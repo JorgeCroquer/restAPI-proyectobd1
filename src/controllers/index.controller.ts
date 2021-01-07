@@ -6,7 +6,7 @@ import {QueryResult} from 'pg'
 
 export const getEmpleados = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const response: QueryResult = await pool.query('SELECT cedula, nombre, salario_emp FROM pruebaemp');
+        const response: QueryResult = await pool.query('SELECT cedula, nombre, salario_emp, horarioent, horariosal FROM pruebaemp');
         return res.status(200).json(response.rows);
     }
     catch(e){

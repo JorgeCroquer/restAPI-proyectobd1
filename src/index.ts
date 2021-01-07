@@ -1,5 +1,8 @@
 import express from 'express';
 import indexRoutes from './routes/index'
+//import cors from 'cors';
+
+const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 
@@ -11,6 +14,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(cors());
 
 //Routes
 app.use('/api',indexRoutes);

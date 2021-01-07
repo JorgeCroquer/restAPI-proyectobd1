@@ -14,7 +14,7 @@ const database_1 = require("../database");
 //Funciones de respuesta
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield database_1.pool.query('SELECT cedula, nombre, salario_emp FROM pruebaemp');
+        const response = yield database_1.pool.query('SELECT cedula, nombre, salario_emp, horarioent, horariosal FROM pruebaemp');
         return res.status(200).json(response.rows);
     }
     catch (e) {
