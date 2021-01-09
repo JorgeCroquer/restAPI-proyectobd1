@@ -29,7 +29,7 @@ export const getUsersById = async(req: Request,res: Response): Promise<Response>
 
 export const createUser = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {nombre,email} = req.body
+        const{nombre,email} = req.body
         const response: QueryResult = await pool.query('INSERT INTO users (nombre,email) VALUES ($1,$2)', [nombre,email]);
         return res.status(200).json({
             message: "User created successfully",
@@ -39,7 +39,6 @@ export const createUser = async(req: Request,res: Response): Promise<Response> =
                     email
                 }
             }
-
         });
     }
     catch(e){

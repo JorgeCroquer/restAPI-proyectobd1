@@ -49,6 +49,7 @@ const ExcelToJSON = (path: string) =>{
    // console.log(jDatos);
     return jDatos;
 }
+
 //Funcion de rango de tolerancia
  function Tolerancia(minutes: number, someDate: Date, hacer:number) :Date{
     //getTime() devuelve los milisegundos entre 1/1/1970 y la fecha en cuestion
@@ -64,9 +65,6 @@ const ExcelToJSON = (path: string) =>{
         return (someDate); 
     } 
 }
-
-
-
 
 //Excel receive Route
 app.post('/api/empreport', multiPartMiddleware, async(req: Request, res: Response) =>{
