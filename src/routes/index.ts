@@ -1,5 +1,5 @@
 import Router from 'express'
-import {getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas, deleteTienda} from '../controllers/index.controller'
+import {getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas, deleteTienda, updateTienda} from '../controllers/index.controller'
 //import {getTiendas} from '../controllers/tiendas.controller'
 
 
@@ -14,6 +14,7 @@ router.delete('/users/:id', deleteUser);
 
 router.get('/tiendas/', getTiendas);
 router.delete('/tiendas/:id',deleteTienda);
+router.put('/tiendas/:id',updateTienda);
 
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
