@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
+exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
 const database_1 = require("../database");
 //Funciones de respuesta
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,3 +80,18 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+const getTiendas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar');
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getTiendas = getTiendas;
+const updateTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.send('respuesta');
+});
+exports.updateTienda = updateTienda;

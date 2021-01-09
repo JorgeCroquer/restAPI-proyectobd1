@@ -72,3 +72,19 @@ export const deleteUser = async(req: Request,res: Response): Promise<Response> =
         return res.status(500).send('Internal Server Error');
     }
 }
+
+export const getTiendas = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query('SELECT nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar');
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updateTienda = async(req: Request, res: Response): Promise<Response> =>{
+    
+    return res.send('respuesta')
+}

@@ -66,8 +66,6 @@ const ExcelToJSON = (path: string) =>{
 }
 
 
-
-
 //Excel receive Route
 app.post('/api/empreport', multiPartMiddleware, async(req: Request, res: Response) =>{
     res.json(req.files);
