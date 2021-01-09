@@ -65,7 +65,10 @@ function Tolerancia(minutes, someDate, hacer) {
 app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(req.files);
     var asistencia = ExcelToJSON(req.files.EmpleadosExcel.path);
-    const response = yield database_1.pool.query('SELECT horaentrada_hor, horasalida_hor FROM horario');
+    const response = yield database_1.pool.query(`SELECT cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
+         FROM horario_empleado,empleado, horario
+         WHERE ((cedula_nat = horario_empleado.fk_empleado) AND (horario.codigo_hor = fk_horario))`);
+    // console.log(response.rows);
     var EmpleadosListos = []; //Aqui se van guardando los empleados chequeados
     for (let i = 0; i <= 1; i++) {
         let entradaTarde = false;
@@ -105,9 +108,13 @@ app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, 
                 salidaTemprana = true;
             }
         }
+        const escritura = yield database_1.pool.query('INSERT INTO prueba_reporte VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', [parseInt(asistencia[i].cedula), response.rows[i].primernombre_nat, response.rows[i].segundonombre_nat, response.rows[i].primerapellido_nat, response.rows[i].segundoapellido_nat, asistencia[i].horaent, asistencia[i].horasal, !(entradaTarde || salidaTemprana)]);
         EmpleadosListos.push({
             cedula: parseInt(asistencia[i].cedula),
-            nombre: asistencia[i].nombre,
+            primernombre: response.rows[i].primernombre_nat,
+            segundonombre: response.rows[i].segundonombre_nat,
+            primerapellido: response.rows[i].primerapellido_nat,
+            segundoapellido: response.rows[i].segundoapellido_nat,
             horaEntrada: asistencia[i].horaent,
             horaSalida: asistencia[i].horasal,
             cumplio: !(entradaTarde || salidaTemprana)
