@@ -71,3 +71,39 @@ export const deleteUser = async(req: Request,res: Response): Promise<Response> =
         return res.status(500).send('Internal Server Error');
     }
 }
+
+export const getTiendas = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar');
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updateTienda = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const id = parseInt(req.params.id);
+        const {nombre} = req.body
+        const response: QueryResult = await pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE id = $2', [nombre,id]);
+        return res.status(200).json(`Tienda ${id} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const deleteTienda = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const id = parseInt(req.params.id);
+        const response: QueryResult = await pool.query('DELETE FROM sucursal WHERE codigo_suc = $1', [id]);
+        return res.status(200).json(`tienda ${id} deleted successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
