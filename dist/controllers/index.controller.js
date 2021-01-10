@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
+exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
 const database_1 = require("../database");
 //Funciones de respuesta
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,9 +80,10 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+//Tiendas
 const getTiendas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield database_1.pool.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar');
+        const response = yield database_1.pool.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar ORDER BY codigo_suc');
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -95,7 +96,7 @@ const updateTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const id = parseInt(req.params.id);
         const { nombre } = req.body;
-        const response = yield database_1.pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE id = $2', [nombre, id]);
+        const response = yield database_1.pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE codigo_suc = $2', [nombre, id]);
         return res.status(200).json(`Tienda ${id} updated successfully`);
     }
     catch (e) {
@@ -116,3 +117,35 @@ const deleteTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.deleteTienda = deleteTienda;
+const createTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { nombre, codigo_dir } = req.body;
+        const response = yield database_1.pool.query('INSERT INTO sucursal(codigo_suc,nombre_suc,fk_lugar) VALUES (4,$1,$2)', [nombre, codigo_dir]);
+        return res.status(200).json({
+            message: "Sucursal created successfully",
+            body: {
+                sucursal: {
+                    nombre,
+                    codigo_dir
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.createTienda = createTienda;
+//Luagares 
+const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT codigo_lug as codigo, nombre_lug as nombre, tipo_lugar as tipo, fk_lugar_lug as codigo_en FROM  lugar');
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getLugares = getLugares;
