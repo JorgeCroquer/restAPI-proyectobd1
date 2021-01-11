@@ -15,11 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const database_1 = require("./database");
+//import EmpleadosListos from '../../restapi-proyecto-ts/EmpleadoListo.json'
 const bodyParser = require('body-parser');
 const multipart = require('connect-multiparty');
 const cors = require('cors');
 const morgan = require('morgan');
 const XLSX = require('xlsx');
+const axios = require('axios');
+const fs = require('fs');
+const EmpListos = require('../EmpleadosListos.json');
 const app = express_1.default();
 const multiPartMiddleware = multipart({ uploadDir: 'src/uploads' });
 //settings
@@ -108,20 +112,36 @@ app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, 
                 salidaTemprana = true;
             }
         }
-        const escritura = yield database_1.pool.query('INSERT INTO prueba_reporte VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', [parseInt(asistencia[i].cedula), response.rows[i].primernombre_nat, response.rows[i].segundonombre_nat, response.rows[i].primerapellido_nat, response.rows[i].segundoapellido_nat, asistencia[i].horaent, asistencia[i].horasal, !(entradaTarde || salidaTemprana)]);
+        // const escritura: QueryResult = await pool.query('INSERT INTO prueba_reporte VALUES ($1,$2,$3,$4,$5,$6,$7,$8)',
+        // [parseInt(asistencia[i].cedula),response.rows[i].primernombre_nat,response.rows[i].segundonombre_nat,response.rows[i].primerapellido_nat,response.rows[i].segundoapellido_nat, asistencia[i].horaent, asistencia[i].horasal, !(entradaTarde || salidaTemprana)]);
+        var options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
         EmpleadosListos.push({
-            cedula: parseInt(asistencia[i].cedula),
-            primernombre: response.rows[i].primernombre_nat,
-            segundonombre: response.rows[i].segundonombre_nat,
-            primerapellido: response.rows[i].primerapellido_nat,
-            segundoapellido: response.rows[i].segundoapellido_nat,
-            horaEntrada: asistencia[i].horaent,
-            horaSalida: asistencia[i].horasal,
-            cumplio: !(entradaTarde || salidaTemprana)
+            Empleado: {
+                cedula: parseInt(asistencia[i].cedula),
+                primernombre: response.rows[i].primernombre_nat,
+                segundonombre: response.rows[i].segundonombre_nat,
+                primerapellido: response.rows[i].primerapellido_nat,
+                segundoapellido: response.rows[i].segundoapellido_nat,
+                horaEntrada: HoraEntrada.toLocaleDateString("es-US", options),
+                horaSalida: HoraSalida.toLocaleDateString("es-US", options),
+                cumplio: !(entradaTarde || salidaTemprana)
+            }
         });
     } //end For
-    console.log(EmpleadosListos); // FALTA ARREGLAR LA CONSULTA 
+    //Guardamos un json para poderlo exportar
+    var json = JSON.stringify(EmpleadosListos);
+    fs.writeFile('EmpleadosListos.json', json, (err) => {
+        // throws an error, you could also catch it here
+        if (err)
+            throw err;
+        console.log('Json salvado');
+    });
 }));
+//Api para generar exportar un JSON para llenar el reporte
+app.get('/api/empleadosreport', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield res.json(EmpListos);
+}));
+//Se levanta el servidor
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
 });
