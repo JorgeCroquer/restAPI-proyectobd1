@@ -113,7 +113,7 @@ export const deleteTienda = async(req: Request,res: Response): Promise<Response>
 export const createTienda = async(req: Request,res: Response): Promise<Response> => {
     try{
         const{nombre,codigo_dir} = req.body
-        const response: QueryResult = await pool.query('INSERT INTO sucursal(codigo_suc,nombre_suc,fk_lugar) VALUES (4,$1,$2)', [nombre,codigo_dir]);
+        const response: QueryResult = await pool.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre,codigo_dir]);
         return res.status(200).json({
             message: "Sucursal created successfully",
             body: {
@@ -135,6 +135,50 @@ export const getLugares = async(req: Request, res: Response): Promise<Response> 
     try{
         const response: QueryResult = await pool.query('SELECT codigo_lug as codigo, nombre_lug as nombre, tipo_lugar as tipo, fk_lugar_lug as codigo_en FROM  lugar');
         return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+//proveedores
+
+export const getProveedores = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query('SELECT * FROM proveedor ORDER BY rif_jur');
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const createProveedor = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur} = req.body;
+        const response: QueryResult = await pool.query('INSERT INTO proveedor VALUES ($1,$2,$3,$4,$5,$6,$7)',[rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur]);
+        return res.status(200).json({
+            message: "Proveedor created successfully",
+            body: {
+                Proveedor: {
+                    rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur
+                }
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updateProveedor = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur} = req.body;
+        const response: QueryResult = await pool.query('UPDATE proveedor SET razonsocial_jur = $1,dencomercial_jur = $2, web_jur = $3, capital_jur = $4, fecharegistro_jur = $5, registrofisico_jur = $6  WHERE rif_jur = $7', [razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur,rif_jur]);
+        return res.status(200).json(`Tienda ${rif_jur} updated successfully`);
     }
     catch(e){
         console.log(e);

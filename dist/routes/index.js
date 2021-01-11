@@ -16,6 +16,9 @@ router.delete('/tiendas/:id', index_controller_1.deleteTienda);
 router.put('/tiendas/:id', index_controller_1.updateTienda);
 router.post('/tiendas/', index_controller_1.createTienda);
 router.get('/lugares/', index_controller_1.getLugares);
+router.get('/proveedores/', index_controller_1.getProveedores);
+router.put('/proveedores/:id', index_controller_1.updateProveedor);
+router.post('/proveedores/', index_controller_1.createProveedor);
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"

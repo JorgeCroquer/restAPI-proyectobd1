@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
+exports.updateProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = void 0;
 const database_1 = require("../database");
 //Funciones de respuesta
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -120,7 +120,7 @@ exports.deleteTienda = deleteTienda;
 const createTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre, codigo_dir } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO sucursal(codigo_suc,nombre_suc,fk_lugar) VALUES (4,$1,$2)', [nombre, codigo_dir]);
+        const response = yield database_1.pool.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre, codigo_dir]);
         return res.status(200).json({
             message: "Sucursal created successfully",
             body: {
@@ -149,3 +149,46 @@ const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getLugares = getLugares;
+//proveedores
+const getProveedores = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT * FROM proveedor ORDER BY rif_jur');
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getProveedores = getProveedores;
+const createProveedor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur } = req.body;
+        const response = yield database_1.pool.query('INSERT INTO proveedor VALUES ($1,$2,$3,$4,$5,$6,$7)', [rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur]);
+        return res.status(200).json({
+            message: "Proveedor created successfully",
+            body: {
+                Proveedor: {
+                    rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.createProveedor = createProveedor;
+const updateProveedor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur } = req.body;
+        const response = yield database_1.pool.query('UPDATE proveedor SET razonsocial_jur = $1,dencomercial_jur = $2, web_jur = $3, capital_jur = $4, fecharegistro_jur = $5, registrofisico_jur = $6  WHERE rif_jur = $7', [razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur, rif_jur]);
+        return res.status(200).json(`Tienda ${rif_jur} updated successfully`);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.updateProveedor = updateProveedor;

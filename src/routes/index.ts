@@ -1,5 +1,5 @@
 import Router from 'express'
-import {getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares} from '../controllers/index.controller'
+import {getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares, getProveedores, updateProveedor, createProveedor} from '../controllers/index.controller'
 //import {getTiendas} from '../controllers/tiendas.controller'
 
 
@@ -18,6 +18,10 @@ router.put('/tiendas/:id',updateTienda);
 router.post('/tiendas/',createTienda);
 
 router.get('/lugares/', getLugares);
+
+router.get('/proveedores/', getProveedores);
+router.put('/proveedores/:id', updateProveedor);
+router.post('/proveedores/',createProveedor);
 
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
