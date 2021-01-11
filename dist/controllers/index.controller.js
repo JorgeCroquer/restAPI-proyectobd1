@@ -95,7 +95,7 @@ const updateTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const id = parseInt(req.params.id);
         const { nombre } = req.body;
-        const response = yield database_1.pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE id = $2', [nombre, id]);
+        const response = yield database_1.pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE codigo_suc = $2', [nombre, id]);
         return res.status(200).json(`Tienda ${id} updated successfully`);
     }
     catch (e) {

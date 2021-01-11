@@ -87,7 +87,7 @@ export const updateTienda = async(req: Request, res: Response): Promise<Response
     try{
         const id = parseInt(req.params.id);
         const {nombre} = req.body
-        const response: QueryResult = await pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE id = $2', [nombre,id]);
+        const response: QueryResult = await pool.query('UPDATE sucursal SET nombre_suc = $1 WHERE codigo_suc = $2', [nombre,id]);
         return res.status(200).json(`Tienda ${id} updated successfully`);
     }
     catch(e){
