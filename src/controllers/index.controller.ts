@@ -4,17 +4,6 @@ import {QueryResult} from 'pg'
 
 //Funciones de respuesta
 
-export const getEmpleados = async(req: Request,res: Response): Promise<Response> => {
-    try{
-        const response: QueryResult = await pool.query('SELECT cedula, nombre, salario_emp, horarioent, horariosal FROM pruebaemp');
-        return res.status(200).json(response.rows);
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-}
-
 export const getUsersById = async(req: Request,res: Response): Promise<Response> => {
     try{
         const id = parseInt(req.params.id);
@@ -76,7 +65,7 @@ export const deleteUser = async(req: Request,res: Response): Promise<Response> =
 
 export const getTiendas = async(req: Request, res: Response): Promise<Response> =>{
     try{
-        const response: QueryResult = await pool.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion  FROM sucursal,lugar WHERE codigo_lug = fk_lugar ORDER BY codigo_suc');
+        const response: QueryResult = await pool.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion FROM sucursal,lugar WHERE codigo_lug = fk_lugar ORDER BY codigo_suc');
         return res.status(200).json(response.rows);
     }
     catch(e){
@@ -179,6 +168,31 @@ export const updateProveedor = async(req: Request, res: Response): Promise<Respo
         const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur} = req.body;
         const response: QueryResult = await pool.query('UPDATE proveedor SET razonsocial_jur = $1,dencomercial_jur = $2, web_jur = $3, capital_jur = $4, fecharegistro_jur = $5, registrofisico_jur = $6  WHERE rif_jur = $7', [razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur,rif_jur]);
         return res.status(200).json(`Tienda ${rif_jur} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const deleteProveedor = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const id = req.params.id;
+        const response: QueryResult = await pool.query('DELETE FROM proveedor WHERE rif_jur = $1', [id]);
+        return res.status(200).json(`Proveedor ${id} deleted successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+//empleados
+
+export const getEmpleados = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query('SELECT cedula_nat, salario_emp, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, fecharegistro_nat,registrofisico_nat, nombre_suc FROM empleado,sucursal WHERE codigo_suc = fk_sucursal ORDER BY cedula_nat');
+        return res.status(200).json(response.rows);
     }
     catch(e){
         console.log(e);
