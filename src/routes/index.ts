@@ -1,5 +1,5 @@
 import Router from 'express'
-import {getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur} from '../controllers/index.controller'
+import {getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, deletePersonaJur, getClientesNat, updatePersonaNat,updateClientesNat } from '../controllers/index.controller'
 //import {getTiendas} from '../controllers/tiendas.controller'
 
 
@@ -13,7 +13,11 @@ router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
 //personas juridicas
 router.post('/personajur/', createPersonaJur);
+router.put('/personajur/:id',updatePersonaJur);
 router.put('/personajur/',updatePersonaJur);
+router.delete('/personajur/:id', deletePersonaJur);
+//personas naturales
+router.put('/personanat/:id',updatePersonaNat);
 //tiendas
 router.get('/tiendas/', getTiendas);
 router.delete('/tiendas/:id',deleteTienda);
@@ -31,7 +35,9 @@ router.get('/empleados/', getEmpleados);
 router.delete('/empleados/:id',deleteTienda);
 router.put('/empleados/:id',updateTienda);
 router.post('/empleados/',createTienda);
-
+//clientes
+router.get('/clientes/naturales', getClientesNat);
+router.put('/clientes/naturales/:id',updateClientesNat);
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"
