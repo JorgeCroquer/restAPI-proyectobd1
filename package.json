@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "Jorge Croquer",
+  "author": "Jorge Croquer & Leonardo Contreras",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.9",
