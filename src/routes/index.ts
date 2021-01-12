@@ -56,6 +56,7 @@ router.put('/clientes/naturales/:id',updateClientesNat);
 router.delete('/clientes/naturales/:id', deleteClientesNat);
 router.post('/clientes/naturales/:id',createClienteNat);
 
+
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"

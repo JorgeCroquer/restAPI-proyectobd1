@@ -241,7 +241,9 @@ export const deleteProveedor = async(req: Request,res: Response): Promise<Respon
 
 export const getEmpleados = async(req: Request, res: Response): Promise<Response> =>{
     try{
-        const response: QueryResult = await pool.query('SELECT cedula_nat, salario_emp, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, fecharegistro_nat,registrofisico_nat, nombre_suc FROM empleado,sucursal WHERE codigo_suc = fk_sucursal ORDER BY cedula_nat');
+        const response: QueryResult = await pool.query(`SELECT cedula_nat, salario_emp, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, nombre_suc, horaentrada_hor, horasalida_hor, nombre_ben
+        FROM persona_natural,empleado,sucursal,horario_empleado, horario, beneficio_empleado, beneficio
+        WHERE cedula_nat = fk_empleado AND fk_cedula_nat = horario_empleado.fk_empleado AND  codigo_hor = horario_empleado.fk_horario AND codigo_suc = empleado.fk_sucursal AND fk_empleado_ben_emp = cedula_nat AND codigo_ben = beneficio_empleado.fk_beneficio_ben_emp`);
         return res.status(200).json(response.rows);
     }
     catch(e){
@@ -388,6 +390,61 @@ export const deleteClientesNat = async(req: Request, res: Response): Promise<Res
 }
 
 export const createClienteNat = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
+        const response: QueryResult = await pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)',[cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
+        return res.status(200).json({
+            message: "Persona Jurídica created successfully",
+            body: {
+                Persona: {
+                    cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia
+                }
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+//Clientes juridicos
+export const getClientesJur = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query(' Select cedula_nat,rif_nat as rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro_nat as fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia,fk_cedula_nat,registrofisico_nat as registrofisico,puntos_nat as puntos,fk_sucursal from persona_natural,cliente_nat where cedula_nat = fk_cedula_nat');
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updateClientesJur = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const {fk_cedula_nat,registrofisico,puntos,fk_sucursal} = req.body;
+        const response: QueryResult = await pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat,registrofisico,puntos,fk_sucursal]);
+        return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const deleteClientesJur = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const id = req.params.id;
+        const response: QueryResult = await pool.query('DELETE FROM cliente_natural WHERE cedula_nat = $1', [id]);
+        return res.status(200).json(`Cliente ${id} deleted successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const createClienteJur = async(req: Request,res: Response): Promise<Response> => {
     try{
         const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
         const response: QueryResult = await pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)',[cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
