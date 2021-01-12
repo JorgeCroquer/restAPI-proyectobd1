@@ -1,56 +1,67 @@
 import Router from 'express'
-<<<<<<< HEAD
-import {getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, deletePersonaJur, getClientesNat, updatePersonaNat,updateClientesNat } from '../controllers/index.controller'
-=======
-import {getCarnet, getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas, createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, createPersonaJur, updatePersonaJur} from '../controllers/index.controller'
->>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
-//import {getTiendas} from '../controllers/tiendas.controller'
+import {getCarnet, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, 
+    getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, 
+    deletePersonaJur, getClientesNat,updateClientesNat, getPersonasNat, deletePersonaNat,  updatePersonaNat, createPersonaNat,
+deleteClientesNat, createClienteNat } from '../controllers/index.controller'
+
 
 
 import { Request, Response} from 'express'
 const router = Router();
 
-//users
+//users (Ejemplos)
 router.get('/users/:id', getUsersById);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
-//personas juridicas
-router.post('/personajur/', createPersonaJur);
-router.put('/personajur/:id',updatePersonaJur);
-router.put('/personajur/',updatePersonaJur);
-router.delete('/personajur/:id', deletePersonaJur);
-//personas naturales
-router.put('/personanat/:id',updatePersonaNat);
+
+
+
 //tiendas
 router.get('/tiendas/', getTiendas);
 router.delete('/tiendas/:id',deleteTienda);
 router.put('/tiendas/:id',updateTienda);
 router.post('/tiendas/',createTienda);
+
 //lugares
 router.get('/lugares/', getLugares);
+
 //proveedores
 router.get('/proveedores/', getProveedores);
 router.put('/proveedores/:id', updatePersonaJur);
 router.post('/proveedores/',createProveedor);
 router.delete('/proveedores/:id',deleteProveedor);
+
 //empleados
 router.get('/empleados/', getEmpleados);
 router.delete('/empleados/:id',deleteTienda);
 router.put('/empleados/:id',updateTienda);
 router.post('/empleados/',createTienda);
-<<<<<<< HEAD
+
+
+//Personas 
+router.get('/personas/naturales', getPersonasNat);
+router.delete('/personas/naturales/:id',deletePersonaNat);
+router.put('/personas/naturales/:id',updatePersonaNat);
+router.post('/personas/naturales/:id',createPersonaNat);
+router.post('/personas/juridicas', createPersonaJur);
+router.put('/personas/juridicas/:id',updatePersonaJur);
+router.put('/personas/juridicas',updatePersonaJur);
+router.delete('/personas/juridicas/:id', deletePersonaJur);
+
+
 //clientes
 router.get('/clientes/naturales', getClientesNat);
 router.put('/clientes/naturales/:id',updateClientesNat);
+router.delete('/clientes/naturales/:id', deleteClientesNat);
+router.post('/clientes/naturales/:id',createClienteNat);
 
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"
 //     })
 // });
-====
->>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
+
 
 
 router.get('/carnet/:id', getCarnet)
