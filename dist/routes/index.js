@@ -28,8 +28,6 @@ router.get('/empleados/', index_controller_1.getEmpleados);
 router.delete('/empleados/:id', index_controller_1.deleteTienda);
 router.put('/empleados/:id', index_controller_1.updateTienda);
 router.post('/empleados/', index_controller_1.createTienda);
-<<<<<<< HEAD
-=======
 //Personas 
 router.get('/personas/naturales', index_controller_1.getPersonasNat);
 router.delete('/personas/naturales/:id', index_controller_1.deletePersonaNat);
@@ -39,7 +37,6 @@ router.post('/personas/juridicas', index_controller_1.createPersonaJur);
 router.put('/personas/juridicas/:id', index_controller_1.updatePersonaJur);
 router.put('/personas/juridicas', index_controller_1.updatePersonaJur);
 router.delete('/personas/juridicas/:id', index_controller_1.deletePersonaJur);
->>>>>>> 93aefec885c7eb012116a7d1ec8ed08815faf897
 //clientes
 router.get('/clientes/naturales', index_controller_1.getClientesNat);
 router.put('/clientes/naturales/:id', index_controller_1.updateClientesNat);
@@ -50,9 +47,5 @@ router.post('/clientes/naturales/:id', index_controller_1.createClienteNat);
 //         "message": "File received"
 //     })
 // });
-<<<<<<< HEAD
-router.get('/carnet/:id', getCarnet);
-=======
 router.get('/carnet/:id', index_controller_1.getCarnet);
->>>>>>> 93aefec885c7eb012116a7d1ec8ed08815faf897
 exports.default = router;
