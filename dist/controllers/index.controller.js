@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNat = exports.deletePersonaNat = exports.updatePersonaNat = exports.getPersonasNat = exports.createPersonaNat = exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
+exports.createClienteJur = exports.deleteClientesJur = exports.updateClientesJur = exports.getClientesJur = exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNat = exports.deletePersonaNat = exports.updatePersonaNat = exports.getPersonasNat = exports.createPersonaNat = exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
 const database_1 = require("../database");
 const qrcode = require('qrcode');
 const fs = require('fs');
@@ -242,7 +242,9 @@ exports.deleteProveedor = deleteProveedor;
 //empleados
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield database_1.pool.query('SELECT cedula_nat, salario_emp, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, fecharegistro_nat,registrofisico_nat, nombre_suc FROM empleado,sucursal WHERE codigo_suc = fk_sucursal ORDER BY cedula_nat');
+        const response = yield database_1.pool.query(`SELECT cedula_nat, salario_emp, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, nombre_suc, horaentrada_hor, horasalida_hor, nombre_ben
+        FROM persona_natural,empleado,sucursal,horario_empleado, horario, beneficio_empleado, beneficio
+        WHERE cedula_nat = fk_empleado AND fk_cedula_nat = horario_empleado.fk_empleado AND  codigo_hor = horario_empleado.fk_horario AND codigo_suc = empleado.fk_sucursal AND fk_empleado_ben_emp = cedula_nat AND codigo_ben = beneficio_empleado.fk_beneficio_ben_emp`);
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -405,3 +407,58 @@ const createClienteNat = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.createClienteNat = createClienteNat;
+//Clientes juridicos
+const getClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query(' Select cedula_nat,rif_nat as rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro_nat as fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia,fk_cedula_nat,registrofisico_nat as registrofisico,puntos_nat as puntos,fk_sucursal from persona_natural,cliente_nat where cedula_nat = fk_cedula_nat');
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getClientesJur = getClientesJur;
+const updateClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { fk_cedula_nat, registrofisico, puntos, fk_sucursal } = req.body;
+        const response = yield database_1.pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat, registrofisico, puntos, fk_sucursal]);
+        return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.updateClientesJur = updateClientesJur;
+const deleteClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const response = yield database_1.pool.query('DELETE FROM cliente_natural WHERE cedula_nat = $1', [id]);
+        return res.status(200).json(`Cliente ${id} deleted successfully`);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.deleteClientesJur = deleteClientesJur;
+const createClienteJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia } = req.body;
+        const response = yield database_1.pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)', [cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia]);
+        return res.status(200).json({
+            message: "Persona Jurídica created successfully",
+            body: {
+                Persona: {
+                    cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.createClienteJur = createClienteJur;
