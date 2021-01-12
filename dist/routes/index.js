@@ -42,6 +42,10 @@ router.get('/clientes/naturales', index_controller_1.getClientesNat);
 router.put('/clientes/naturales/:id', index_controller_1.updateClientesNat);
 router.delete('/clientes/naturales/:id', index_controller_1.deleteClientesNat);
 router.post('/clientes/naturales/:id', index_controller_1.createClienteNat);
+router.post('/clientes/juridicos', index_controller_1.createClienteJur);
+router.put('/clientes/juridicos/:id', index_controller_1.updateClientesJur);
+router.put('/clientes/juridicos', index_controller_1.updateClientesJur);
+router.delete('/clientes/juridicos/:id', index_controller_1.deleteClientesJur);
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"

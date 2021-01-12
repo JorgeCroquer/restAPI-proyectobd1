@@ -366,8 +366,8 @@ const getClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getClientesNat = getClientesNat;
 const updateClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fk_cedula_nat, registrofisico, puntos, fk_sucursal } = req.body;
-        const response = yield database_1.pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat, registrofisico, puntos, fk_sucursal]);
+        const { fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal } = req.body;
+        const response = yield database_1.pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal]);
         return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
     }
     catch (e) {
@@ -410,7 +410,7 @@ exports.createClienteNat = createClienteNat;
 //Clientes juridicos
 const getClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield database_1.pool.query(' Select cedula_nat,rif_nat as rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro_nat as fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia,fk_cedula_nat,registrofisico_nat as registrofisico,puntos_nat as puntos,fk_sucursal from persona_natural,cliente_nat where cedula_nat = fk_cedula_nat');
+        const response = yield database_1.pool.query(' Select * from cliente_jur');
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -421,9 +421,9 @@ const getClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getClientesJur = getClientesJur;
 const updateClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fk_cedula_nat, registrofisico, puntos, fk_sucursal } = req.body;
-        const response = yield database_1.pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat, registrofisico, puntos, fk_sucursal]);
-        return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
+        const { fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal } = req.body;
+        const response = yield database_1.pool.query('UPDATE cliente_jur SET registrofisico_jur = $2, puntos_jur = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal]);
+        return res.status(200).json(`Persona ${fk_rif_jur} updated successfully`);
     }
     catch (e) {
         console.log(e);
@@ -434,7 +434,7 @@ exports.updateClientesJur = updateClientesJur;
 const deleteClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM cliente_natural WHERE cedula_nat = $1', [id]);
+        const response = yield database_1.pool.query('DELETE FROM cliente_jur WHERE fk_rif_jur = $1', [id]);
         return res.status(200).json(`Cliente ${id} deleted successfully`);
     }
     catch (e) {
@@ -445,13 +445,13 @@ const deleteClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.deleteClientesJur = deleteClientesJur;
 const createClienteJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)', [cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia]);
+        const { fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal } = req.body;
+        const response = yield database_1.pool.query('INSERT INTO cliente_jur VALUES ($1,$2,$3,$4)', [fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal]);
         return res.status(200).json({
-            message: "Persona Jurídica created successfully",
+            message: "Cliente Jurídico created successfully",
             body: {
                 Persona: {
-                    cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia
+                    fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal
                 }
             }
         });

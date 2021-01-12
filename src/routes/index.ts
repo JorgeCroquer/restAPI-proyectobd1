@@ -2,7 +2,7 @@ import Router from 'express'
 import {getCarnet, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, 
     getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, 
     deletePersonaJur, getClientesNat,updateClientesNat, getPersonasNat, deletePersonaNat,  updatePersonaNat, createPersonaNat,
-deleteClientesNat, createClienteNat } from '../controllers/index.controller'
+deleteClientesNat, createClienteNat, getClientesJur, updateClientesJur, deleteClientesJur, createClienteJur } from '../controllers/index.controller'
 
 
 
@@ -55,6 +55,11 @@ router.get('/clientes/naturales', getClientesNat);
 router.put('/clientes/naturales/:id',updateClientesNat);
 router.delete('/clientes/naturales/:id', deleteClientesNat);
 router.post('/clientes/naturales/:id',createClienteNat);
+router.post('/clientes/juridicos', createClienteJur);
+router.put('/clientes/juridicos/:id',updateClientesJur);
+router.put('/clientes/juridicos',updateClientesJur);
+router.delete('/clientes/juridicos/:id', deleteClientesJur);
+
 
 
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
