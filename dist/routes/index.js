@@ -23,10 +23,5 @@ router.get('/empleados/', index_controller_1.getEmpleados);
 router.delete('/empleados/:id', index_controller_1.deleteTienda);
 router.put('/empleados/:id', index_controller_1.updateTienda);
 router.post('/empleados/', index_controller_1.createTienda);
-// router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
-//     res.json({
-//         "message": "File received"
-//     })
-// });
 router.get('/carnet/:id', index_controller_1.getCarnet);
 exports.default = router;

@@ -9,11 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getEmpleados = exports.getCarnet = void 0;
-=======
-exports.getEmpleados = exports.deleteProveedor = exports.updateProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = void 0;
->>>>>>> 0e481eac88f5acd9d0e8d054db98f908dce9f3a2
+exports.getEmpleados = exports.deleteProveedor = exports.updateProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
 const database_1 = require("../database");
 const qrcode = require('qrcode');
 const fs = require('fs');
@@ -29,7 +25,6 @@ function generarQR(cedula, url) {
     });
 }
 //Funciones de respuesta
-<<<<<<< HEAD
 const getCarnet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cedula = req.params.id;
@@ -64,19 +59,6 @@ const getCarnet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getCarnet = getCarnet;
-const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT cedula, nombre, salario_emp, horarioent, horariosal FROM pruebaemp');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getEmpleados = getEmpleados;
-=======
->>>>>>> 0e481eac88f5acd9d0e8d054db98f908dce9f3a2
 const getUsersById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
