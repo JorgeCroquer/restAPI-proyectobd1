@@ -1,8 +1,59 @@
 import {Request, Response} from 'express'
-import {pool} from '../database'
+import {pool, pool2} from '../database'
 import {QueryResult} from 'pg'
 
+
+const qrcode = require('qrcode')
+const fs = require('fs')
+
+async function generarQR (cedula:string, url:string){
+   
+    const QR = await qrcode.toDataURL(url);
+    fs.writeFile(`C:\\ImagenesDB\\QR\\${cedula}.png`, QR.split(',')[1] ,'base64', (err: Error) => {
+        // throws an error, you could also catch it here
+        if (err) throw err;
+
+        console.log('QR salvado');
+    });
+}
+
+
 //Funciones de respuesta
+export const getCarnet = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const cedula = req.params.id;
+        let urlQR = `http://localhost:3000/api/cliente/${cedula}`;
+
+        //Se genera el QR
+        generarQR(cedula, urlQR);
+        
+        //consultamos por la persona con esa cedula
+        const response: QueryResult = await pool2.query(`SELECT persona_nat.cedula_nat,  fk_sucursal,  persona_nat.primernombre_nat,   persona_nat.segundonombre_nat,  persona_nat.primerapellido_nat,   persona_nat.segundoapellido_nat, numero_tel,  cliente_nat.qrpath
+        FROM cliente_nat, persona_nat, telefono
+        WHERE persona_nat.cedula_nat = $1 AND cliente_nat.cedula_nat = $1 AND telefono.fk_persona = $1`, [cedula]);
+
+        //Armamos el nombre
+        let nombre:string = response.rows[0].primernombre_nat;
+        if (response.rows[0].segundonombre_nat != null) nombre = `${nombre} ${response.rows[0].segundonombre_nat}`;
+        nombre = `${nombre} ${response.rows[0].primerapellido_nat}`;
+        if (response.rows[0].segundoapellido_nat != null) nombre = `${nombre} ${response.rows[0].segundoapellido_nat}`;
+        
+        //Se envia el JSON
+        return res.status(200).json({
+            cliente: {
+                'cedula': response.rows[0].cedula_nat.toString(),
+                'nombre': nombre,
+                'telefono': response.rows[0].numero_tel,
+                'id': `${response.rows[0].fk_sucursal} - ${response.rows[0].cedula_nat.toString()}`,
+                'qrpath': response.rows[0].qrpath
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
 
 export const getEmpleados = async(req: Request,res: Response): Promise<Response> => {
     try{

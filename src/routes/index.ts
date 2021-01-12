@@ -1,5 +1,5 @@
 import Router from 'express'
-import {getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares} from '../controllers/index.controller'
+import {getCarnet, getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares} from '../controllers/index.controller'
 //import {getTiendas} from '../controllers/tiendas.controller'
 
 
@@ -25,5 +25,5 @@ router.get('/lugares/', getLugares);
 //     })
 // });
 
-
+router.get('/carnet/:id', getCarnet)
 export default router;

@@ -21,4 +21,5 @@ router.get('/lugares/', index_controller_1.getLugares);
 //         "message": "File received"
 //     })
 // });
+router.get('/carnet/:id', index_controller_1.getCarnet);
 exports.default = router;

@@ -6,4 +6,12 @@ export const pool = new Pool ({
     password: '123456789',
     database: 'proyectocck',
     port: 5432
+});
+
+export const pool2 = new Pool ({
+    user: 'jorge',
+    host: 'localhost',
+    password: '221099',
+    database: 'prueba carnet',
+    port: 5432
 })
