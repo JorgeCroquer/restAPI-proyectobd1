@@ -228,7 +228,7 @@ export const createProveedor = async(req: Request,res: Response): Promise<Respon
 export const deleteProveedor = async(req: Request,res: Response): Promise<Response> => {
     try{
         const id = req.params.id;
-        const response: QueryResult = await pool.query('DELETE FROM proveedor WHERE rif_jur = $1', [id]);
+        const response: QueryResult = await pool.query('DELETE FROM proveedor WHERE fk_rif_jur = $1', [id]);
         return res.status(200).json(`Proveedor ${id} deleted successfully`);
     }
     catch(e){
@@ -255,11 +255,11 @@ export const getEmpleados = async(req: Request, res: Response): Promise<Response
 export const createPersonaJur = async(req: Request,res: Response): Promise<Response> => {
     try{
         const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur} = req.body;
-        const response: QueryResult = await pool.query('INSERT INTO persona_juridica VALUES ($1,$2,$3,$4,$5,$6,$7,1,1)',[rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur]);
+        const response: QueryResult = await pool.query('INSERT INTO persona_juridica VALUES ($1,$2,$3,$4,$5,$6,$7,1,1,1)',[rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur]);
         return res.status(200).json({
             message: "Persona Jurídica created successfully",
             body: {
-                Proveedor: {
+                Persona: {
                     rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur
                 }
             }
@@ -271,15 +271,84 @@ export const createPersonaJur = async(req: Request,res: Response): Promise<Respo
     }
 }
 
-
 export const updatePersonaJur = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur} = req.body;
         const response: QueryResult = await pool.query('UPDATE persona_juridica SET razonsocial_jur = $1,dencomercial_jur = $2, web_jur = $3, capital_jur = $4, fecharegistro_jur = $5, registrofisico_jur = $6  WHERE rif_jur = $7', [razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur,rif_jur]);
-        return res.status(200).json(`Tienda ${rif_jur} updated successfully`);
+        return res.status(200).json(`Persona ${rif_jur} updated successfully`);
     }
     catch(e){
         console.log(e);
         return res.status(500).send('Internal Server Error');
     }
 }
+
+export const deletePersonaJur = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const id = req.params.id;
+        const response: QueryResult = await pool.query('DELETE FROM persona_juridica WHERE rif_jur = $1', [id]);
+        return res.status(200).json(`Persona ${id} deleted successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+//persona_natural
+export const createPersonaNat = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
+        const response: QueryResult = await pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)',[cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
+        return res.status(200).json({
+            message: "Persona Jurídica created successfully",
+            body: {
+                Persona: {
+                    rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur
+                }
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updatePersonaNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
+        const response: QueryResult = await pool.query('UPDATE persona_natural SET rif_nat = $2, primernombre_nat = $3, segundonombre_nat = $4, primerapellido_nat = $5, segundoapellido_nat = $6, fecharegistro_nat = $7, qr_path=$8,fk_persona_contacto = $9,fk_lugar_residencia =$10 WHERE cedula_nat = $1', [cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
+        return res.status(200).json(`Persona ${cedula_nat} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+//cliente natural 
+
+export const getClientesNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query(' Select cedula_nat,rif_nat as rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro_nat as fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia,fk_cedula_nat,registrofisico_nat as registrofisico,puntos_nat as puntos,fk_sucursal from persona_natural,cliente_nat where cedula_nat = fk_cedula_nat');
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const updateClientesNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const {fk_cedula_nat,registrofisico,puntos,fk_sucursal} = req.body;
+        const response: QueryResult = await pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat,registrofisico,puntos,fk_sucursal]);
+        return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
