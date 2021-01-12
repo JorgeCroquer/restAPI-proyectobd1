@@ -9,14 +9,23 @@ const fs = require('fs')
 async function generarQR (cedula:string, url:string){
    
     const QR = await qrcode.toDataURL(url);
-    fs.writeFile(`C:\\ImagenesDB\\QR\\${cedula}.png`, QR.split(',')[1] ,'base64', (err: Error) => {
+    fs.writeFile(`C:\\ImagenesBD\\QR\\${cedula}.png`, QR.split(',')[1] ,'base64', (err: Error) => {
         // throws an error, you could also catch it here
         if (err) throw err;
 
         console.log('QR salvado');
     });
 }
+async function llenarQR(){
+    const response: QueryResult = await pool.query(`SELECT fk_cedula_nat
+    FROM cliente_nat`);
 
+    for(let i = 0; i<= response.rows.length; i++){
+        generarQR(response.rows[i].fk_cedula_nat,`http://localhost:3000/api/cliente/${response.rows[i].fk_cedula_nat}`);
+    }
+
+    console.log('listo')
+}
 
 //Funciones de respuesta
 export const getCarnet = async(req: Request,res: Response): Promise<Response> => {

@@ -70,9 +70,9 @@ function Tolerancia(minutes, someDate, hacer) {
 app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(req.files);
     var asistencia = ExcelToJSON(req.files.EmpleadosExcel.path);
-    const response = yield database_1.pool.query(`SELECT cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
-         FROM horario_empleado,empleado, horario
-         WHERE ((cedula_nat = horario_empleado.fk_empleado) AND (horario.codigo_hor = fk_horario))`);
+    const response = yield database_1.pool.query(`select cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
+        from  persona_natural, empleado, horario_empleado, horario
+        where fk_cedula_nat= horario_empleado.fk_empleado AND cedula_nat = fk_empleado AND codigo_hor= horario_empleado.fk_horario`);
     // console.log(response.rows);
     var EmpleadosListos = []; //Aqui se van guardando los empleados chequeados
     for (let i = 0; i <= 1; i++) {
@@ -102,7 +102,6 @@ app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, 
                 entradaTarde = true;
             }
         }
-        console.log(HoraEntrada.getUTCHours() > HorarioEntrada.getHours());
         //comparemos las horas de salida
         if (HoraSalida.getUTCHours() < HorarioSalida.getHours()) { //if hora de entrada es mayor a su horario...
             salidaTemprana = true;
@@ -116,6 +115,7 @@ app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, 
         // const escritura: QueryResult = await pool.query('INSERT INTO prueba_reporte VALUES ($1,$2,$3,$4,$5,$6,$7,$8)',
         // [parseInt(asistencia[i].cedula),response.rows[i].primernombre_nat,response.rows[i].segundonombre_nat,response.rows[i].primerapellido_nat,response.rows[i].segundoapellido_nat, asistencia[i].horaent, asistencia[i].horasal, !(entradaTarde || salidaTemprana)]);
         var options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        console.log(HoraEntrada.toLocaleDateString("es-US", options));
         EmpleadosListos.push({
             Empleado: {
                 cedula: parseInt(asistencia[i].cedula),
@@ -123,8 +123,8 @@ app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, 
                 segundonombre: response.rows[i].segundonombre_nat,
                 primerapellido: response.rows[i].primerapellido_nat,
                 segundoapellido: response.rows[i].segundoapellido_nat,
-                horaEntrada: HoraEntrada.toLocaleDateString("es-US", options),
-                horaSalida: HoraSalida.toLocaleDateString("es-US", options),
+                horaEntrada: HoraEntrada,
+                horaSalida: HoraSalida,
                 cumplio: !(entradaTarde || salidaTemprana)
             }
         });

@@ -5,8 +5,8 @@ export interface EmpleadoListo{
         segundonombre: string;
         primerapellido: string;
         segundoapellido: string;
-        horaEntrada: string;
-        horaSalida: string;
+        horaEntrada: Date;
+        horaSalida: Date;
         cumplio: boolean
     }
 
