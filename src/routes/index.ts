@@ -39,7 +39,7 @@ router.get('/empleados/', getEmpleados);
 router.delete('/empleados/:id',deleteTienda);
 router.put('/empleados/:id',updateTienda);
 router.post('/empleados/',createTienda);
-<<<<<<< HEAD
+
 //clientes
 router.get('/clientes/naturales', getClientesNat);
 router.put('/clientes/naturales/:id',updateClientesNat);
@@ -49,9 +49,6 @@ router.put('/clientes/naturales/:id',updateClientesNat);
 //         "message": "File received"
 //     })
 // });
-====
->>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
-
 
 router.get('/carnet/:id', getCarnet)
 export default router;

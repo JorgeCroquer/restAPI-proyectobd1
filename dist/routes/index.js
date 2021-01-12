@@ -35,7 +35,6 @@ router.get('/empleados/', index_controller_1.getEmpleados);
 router.delete('/empleados/:id', index_controller_1.deleteTienda);
 router.put('/empleados/:id', index_controller_1.updateTienda);
 router.post('/empleados/', index_controller_1.createTienda);
-<<<<<<< HEAD
 //clientes
 router.get('/clientes/naturales', index_controller_1.getClientesNat);
 router.put('/clientes/naturales/:id', index_controller_1.updateClientesNat);
@@ -44,7 +43,5 @@ router.put('/clientes/naturales/:id', index_controller_1.updateClientesNat);
 //         "message": "File received"
 //     })
 // });
-=======
-router.get('/carnet/:id', index_controller_1.getCarnet);
->>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
+router.get('/carnet/:id', getCarnet);
 exports.default = router;

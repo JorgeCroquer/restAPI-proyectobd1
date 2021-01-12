@@ -9,11 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-exports.updateClientesNat = exports.getClientesNat = exports.updatePersonaNat = exports.createPersonaNat = exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = void 0;
-=======
-exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
->>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
+exports.updateClientesNat = exports.getClientesNat = exports.updatePersonaNat = exports.createPersonaNat = exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
 const database_1 = require("../database");
 const qrcode = require('qrcode');
 const fs = require('fs');
