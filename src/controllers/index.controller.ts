@@ -9,14 +9,23 @@ const fs = require('fs')
 async function generarQR (cedula:string, url:string){
    
     const QR = await qrcode.toDataURL(url);
-    fs.writeFile(`C:\\ImagenesDB\\QR\\${cedula}.png`, QR.split(',')[1] ,'base64', (err: Error) => {
+    fs.writeFile(`C:\\ImagenesBD\\QR\\${cedula}.png`, QR.split(',')[1] ,'base64', (err: Error) => {
         // throws an error, you could also catch it here
         if (err) throw err;
 
         console.log('QR salvado');
     });
 }
+async function llenarQR(){
+    const response: QueryResult = await pool.query(`SELECT fk_cedula_nat
+    FROM cliente_nat`);
 
+    for(let i = 0; i<= response.rows.length; i++){
+        generarQR(response.rows[i].fk_cedula_nat,`http://localhost:3000/api/cliente/${response.rows[i].fk_cedula_nat}`);
+    }
+
+    console.log('listo')
+}
 
 //Funciones de respuesta
 export const getCarnet = async(req: Request,res: Response): Promise<Response> => {
@@ -295,10 +304,21 @@ export const createPersonaNat = async(req: Request,res: Response): Promise<Respo
             message: "Persona Jurídica created successfully",
             body: {
                 Persona: {
-                    rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur
+                    cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia
                 }
             }
         });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getPersonasNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await pool.query('SELECT cedula_nat, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, fecharegistro_nat FROM persona_natural');
+        return res.status(200).json(response.rows);
     }
     catch(e){
         console.log(e);
@@ -311,6 +331,18 @@ export const updatePersonaNat = async(req: Request, res: Response): Promise<Resp
         const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
         const response: QueryResult = await pool.query('UPDATE persona_natural SET rif_nat = $2, primernombre_nat = $3, segundonombre_nat = $4, primerapellido_nat = $5, segundoapellido_nat = $6, fecharegistro_nat = $7, qr_path=$8,fk_persona_contacto = $9,fk_lugar_residencia =$10 WHERE cedula_nat = $1', [cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
         return res.status(200).json(`Persona ${cedula_nat} updated successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const deletePersonaNat = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const id = req.params.id;
+        const response: QueryResult = await pool.query('DELETE FROM persona_natural WHERE cedula_nat = $1', [id]);
+        return res.status(200).json(`Persona ${id} deleted successfully`);
     }
     catch(e){
         console.log(e);
@@ -343,3 +375,33 @@ export const updateClientesNat = async(req: Request, res: Response): Promise<Res
     }
 }
 
+export const deleteClientesNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const id = req.params.id;
+        const response: QueryResult = await pool.query('DELETE FROM cliente_natural WHERE cedula_nat = $1', [id]);
+        return res.status(200).json(`Cliente ${id} deleted successfully`);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const createClienteNat = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const {cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia} = req.body;
+        const response: QueryResult = await pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)',[cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia]);
+        return res.status(200).json({
+            message: "Persona Jurídica created successfully",
+            body: {
+                Persona: {
+                    cedula_nat,rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia
+                }
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
