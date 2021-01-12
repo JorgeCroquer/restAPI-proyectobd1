@@ -65,6 +65,7 @@ function Tolerancia(minutes, someDate, hacer) {
         return (someDate);
     }
 }
+//generador de QR
 //Excel receive Route
 app.post('/api/empreport', multiPartMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(req.files);

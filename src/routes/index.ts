@@ -1,5 +1,9 @@
 import Router from 'express'
+<<<<<<< HEAD
 import {getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, deletePersonaJur, getClientesNat, updatePersonaNat,updateClientesNat } from '../controllers/index.controller'
+=======
+import {getCarnet, getEmpleados, getUsersById, createUser, updateUser, deleteUser, getTiendas, createTienda, deleteTienda, updateTienda, getLugares, getProveedores, createProveedor, deleteProveedor, createPersonaJur, updatePersonaJur} from '../controllers/index.controller'
+>>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
 //import {getTiendas} from '../controllers/tiendas.controller'
 
 
@@ -35,14 +39,19 @@ router.get('/empleados/', getEmpleados);
 router.delete('/empleados/:id',deleteTienda);
 router.put('/empleados/:id',updateTienda);
 router.post('/empleados/',createTienda);
+<<<<<<< HEAD
 //clientes
 router.get('/clientes/naturales', getClientesNat);
 router.put('/clientes/naturales/:id',updateClientesNat);
+
 // router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
 //     res.json({
 //         "message": "File received"
 //     })
 // });
+====
+>>>>>>> 5bc4f9768b35ca6293f6925a87d1a7862533a22a
 
 
+router.get('/carnet/:id', getCarnet)
 export default router;

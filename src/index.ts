@@ -73,6 +73,7 @@ const ExcelToJSON = (path: string) =>{
     } 
 }
 
+//generador de QR
 
 
 //Excel receive Route
@@ -177,6 +178,7 @@ app.get('/api/empleadosreport', async(req: Request, res: Response) =>{
     await res.json(EmpListos);
 
 })
+
 
 
 //Se levanta el servidor
