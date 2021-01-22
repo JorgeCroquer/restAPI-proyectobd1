@@ -44,7 +44,7 @@ router.get('/personas/naturales', getPersonasNat);
 router.delete('/personas/naturales/:id',deletePersonaNat);
 router.put('/personas/naturales/:id',updatePersonaNat);
 router.post('/personas/naturales/:id',createPersonaNat);
-router.post('/personas/juridicas', createPersonaJur);
+router.post('/personajur', createPersonaJur);
 router.put('/personas/juridicas/:id',updatePersonaJur);
 router.put('/personas/juridicas',updatePersonaJur);
 router.delete('/personas/juridicas/:id', deletePersonaJur);

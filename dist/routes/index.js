@@ -33,7 +33,7 @@ router.get('/personas/naturales', index_controller_1.getPersonasNat);
 router.delete('/personas/naturales/:id', index_controller_1.deletePersonaNat);
 router.put('/personas/naturales/:id', index_controller_1.updatePersonaNat);
 router.post('/personas/naturales/:id', index_controller_1.createPersonaNat);
-router.post('/personas/juridicas', index_controller_1.createPersonaJur);
+router.post('/personajur', index_controller_1.createPersonaJur);
 router.put('/personas/juridicas/:id', index_controller_1.updatePersonaJur);
 router.put('/personas/juridicas', index_controller_1.updatePersonaJur);
 router.delete('/personas/juridicas/:id', index_controller_1.deletePersonaJur);

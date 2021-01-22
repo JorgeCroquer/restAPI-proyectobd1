@@ -4,7 +4,7 @@ export const pool = new Pool ({
     user: 'grupo1bd1',
     host: 'labs-dbservices01.ucab.edu.ve',
     password: '123456789',
-    database: 'proyectogrupo1bd1',
+    database: 'proyectogrupo1',
     port: 5432
 });
 
@@ -13,5 +13,13 @@ export const pool2 = new Pool ({
     host: 'localhost',
     password: '221099',
     database: 'prueba carnet',
+    port: 5432
+})
+
+export const LocalPool = new Pool ({
+    user: 'jorge',
+    host: 'localhost',
+    password: '221099',
+    database: 'proyectogrupobd1',
     port: 5432
 })
