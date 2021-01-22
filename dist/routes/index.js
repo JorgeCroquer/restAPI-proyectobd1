@@ -20,9 +20,9 @@ router.post('/proveedores/', index_controller_1.createProveedor);
 router.delete('/proveedores/:id', index_controller_1.deleteProveedor);
 //empleados
 router.get('/empleados/', index_controller_1.getEmpleados);
-router.delete('/empleados/:id', index_controller_1.deleteTienda);
-router.put('/empleados/:id', index_controller_1.updateTienda);
-router.post('/empleados/', index_controller_1.createTienda);
+router.delete('/empleados/:id', deleteTienda);
+router.put('/empleados/:id', updateTienda);
+router.post('/empleados/', createTienda);
 //Personas 
 router.get('/personas/naturales', index_controller_1.getPersonasNat);
 router.delete('/personas/naturales/:id', index_controller_1.deletePersonaNat);
@@ -41,10 +41,5 @@ router.post('/clientes/juridicos', index_controller_1.createClienteJur);
 router.put('/clientes/juridicos/:id', index_controller_1.updateClientesJur);
 router.put('/clientes/juridicos', index_controller_1.updateClientesJur);
 router.delete('/clientes/juridicos/:id', index_controller_1.deleteClientesJur);
-// router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
-//     res.json({
-//         "message": "File received"
-//     })
-// });
 router.get('/carnet/:id', index_controller_1.getCarnet);
 exports.default = router;

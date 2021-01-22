@@ -1,5 +1,5 @@
 import Router from 'express'
-import {getCarnet, getUsersById, createUser, updateUser, deleteUser, getTiendas,createTienda, deleteTienda, updateTienda, 
+import {getCarnet, getUsersById, createUser, updateUser, deleteUser,  
     getLugares, getProveedores, createProveedor, deleteProveedor, getEmpleados, createPersonaJur, updatePersonaJur, 
     deletePersonaJur, getClientesNat,updateClientesNat, getPersonasNat, deletePersonaNat,  updatePersonaNat, createPersonaNat,
 deleteClientesNat, createClienteNat, getClientesJur, updateClientesJur, deleteClientesJur, createClienteJur } from '../controllers/index.controller'
@@ -57,11 +57,7 @@ router.delete('/clientes/juridicos/:id', deleteClientesJur);
 
 
 
-// router.post('/empreport',multiPartMiddleware,(req: Request,res: Response) =>{
-//     res.json({
-//         "message": "File received"
-//     })
-// });
+
 
 
 
