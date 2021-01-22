@@ -47,9 +47,13 @@ const ExcelToJSON = (path: string) =>{
 
 
 export const compararHorarios = async(req: Request, res: Response) =>{
-    res.json(req.files);
+    res.status(200).json({
+        message: 'Excel recibido'
+    });
 
-    var asistencia = ExcelToJSON(req.files.EmpleadosExcel.path);
+    //Este es un JSON con la info del archivo
+    var archivoJSON:any = req.files
+    var asistencia = ExcelToJSON(archivoJSON.EmpleadosExcel.path);
     var Cedulas: number[] = [];
 
     //Llenamos un array con las cedulas presentes en el excel

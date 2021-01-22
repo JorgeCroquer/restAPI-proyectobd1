@@ -1,25 +1,14 @@
 import express from 'express'
-import { Request, Response} from 'express'
 import indexRoutes from './routes/index'
 import reportRoutes from './routes/reports'
-import {QueryResult} from 'pg'
-import {pool} from './database'
-import {LocalPool} from './database'
-import {EmpleadoListo} from './interfaces/EmpleadoListo'
-//import EmpleadosListos from '../../restapi-proyecto-ts/EmpleadoListo.json'
-import {multiPartMiddleware} from './middlewares/connect-multiparty'
 
 
 const bodyParser = require ('body-parser');
-//const multipart = require ('connect-multiparty');
 const cors = require('cors');
 const morgan = require('morgan');
-const XLSX = require('xlsx');
-const axios = require('axios');
-const fs = require('fs');
 
-const EmpListos = require('../EmpleadosListos.json')
 
+// Instancia del servidor
 const app = express();
 
 //export const multiPartMiddleware = multipart({uploadDir: 'src/uploads'})
@@ -40,9 +29,6 @@ app.use(cors());
 //Routes
 app.use('/api',indexRoutes);
 app.use('/api',reportRoutes);
-
-
-
 
 
 

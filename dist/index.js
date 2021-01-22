@@ -7,13 +7,9 @@ const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const reports_1 = __importDefault(require("./routes/reports"));
 const bodyParser = require('body-parser');
-//const multipart = require ('connect-multiparty');
 const cors = require('cors');
 const morgan = require('morgan');
-const XLSX = require('xlsx');
-const axios = require('axios');
-const fs = require('fs');
-const EmpListos = require('../EmpleadosListos.json');
+// Instancia del servidor
 const app = express_1.default();
 //export const multiPartMiddleware = multipart({uploadDir: 'src/uploads'})
 //settings

@@ -43,8 +43,12 @@ function Tolerancia(minutes, someDate, hacer) {
     }
 }
 const compararHorarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json(req.files);
-    var asistencia = ExcelToJSON(req.files.EmpleadosExcel.path);
+    res.status(200).json({
+        message: 'Excel recibido'
+    });
+    //Este es un JSON con la info del archivo
+    var archivoJSON = req.files;
+    var asistencia = ExcelToJSON(archivoJSON.EmpleadosExcel.path);
     var Cedulas = [];
     //Llenamos un array con las cedulas presentes en el excel
     for (let i in asistencia) {
