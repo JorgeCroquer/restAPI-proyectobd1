@@ -1,5 +1,6 @@
 import express from 'express'
 import indexRoutes from './routes/index'
+import tiendasRoutes from './routes/tiendas'
 import reportRoutes from './routes/reports'
 
 
@@ -28,6 +29,7 @@ app.use(cors());
 
 //Routes
 app.use('/api',indexRoutes);
+app.use('/api',tiendasRoutes);
 app.use('/api',reportRoutes);
 
 

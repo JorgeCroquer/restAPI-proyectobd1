@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
+const tiendas_1 = __importDefault(require("./routes/tiendas"));
 const reports_1 = __importDefault(require("./routes/reports"));
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 //Routes
 app.use('/api', index_1.default);
+app.use('/api', tiendas_1.default);
 app.use('/api', reports_1.default);
 //Se levanta el servidor
 app.listen(app.get('port'), () => {

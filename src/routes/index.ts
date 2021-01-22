@@ -17,11 +17,6 @@ router.delete('/users/:id', deleteUser);
 
 
 
-//tiendas
-router.get('/tiendas/', getTiendas);
-router.delete('/tiendas/:id',deleteTienda);
-router.put('/tiendas/:id',updateTienda);
-router.post('/tiendas/',createTienda);
 
 //lugares
 router.get('/lugares/', getLugares);
