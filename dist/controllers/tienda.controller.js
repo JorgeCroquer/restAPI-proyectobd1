@@ -40,7 +40,7 @@ const deleteTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const id = parseInt(req.params.id);
         const response = yield database_1.LocalPool.query('DELETE FROM sucursal WHERE codigo_suc = $1', [id]);
-        return res.status(20).json(`tienda ${id} deleted successfully`);
+        return res.status(200).json(`tienda ${id} deleted successfully`);
     }
     catch (e) {
         console.log(e);
@@ -51,6 +51,7 @@ exports.deleteTienda = deleteTienda;
 const createTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre, codigo_dir } = req.body;
+        console.log(req.body);
         const response = yield database_1.LocalPool.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre, codigo_dir]);
         return res.status(201).json({
             message: "Sucursal created successfully",

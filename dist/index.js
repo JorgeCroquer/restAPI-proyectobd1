@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const tiendas_1 = __importDefault(require("./routes/tiendas"));
 const reports_1 = __importDefault(require("./routes/reports"));
+const proveedor_1 = __importDefault(require("./routes/proveedor"));
+const cliente_1 = __importDefault(require("./routes/cliente"));
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -26,6 +28,8 @@ app.use(cors());
 app.use('/api', index_1.default);
 app.use('/api', tiendas_1.default);
 app.use('/api', reports_1.default);
+app.use('/api', proveedor_1.default);
+app.use('/api', cliente_1.default);
 //Se levanta el servidor
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);

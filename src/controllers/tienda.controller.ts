@@ -35,7 +35,7 @@ export const deleteTienda = async(req: Request,res: Response): Promise<Response>
     try{
         const id = parseInt(req.params.id);
         const response: QueryResult = await LocalPool.query('DELETE FROM sucursal WHERE codigo_suc = $1', [id]);
-        return res.status(20).json(`tienda ${id} deleted successfully`);
+        return res.status(200).json(`tienda ${id} deleted successfully`);
     }
     catch(e){
         console.log(e);
@@ -46,6 +46,7 @@ export const deleteTienda = async(req: Request,res: Response): Promise<Response>
 export const createTienda = async(req: Request,res: Response): Promise<Response> => {
     try{
         const{nombre,codigo_dir} = req.body
+        console.log(req.body)
         const response: QueryResult = await LocalPool.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre,codigo_dir]);
         return res.status(201).json({
             message: "Sucursal created successfully",

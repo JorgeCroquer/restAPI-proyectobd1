@@ -23,11 +23,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
+const ClienteCtrl = __importStar(require("../controllers/cliente.controller"));
 const router = express_1.default();
-//tiendas
-router.get('/tiendas', TiendaCtrl.getTiendas);
-router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
-router.put('/tiendas/:id', TiendaCtrl.updateTienda);
-router.post('/tiendas', TiendaCtrl.createTienda);
+//clientes
+router.get('/clientes/naturales', ClienteCtrl.getClientesNat);
+router.get('/clientes/naturales/:id', ClienteCtrl.getClientesNatById);
+router.put('/clientes/naturales/:id', ClienteCtrl.updateClientesNat);
+router.post('/clientes/naturales/', ClienteCtrl.createClienteNat);
+router.delete('/clientes/naturales/:id', ClienteCtrl.deleteClientesNat);
+router.get('/clientes/juridicos/', ClienteCtrl.getClientesJur);
+router.get('/clientes/juridicos/:id', ClienteCtrl.getClientesJurById);
+router.post('/clientes/juridicos', ClienteCtrl.createClienteJur);
+router.put('/clientes/juridicos/:id', ClienteCtrl.updateClientesJur);
+router.delete('/clientes/juridicos/:id', ClienteCtrl.deleteClientesJur);
 exports.default = router;

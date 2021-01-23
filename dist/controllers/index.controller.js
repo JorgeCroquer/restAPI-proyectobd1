@@ -9,66 +9,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClienteJur = exports.deleteClientesJur = exports.updateClientesJur = exports.getClientesJur = exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNat = exports.deletePersonaNat = exports.updatePersonaNat = exports.getPersonasNat = exports.createPersonaNat = exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.deleteProveedor = exports.createProveedor = exports.getProveedores = exports.getLugares = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = exports.getCarnet = void 0;
+exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.getLugares = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = void 0;
 const database_1 = require("../database");
 const qrcode = require('qrcode');
 const fs = require('fs');
-function generarQR(cedula, url) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const QR = yield qrcode.toDataURL(url);
-        fs.writeFile(`C:\\ImagenesBD\\QR\\${cedula}.png`, QR.split(',')[1], 'base64', (err) => {
-            // throws an error, you could also catch it here
-            if (err)
-                throw err;
-            console.log('QR salvado');
-        });
-    });
-}
-function llenarQR() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const response = yield database_1.pool.query(`SELECT fk_cedula_nat
-    FROM cliente_nat`);
-        for (let i = 0; i <= response.rows.length; i++) {
-            generarQR(response.rows[i].fk_cedula_nat, `http://localhost:3000/api/cliente/${response.rows[i].fk_cedula_nat}`);
-        }
-        console.log('listo');
-    });
-}
 //Funciones de respuesta
-const getCarnet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const cedula = req.params.id;
-        let urlQR = `http://localhost:3000/api/cliente/${cedula}`;
-        //Se genera el QR
-        generarQR(cedula, urlQR);
-        //consultamos por la persona con esa cedula
-        const response = yield database_1.pool2.query(`SELECT persona_nat.cedula_nat,  fk_sucursal,  persona_nat.primernombre_nat,   persona_nat.segundonombre_nat,  persona_nat.primerapellido_nat,   persona_nat.segundoapellido_nat, numero_tel,  cliente_nat.qrpath
-        FROM cliente_nat, persona_nat, telefono
-        WHERE persona_nat.cedula_nat = $1 AND cliente_nat.cedula_nat = $1 AND telefono.fk_persona = $1`, [cedula]);
-        //Armamos el nombre
-        let nombre = response.rows[0].primernombre_nat;
-        if (response.rows[0].segundonombre_nat != null)
-            nombre = `${nombre} ${response.rows[0].segundonombre_nat}`;
-        nombre = `${nombre} ${response.rows[0].primerapellido_nat}`;
-        if (response.rows[0].segundoapellido_nat != null)
-            nombre = `${nombre} ${response.rows[0].segundoapellido_nat}`;
-        //Se envia el JSON
-        return res.status(200).json({
-            cliente: {
-                'cedula': response.rows[0].cedula_nat.toString(),
-                'nombre': nombre,
-                'telefono': response.rows[0].numero_tel,
-                'id': `${response.rows[0].fk_sucursal} - ${response.rows[0].cedula_nat.toString()}`,
-                'qrpath': response.rows[0].qrpath
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getCarnet = getCarnet;
+// export const getCarnet = async(req: Request,res: Response): Promise<Response> => {
+//     try{
+//         const cedula = req.params.id;
+//         let urlQR = `http://localhost:3000/api/cliente/${cedula}`;
+//         //Se genera el QR
+//         generarQR(cedula, urlQR);
+//         //consultamos por la persona con esa cedula
+//         const response: QueryResult = await pool2.query(`SELECT persona_nat.cedula_nat,  fk_sucursal,  persona_nat.primernombre_nat,   persona_nat.segundonombre_nat,  persona_nat.primerapellido_nat,   persona_nat.segundoapellido_nat, numero_tel,  cliente_nat.qrpath
+//         FROM cliente_nat, persona_nat, telefono
+//         WHERE persona_nat.cedula_nat = $1 AND cliente_nat.cedula_nat = $1 AND telefono.fk_persona = $1`, [cedula]);
+//         //Armamos el nombre
+//         let nombre:string = response.rows[0].primernombre_nat;
+//         if (response.rows[0].segundonombre_nat != null) nombre = `${nombre} ${response.rows[0].segundonombre_nat}`;
+//         nombre = `${nombre} ${response.rows[0].primerapellido_nat}`;
+//         if (response.rows[0].segundoapellido_nat != null) nombre = `${nombre} ${response.rows[0].segundoapellido_nat}`;
+//         //Se envia el JSON
+//         return res.status(200).json({
+//             cliente: {
+//                 'cedula': response.rows[0].cedula_nat.toString(),
+//                 'nombre': nombre,
+//                 'telefono': response.rows[0].numero_tel,
+//                 'id': `${response.rows[0].fk_sucursal} - ${response.rows[0].cedula_nat.toString()}`,
+//                 'qrpath': response.rows[0].qrpath
+//             }
+//         });
+//     }
+//     catch(e){
+//         console.log(e);
+//         return res.status(500).send('Internal Server Error');
+//     }
+// }
 const getUsersById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
@@ -138,50 +114,6 @@ const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getLugares = getLugares;
-//proveedores
-const getProveedores = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // const response: QueryResult = await pool.query('SELECT * FROM proveedor ORDER BY rif_jur');
-        const response = yield database_1.pool.query('SELECT * FROM persona_juridica WHERE rif_jur IN (SELECT fk_rif_jur FROM proveedor)');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getProveedores = getProveedores;
-const createProveedor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { fk_rif_jur, marca_propia } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO proveedor VALUES ($1,$2)', [fk_rif_jur, marca_propia]);
-        return res.status(200).json({
-            message: "Proveedor created successfully",
-            body: {
-                Proveedor: {
-                    fk_rif_jur, marca_propia
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createProveedor = createProveedor;
-const deleteProveedor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM proveedor WHERE fk_rif_jur = $1', [id]);
-        return res.status(200).json(`Proveedor ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deleteProveedor = deleteProveedor;
 //empleados
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -240,168 +172,3 @@ const deletePersonaJur = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deletePersonaJur = deletePersonaJur;
-//persona_natural
-const createPersonaNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)', [cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia]);
-        return res.status(200).json({
-            message: "Persona Jurídica created successfully",
-            body: {
-                Persona: {
-                    cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createPersonaNat = createPersonaNat;
-const getPersonasNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT cedula_nat, rif_nat, primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat, fecharegistro_nat FROM persona_natural');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getPersonasNat = getPersonasNat;
-const updatePersonaNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia } = req.body;
-        const response = yield database_1.pool.query('UPDATE persona_natural SET rif_nat = $2, primernombre_nat = $3, segundonombre_nat = $4, primerapellido_nat = $5, segundoapellido_nat = $6, fecharegistro_nat = $7, qr_path=$8,fk_persona_contacto = $9,fk_lugar_residencia =$10 WHERE cedula_nat = $1', [cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia]);
-        return res.status(200).json(`Persona ${cedula_nat} updated successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.updatePersonaNat = updatePersonaNat;
-const deletePersonaNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM persona_natural WHERE cedula_nat = $1', [id]);
-        return res.status(200).json(`Persona ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deletePersonaNat = deletePersonaNat;
-//cliente natural 
-const getClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query(' Select cedula_nat,rif_nat as rif,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,fecharegistro_nat as fecharegistro,qr_path,fk_persona_contacto,fk_lugar_residencia,fk_cedula_nat,registrofisico_nat as registrofisico,puntos_nat as puntos,fk_sucursal from persona_natural,cliente_nat where cedula_nat = fk_cedula_nat');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getClientesNat = getClientesNat;
-const updateClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal } = req.body;
-        const response = yield database_1.pool.query('UPDATE cliente_nat SET registrofisico_nat = $2, puntos_nat = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal]);
-        return res.status(200).json(`Persona ${fk_cedula_nat} updated successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.updateClientesNat = updateClientesNat;
-const deleteClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM cliente_natural WHERE cedula_nat = $1', [id]);
-        return res.status(200).json(`Cliente ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deleteClientesNat = deleteClientesNat;
-const createClienteNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO persona_natural VALUES ($1,$2,$3,$4,$5,$6,$7,1,null,1)', [cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia]);
-        return res.status(200).json({
-            message: "Persona Jurídica created successfully",
-            body: {
-                Persona: {
-                    cedula_nat, rif, primernombre_nat, segundonombre_nat, primerapellido_nat, segundoapellido_nat, fecharegistro, qr_path, fk_persona_contacto, fk_lugar_residencia
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createClienteNat = createClienteNat;
-//Clientes juridicos
-const getClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query(' Select * from cliente_jur');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getClientesJur = getClientesJur;
-const updateClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal } = req.body;
-        const response = yield database_1.pool.query('UPDATE cliente_jur SET registrofisico_jur = $2, puntos_jur = $3, fk_sucursal = $4  WHERE fk_cedula_nat = $1', [fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal]);
-        return res.status(200).json(`Persona ${fk_rif_jur} updated successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.updateClientesJur = updateClientesJur;
-const deleteClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM cliente_jur WHERE fk_rif_jur = $1', [id]);
-        return res.status(200).json(`Cliente ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deleteClientesJur = deleteClientesJur;
-const createClienteJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO cliente_jur VALUES ($1,$2,$3,$4)', [fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal]);
-        return res.status(200).json({
-            message: "Cliente Jurídico created successfully",
-            body: {
-                Persona: {
-                    fk_rif_jur, registrofisico_jur, puntos_jur, fk_sucursal
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createClienteJur = createClienteJur;

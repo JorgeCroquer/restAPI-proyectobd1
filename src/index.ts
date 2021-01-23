@@ -2,6 +2,8 @@ import express from 'express'
 import indexRoutes from './routes/index'
 import tiendasRoutes from './routes/tiendas'
 import reportRoutes from './routes/reports'
+import proveedoresRoutes from './routes/proveedor'
+import clientesRoutes from './routes/cliente'
 
 
 const bodyParser = require ('body-parser');
@@ -31,6 +33,8 @@ app.use(cors());
 app.use('/api',indexRoutes);
 app.use('/api',tiendasRoutes);
 app.use('/api',reportRoutes);
+app.use('/api',proveedoresRoutes);
+app.use('/api',clientesRoutes);
 
 
 

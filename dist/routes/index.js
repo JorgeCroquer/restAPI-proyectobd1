@@ -13,33 +13,19 @@ router.put('/users/:id', index_controller_1.updateUser);
 router.delete('/users/:id', index_controller_1.deleteUser);
 //lugares
 router.get('/lugares/', index_controller_1.getLugares);
-//proveedores
-router.get('/proveedores/', index_controller_1.getProveedores);
-router.put('/proveedores/:id', index_controller_1.updatePersonaJur);
-router.post('/proveedores/', index_controller_1.createProveedor);
-router.delete('/proveedores/:id', index_controller_1.deleteProveedor);
 //empleados
 router.get('/empleados/', index_controller_1.getEmpleados);
-router.delete('/empleados/:id', deleteTienda);
-router.put('/empleados/:id', updateTienda);
-router.post('/empleados/', createTienda);
+// router.delete('/empleados/:id',deleteTienda);
+// router.put('/empleados/:id',updateTienda);
+// router.post('/empleados/',createTienda);
 //Personas 
-router.get('/personas/naturales', index_controller_1.getPersonasNat);
-router.delete('/personas/naturales/:id', index_controller_1.deletePersonaNat);
-router.put('/personas/naturales/:id', index_controller_1.updatePersonaNat);
-router.post('/personas/naturales/:id', index_controller_1.createPersonaNat);
+// router.get('/personas/naturales', getPersonasNat);
+// router.delete('/personas/naturales/:id',deletePersonaNat);
+// router.put('/personas/naturales/:id',updatePersonaNat);
+// router.post('/personas/naturales/:id',createPersonaNat);
 router.post('/personajur', index_controller_1.createPersonaJur);
 router.put('/personas/juridicas/:id', index_controller_1.updatePersonaJur);
 router.put('/personas/juridicas', index_controller_1.updatePersonaJur);
 router.delete('/personas/juridicas/:id', index_controller_1.deletePersonaJur);
-//clientes
-router.get('/clientes/naturales', index_controller_1.getClientesNat);
-router.put('/clientes/naturales/:id', index_controller_1.updateClientesNat);
-router.delete('/clientes/naturales/:id', index_controller_1.deleteClientesNat);
-router.post('/clientes/naturales/:id', index_controller_1.createClienteNat);
-router.post('/clientes/juridicos', index_controller_1.createClienteJur);
-router.put('/clientes/juridicos/:id', index_controller_1.updateClientesJur);
-router.put('/clientes/juridicos', index_controller_1.updateClientesJur);
-router.delete('/clientes/juridicos/:id', index_controller_1.deleteClientesJur);
-router.get('/carnet/:id', index_controller_1.getCarnet);
+//router.get('/carnet/:id', getCarnet)
 exports.default = router;
