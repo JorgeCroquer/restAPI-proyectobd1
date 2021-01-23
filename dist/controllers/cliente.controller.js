@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClienteJur = exports.deleteClientesJur = exports.updateClientesJur = exports.getClientesJurById = exports.getClientesJur = exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNatById = exports.getClientesNat = void 0;
+exports.createClienteJur = exports.deleteClientesJur = exports.updateClientesJur = exports.getClientesJurById = exports.getClientesJur = exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNatById = exports.getClientesNat = exports.getCarnet = void 0;
 const database_1 = require("../database");
 //Aqui se cambia la BD que esta en uso
 const PoolEnUso = database_1.LocalPool;
@@ -32,11 +32,47 @@ function llenarQR() {
         const response = yield database_1.LocalPool.query(`SELECT fk_cedula_nat
     FROM cliente_nat`);
         for (let i = 0; i <= response.rows.length; i++) {
-            generarQR(response.rows[i].fk_cedula_nat, `http://localhost:3000/api/cliente/${response.rows[i].fk_cedula_nat}`);
+            generarQR(response.rows[i].fk_cedula_nat, `http://localhost:3000/api/clientes/naturales/${response.rows[i].fk_cedula_nat}`);
+            const escritura = yield database_1.LocalPool.query(`UPDATE cliente_nat SET qr_path = $1 WHERE fk_cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].fk_cedula_nat}.png`, response.rows[i].fk_cedula_nat]);
         }
         console.log('listo');
     });
 }
+//Funciones de respuesta
+const getCarnet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cedula = req.params.id;
+        let urlQR = `http://localhost:3000/api/cliente/${cedula}`;
+        //Se genera el QR
+        generarQR(cedula, urlQR);
+        //consultamos por la persona con esa cedula
+        const response = yield database_1.LocalPool.query(`SELECT persona_nat.cedula_nat,  fk_sucursal,  persona_nat.primernombre_nat,   persona_nat.segundonombre_nat,  persona_nat.primerapellido_nat,   persona_nat.segundoapellido_nat, numero_tel,  cliente_nat.qrpath
+         FROM cliente_nat, persona_nat, telefono
+         WHERE persona_nat.cedula_nat = $1 AND cliente_nat.cedula_nat = $1 AND telefono.fk_persona = $1`, [cedula]);
+        //Armamos el nombre
+        let nombre = response.rows[0].primernombre_nat;
+        if (response.rows[0].segundonombre_nat != null)
+            nombre = `${nombre} ${response.rows[0].segundonombre_nat}`;
+        nombre = `${nombre} ${response.rows[0].primerapellido_nat}`;
+        if (response.rows[0].segundoapellido_nat != null)
+            nombre = `${nombre} ${response.rows[0].segundoapellido_nat}`;
+        //Se envia el JSON
+        return res.status(200).json({
+            cliente: {
+                'cedula': response.rows[0].cedula_nat.toString(),
+                'nombre': nombre,
+                'telefono': response.rows[0].numero_tel,
+                'id': `${response.rows[0].fk_sucursal} - ${response.rows[0].cedula_nat.toString()}`,
+                'qrpath': response.rows[0].qrpath
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getCarnet = getCarnet;
 //cliente natural 
 const getClientesNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

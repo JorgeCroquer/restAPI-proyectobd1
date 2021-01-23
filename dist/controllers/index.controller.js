@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getEmpleados = exports.getLugares = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUsersById = void 0;
+exports.getEmpleados = void 0;
 const database_1 = require("../database");
 const qrcode = require('qrcode');
 const fs = require('fs');
@@ -45,75 +45,6 @@ const fs = require('fs');
 //         return res.status(500).send('Internal Server Error');
 //     }
 // }
-const getUsersById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = parseInt(req.params.id);
-        const response = yield database_1.pool.query('SELECT * FROM users WHERE id = $1', [id]);
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getUsersById = getUsersById;
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { nombre, email } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO users (nombre,email) VALUES ($1,$2)', [nombre, email]);
-        return res.status(200).json({
-            message: "User created successfully",
-            body: {
-                user: {
-                    nombre,
-                    email
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createUser = createUser;
-const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = parseInt(req.params.id);
-        const { nombre, email } = req.body;
-        const response = yield database_1.pool.query('UPDATE users SET nombre = $1, email = $2 WHERE id = $3', [nombre, email, id]);
-        return res.status(200).json(`User ${id} updated successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.updateUser = updateUser;
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = parseInt(req.params.id);
-        const response = yield database_1.pool.query('DELETE FROM users WHERE id = $1', [id]);
-        return res.status(200).json(`User ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deleteUser = deleteUser;
-//Luagares 
-const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT codigo_lug as codigo, nombre_lug as nombre, tipo_lugar as tipo, fk_lugar_lug as codigo_en FROM  lugar');
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.getLugares = getLugares;
 //empleados
 const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -128,47 +59,3 @@ const getEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getEmpleados = getEmpleados;
-//personas juridicas
-const createPersonaJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur } = req.body;
-        const response = yield database_1.pool.query('INSERT INTO persona_juridica VALUES ($1,$2,$3,$4,$5,$6,$7,1,1,1)', [rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur]);
-        return res.status(200).json({
-            message: "Persona Jurídica created successfully",
-            body: {
-                Persona: {
-                    rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.createPersonaJur = createPersonaJur;
-const updatePersonaJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur } = req.body;
-        const response = yield database_1.pool.query('UPDATE persona_juridica SET razonsocial_jur = $1,dencomercial_jur = $2, web_jur = $3, capital_jur = $4, fecharegistro_jur = $5, registrofisico_jur = $6  WHERE rif_jur = $7', [razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, registrofisico_jur, rif_jur]);
-        return res.status(200).json(`Persona ${rif_jur} updated successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.updatePersonaJur = updatePersonaJur;
-const deletePersonaJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const response = yield database_1.pool.query('DELETE FROM persona_juridica WHERE rif_jur = $1', [id]);
-        return res.status(200).json(`Persona ${id} deleted successfully`);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-});
-exports.deletePersonaJur = deletePersonaJur;

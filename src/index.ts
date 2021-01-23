@@ -1,10 +1,11 @@
 import express from 'express'
-import indexRoutes from './routes/index'
+import empleadosRoutes from './routes/empleado'
 import tiendasRoutes from './routes/tiendas'
 import reportRoutes from './routes/reports'
 import proveedoresRoutes from './routes/proveedor'
 import clientesRoutes from './routes/cliente'
 import lugaresRoutes from './routes/lugar'
+import personasRoutes from './routes/persona'
 
 
 const bodyParser = require ('body-parser');
@@ -31,13 +32,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
 
 //Routes
-app.use('/api',indexRoutes);
+app.use('/api',empleadosRoutes);
 app.use('/api',tiendasRoutes);
 app.use('/api',reportRoutes);
 app.use('/api',proveedoresRoutes);
 app.use('/api',clientesRoutes);
 app.use('/api',lugaresRoutes);
-
+app.use('/api',personasRoutes);
 
 
 
