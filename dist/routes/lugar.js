@@ -28,6 +28,7 @@ const router = express_1.default();
 //lugares
 router.get('/lugares/', LugarCtrl.getLugares);
 router.get('/lugares/:id', LugarCtrl.getLugarById);
+router.get('/lugares/:id/sublugares', LugarCtrl.getSub_LugaresById);
 router.post('/lugares/', LugarCtrl.createLugar);
 router.put('/lugares/:id', LugarCtrl.updateLugar);
 router.delete('/lugares/:id', LugarCtrl.deleteLugar);

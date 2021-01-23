@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteLugar = exports.updateLugar = exports.createLugar = exports.getLugarById = exports.getLugares = void 0;
+exports.deleteLugar = exports.updateLugar = exports.createLugar = exports.getLugarById = exports.getSub_LugaresById = exports.getLugares = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.LocalPool;
@@ -25,6 +25,24 @@ const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getLugares = getLugares;
+const getSub_LugaresById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const codigo_lug = req.params.id;
+        const response = yield PoolEnUso.query(`SELECT sublug.codigo_lug as codigo, 
+                                                                    sublug.nombre_lug as nombre, 
+                                                                    sublug.tipo_lugar as tipo, 
+                                                                    sublug.fk_lugar_lug as codigo_en 
+                                                             FROM  lugar as sublug JOIN lugar as superlug 
+                                                                    ON sublug.fk_lugar_lug = superlug.codigo_lug
+                                                             WHERE superlug.codigo_lug = $1`, [codigo_lug]);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getSub_LugaresById = getSub_LugaresById;
 const getLugarById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const codigo_lug = req.params.id;
