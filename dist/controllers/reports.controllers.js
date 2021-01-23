@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.enviarAReporte = exports.compararHorarios = void 0;
 const database_1 = require("../database");
+//Aqui se pone la BD que esta en uso
+const PoolEnUso = database_1.LocalPool;
 const EmpListos = require('../../EmpleadosListos.json');
 const XLSX = require('xlsx');
 const fs = require('fs');
@@ -54,7 +56,7 @@ const compararHorarios = (req, res) => __awaiter(void 0, void 0, void 0, functio
     for (let i in asistencia) {
         Cedulas.push(parseInt(asistencia[i].cedula));
     }
-    const response = yield database_1.LocalPool.query(`SELECT cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
+    const response = yield PoolEnUso.query(`SELECT cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
         FROM  persona_natural, empleado, horario_empleado, horario
         WHERE fk_cedula_nat= horario_empleado.fk_empleado 
               AND cedula_nat = fk_empleado 

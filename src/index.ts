@@ -4,6 +4,7 @@ import tiendasRoutes from './routes/tiendas'
 import reportRoutes from './routes/reports'
 import proveedoresRoutes from './routes/proveedor'
 import clientesRoutes from './routes/cliente'
+import lugaresRoutes from './routes/lugar'
 
 
 const bodyParser = require ('body-parser');
@@ -35,6 +36,7 @@ app.use('/api',tiendasRoutes);
 app.use('/api',reportRoutes);
 app.use('/api',proveedoresRoutes);
 app.use('/api',clientesRoutes);
+app.use('/api',lugaresRoutes);
 
 
 
