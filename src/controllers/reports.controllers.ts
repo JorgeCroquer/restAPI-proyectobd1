@@ -4,6 +4,10 @@ import {QueryResult} from 'pg'
 
 import {EmpleadoListo} from '../interfaces/EmpleadoListo'
 
+
+//Aqui se pone la BD que esta en uso
+const PoolEnUso = LocalPool
+
 const EmpListos = require('../../EmpleadosListos.json')
 const XLSX = require('xlsx');
 const fs = require('fs');
@@ -63,7 +67,7 @@ export const compararHorarios = async(req: Request, res: Response) =>{
 
     
 
-    const response: QueryResult = await LocalPool.query(
+    const response: QueryResult = await PoolEnUso.query(
         `SELECT cedula_nat,primernombre_nat,segundonombre_nat,primerapellido_nat,segundoapellido_nat,horaentrada_hor,horasalida_hor
         FROM  persona_natural, empleado, horario_empleado, horario
         WHERE fk_cedula_nat= horario_empleado.fk_empleado 
