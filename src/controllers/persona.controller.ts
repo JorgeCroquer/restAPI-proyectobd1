@@ -140,14 +140,14 @@ export const getPersonaJurById = async(req: Request,res: Response): Promise<Resp
 
 export const createPersonaJur = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {rif,razon_social,denom_comercial,web,capital,fecha_registro,registro_fisico, direccion_fisica, direccion_fiscal} = req.body;
-        const response: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,registrofisico_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
-                                                             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,[rif,razon_social,denom_comercial,web,capital,fecha_registro,registro_fisico, direccion_fisica, direccion_fiscal]);
+        const {rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal} = req.body;
+        const response: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
+                                                             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,[rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal]);
         return res.status(201).json({
             message: "Persona Jurídica created successfully",
             body: {
                 Persona: {
-                    rif,razon_social,denom_comercial,web,capital,fecha_registro,registro_fisico, direccion_fisica, direccion_fiscal
+                    rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal
                 }
             }
         });
@@ -161,17 +161,16 @@ export const createPersonaJur = async(req: Request,res: Response): Promise<Respo
 export const updatePersonaJur = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const rif_jur = req.params.id;
-        const {razon_social,denom_comercial,web,capital,fecha_registro,registro_fisico, direccion_fisica, direccion_fiscal} = req.body;
+        const {razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal} = req.body;
         const response: QueryResult = await PoolEnUso.query(`UPDATE persona_juridica 
                                                              SET razonsocial_jur = $2,
                                                                  dencomercial_jur = $3,
                                                                  web_jur = $4,
                                                                  capital_jur = $5,
                                                                  fecharegistro_jur = $6,
-                                                                 registrofisico_jur = $7,
-                                                                 fk_direccion_fisica_jur = $8,
-                                                                 fk_direccion_fiscal_jur = $9
-                                                             WHERE rif_jur = $1`, [rif_jur,razon_social,denom_comercial,web,capital,fecha_registro,registro_fisico, direccion_fisica, direccion_fiscal]);
+                                                                 fk_direccion_fisica_jur = $7,
+                                                                 fk_direccion_fiscal_jur = $8
+                                                             WHERE rif_jur = $1`, [rif_jur,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal]);
         return res.status(200).json(`Persona ${rif_jur} updated successfully`);
     }
     catch(e){

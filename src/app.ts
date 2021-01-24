@@ -1,11 +1,12 @@
 import express from 'express'
-import empleadosRoutes from './routes/empleado'
-import tiendasRoutes from './routes/tiendas'
-import reportRoutes from './routes/reports'
-import proveedoresRoutes from './routes/proveedor'
-import clientesRoutes from './routes/cliente'
-import lugaresRoutes from './routes/lugar'
-import personasRoutes from './routes/persona'
+import empleadosRoutes from './routes/empleado.routes'
+import tiendasRoutes from './routes/tiendas.routes'
+import reportRoutes from './routes/reports.routes'
+import proveedoresRoutes from './routes/proveedor.routes'
+import clientesRoutes from './routes/cliente.routes'
+import lugaresRoutes from './routes/lugar.routes'
+import personasRoutes from './routes/persona.routes'
+import authRoutes from './routes/auth.routes'
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api',proveedoresRoutes);
 app.use('/api',clientesRoutes);
 app.use('/api',lugaresRoutes);
 app.use('/api',personasRoutes);
+app.use('/api',authRoutes)
 
 
 
