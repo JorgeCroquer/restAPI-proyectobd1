@@ -4,7 +4,6 @@ import {QueryResult} from 'pg'
 const PoolEnUso = LocalPool
 
 export class usuario {
-
     username: string;
     password: string;
     email:string;
@@ -20,6 +19,7 @@ export class usuario {
     }
  
 
+    //Esta funcion devuelve un booleano que indica si un nombre de usuario o email ya esta en uso
     async existeEnBD(): Promise<boolean> {
 
         const ValidacionUsername: QueryResult = await PoolEnUso.query(`SELECT nombre_usu FROM usuarios
@@ -33,4 +33,5 @@ export class usuario {
         else return false;
     } 
 
+    
 }

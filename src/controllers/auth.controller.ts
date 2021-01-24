@@ -6,6 +6,8 @@ import {persona_natural} from '../Clases/persona_natural'
 import {persona_juridica} from '../Clases/persona_juridica'
 import {QR} from '../Clases/QR'
 import {usuario} from '../Clases/usuario'
+import jwt from 'jsonwebtoken'
+//import * as config from '../config/config'
 
 const PoolEnUso = LocalPool;
 
@@ -15,7 +17,16 @@ async function encryptPassword(password:string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password,salt);
 }
+async function comparePasswords(encryptedPassword: string, password:string): Promise<boolean>{
+    console.log('ahi va')
+    console.log(encryptedPassword)
+    return await bcrypt.compare(password, encryptedPassword)
+}
 
+
+function createToken(id: number, username: string, email:string){
+    return jwt.sign({id: id, username: username, email: email}, 'somesecrettoken', {expiresIn: 86400 /*24 horas*/})
+}
 
 export const signUp = async (req: Request,res: Response) =>{
     try {
@@ -113,6 +124,37 @@ export const signUp = async (req: Request,res: Response) =>{
 
 }
 
-export const logIn = (req: Request,res: Response) =>{
-    res.status(200).send('LOGIN')
+export const logIn = async(req: Request,res: Response) =>{
+    try {
+        console.log('me ejecuto')
+        const {email, password} = req.body
+        //Una mini validacion
+        if (!email || !password){
+            res.status(400).json({message: 'Faltan campos'})
+            return;
+        }
+        console.log('peticion completa')
+        //Verifiquemos si el usuario existe
+        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword 
+                                                            FROM usuarios
+                                                           WHERE direccion_ema = $1`, [email]);
+        console.log('sali de la BD')
+        if (response.rows.length != 1){
+            res.status(400).json({message: `No hay una cuenta asociada a la direccion ${email}`})
+            return
+        }
+        console.log('Si hay usuario')
+        var usuario = response.rows[0];
+        console.log(usuario)
+        if (await comparePasswords(usuario.encryptedpassword, password) == false){
+            res.status(400).json({message: 'Direccion de e-mail o contraseña invalidos'})
+            console.log('mala contrasena')
+            return;
+        }
+
+        res.status(200).json({token: createToken(usuario.ID,usuario.username, usuario.email)})
+        console.log('respondi')
+    } catch (error) {
+        
+    }
 }

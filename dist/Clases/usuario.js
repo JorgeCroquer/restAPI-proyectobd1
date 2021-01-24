@@ -21,6 +21,7 @@ class usuario {
         this.email = email;
         this.roles = roles;
     }
+    //Esta funcion devuelve un booleano que indica si un nombre de usuario o email ya esta en uso
     existeEnBD() {
         return __awaiter(this, void 0, void 0, function* () {
             const ValidacionUsername = yield PoolEnUso.query(`SELECT nombre_usu FROM usuarios

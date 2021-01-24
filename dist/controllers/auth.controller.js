@@ -19,6 +19,8 @@ const persona_natural_1 = require("../Clases/persona_natural");
 const persona_juridica_1 = require("../Clases/persona_juridica");
 const QR_1 = require("../Clases/QR");
 const usuario_1 = require("../Clases/usuario");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+//import * as config from '../config/config'
 const PoolEnUso = database_1.LocalPool;
 //Funcion para encriptar un password
 function encryptPassword(password) {
@@ -26,6 +28,16 @@ function encryptPassword(password) {
         const salt = yield bcrypt_1.default.genSalt(10);
         return yield bcrypt_1.default.hash(password, salt);
     });
+}
+function comparePasswords(encryptedPassword, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('ahi va');
+        console.log(encryptedPassword);
+        return yield bcrypt_1.default.compare(password, encryptedPassword);
+    });
+}
+function createToken(id, username, email) {
+    return jsonwebtoken_1.default.sign({ id: id, username: username, email: email }, 'somesecrettoken', { expiresIn: 86400 /*24 horas*/ });
 }
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -92,7 +104,37 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signUp = signUp;
-const logIn = (req, res) => {
-    res.status(200).send('LOGIN');
-};
+const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log('me ejecuto');
+        const { email, password } = req.body;
+        //Una mini validacion
+        if (!email || !password) {
+            res.status(400).json({ message: 'Faltan campos' });
+            return;
+        }
+        console.log('peticion completa');
+        //Verifiquemos si el usuario existe
+        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword 
+                                                            FROM usuarios
+                                                           WHERE direccion_ema = $1`, [email]);
+        console.log('sali de la BD');
+        if (response.rows.length != 1) {
+            res.status(400).json({ message: `No hay una cuenta asociada a la direccion ${email}` });
+            return;
+        }
+        console.log('Si hay usuario');
+        var usuario = response.rows[0];
+        console.log(usuario);
+        if ((yield comparePasswords(usuario.encryptedpassword, password)) == false) {
+            res.status(400).json({ message: 'Direccion de e-mail o contraseña invalidos' });
+            console.log('mala contrasena');
+            return;
+        }
+        res.status(200).json({ token: createToken(usuario.ID, usuario.username, usuario.email) });
+        console.log('respondi');
+    }
+    catch (error) {
+    }
+});
 exports.logIn = logIn;
