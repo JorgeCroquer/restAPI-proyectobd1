@@ -24,10 +24,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ProovedorCtrl = __importStar(require("../controllers/proveedor.controller"));
+const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 //proveedores
-router.get('/proveedores/', ProovedorCtrl.getProveedores);
-router.put('/proveedores/:id', ProovedorCtrl.updateProveedor);
-router.post('/proveedores/', ProovedorCtrl.createProveedor);
-router.delete('/proveedores/:id', ProovedorCtrl.deleteProveedor);
+router.get('/proveedores/', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteReabastecimiento], ProovedorCtrl.getProveedores);
+router.put('/proveedores/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteReabastecimiento], ProovedorCtrl.updateProveedor);
+router.post('/proveedores/', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteReabastecimiento], ProovedorCtrl.createProveedor);
+router.delete('/proveedores/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteReabastecimiento], ProovedorCtrl.deleteProveedor);
 exports.default = router;

@@ -24,12 +24,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const LugarCtrl = __importStar(require("../controllers/lugar.controller"));
+const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 //lugares
 router.get('/lugares/', LugarCtrl.getLugares);
 router.get('/lugares/:id', LugarCtrl.getLugarById);
 router.get('/lugares/:id/sublugares', LugarCtrl.getSub_LugaresById);
-router.post('/lugares/', LugarCtrl.createLugar);
-router.put('/lugares/:id', LugarCtrl.updateLugar);
-router.delete('/lugares/:id', LugarCtrl.deleteLugar);
+router.post('/lugares/', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isAdmin], LugarCtrl.createLugar);
+router.put('/lugares/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isAdmin], LugarCtrl.updateLugar);
+router.delete('/lugares/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isAdmin], LugarCtrl.deleteLugar);
 exports.default = router;

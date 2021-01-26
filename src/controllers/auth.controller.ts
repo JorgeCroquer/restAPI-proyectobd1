@@ -7,7 +7,6 @@ import {persona_juridica} from '../Clases/persona_juridica'
 import {QR} from '../Clases/QR'
 import {usuario} from '../Clases/usuario'
 import jwt from 'jsonwebtoken'
-//import * as config from '../config/config'
 
 const PoolEnUso = LocalPool;
 

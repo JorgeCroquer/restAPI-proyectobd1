@@ -20,7 +20,6 @@ const persona_juridica_1 = require("../Clases/persona_juridica");
 const QR_1 = require("../Clases/QR");
 const usuario_1 = require("../Clases/usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-//import * as config from '../config/config'
 const PoolEnUso = database_1.LocalPool;
 //Funcion para encriptar un password
 function encryptPassword(password) {

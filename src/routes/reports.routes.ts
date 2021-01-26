@@ -2,10 +2,11 @@ import Router from 'express'
 
 import {multiPartMiddleware} from '../middlewares/connect-multiparty'
 import * as ReportCtrl from '../controllers/reports.controllers'
+import {authJWT} from '../middlewares'
 
 const router = Router();
 
-router.post('/empreport', multiPartMiddleware, ReportCtrl.compararHorarios);
+router.post('/empreport', [multiPartMiddleware, authJWT.verifyToken,authJWT.isGerenteTalentoHumano], ReportCtrl.compararHorarios);
 
 router.get('/empleadosreport', ReportCtrl.enviarAReporte)
 export default router;
