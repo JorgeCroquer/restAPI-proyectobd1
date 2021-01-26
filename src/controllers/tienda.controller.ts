@@ -2,6 +2,9 @@ import {Request, Response} from 'express'
 import {LocalPool} from '../database'
 import {QueryResult} from 'pg'
 
+import jwt from 'jsonwebtoken'
+import config from '../config/config'
+
 
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = LocalPool
@@ -47,7 +50,6 @@ export const deleteTienda = async(req: Request,res: Response): Promise<Response>
 export const createTienda = async(req: Request,res: Response): Promise<Response> => {
     try{
         const{nombre,codigo_dir} = req.body
-        console.log(req.body)
         const response: QueryResult = await PoolEnUso.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre,codigo_dir]);
         return res.status(201).json({
             message: "Sucursal created successfully",

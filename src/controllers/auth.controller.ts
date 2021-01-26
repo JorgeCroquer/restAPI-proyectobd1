@@ -18,14 +18,13 @@ async function encryptPassword(password:string) {
     return await bcrypt.hash(password,salt);
 }
 async function comparePasswords(encryptedPassword: string, password:string): Promise<boolean>{
-    console.log('ahi va')
     console.log(encryptedPassword)
     return await bcrypt.compare(password, encryptedPassword)
 }
 
 
-function createToken(id: number, username: string, email:string){
-    return jwt.sign({id: id, username: username, email: email}, 'somesecrettoken', {expiresIn: 86400 /*24 horas*/})
+function createToken(id: string, rol: number): string{
+    return jwt.sign({id: id, rol: rol}, process.env.JWT_Secret || 'somesecrettoken', {expiresIn: 86400 /*24 horas*/})
 }
 
 export const signUp = async (req: Request,res: Response) =>{
@@ -126,35 +125,29 @@ export const signUp = async (req: Request,res: Response) =>{
 
 export const logIn = async(req: Request,res: Response) =>{
     try {
-        console.log('me ejecuto')
         const {email, password} = req.body
         //Una mini validacion
         if (!email || !password){
             res.status(400).json({message: 'Faltan campos'})
             return;
         }
-        console.log('peticion completa')
         //Verifiquemos si el usuario existe
-        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword 
+        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword, fk_roles AS rol 
                                                             FROM usuarios
                                                            WHERE direccion_ema = $1`, [email]);
-        console.log('sali de la BD')
         if (response.rows.length != 1){
             res.status(400).json({message: `No hay una cuenta asociada a la direccion ${email}`})
             return
         }
-        console.log('Si hay usuario')
         var usuario = response.rows[0];
-        console.log(usuario)
         if (await comparePasswords(usuario.encryptedpassword, password) == false){
             res.status(400).json({message: 'Direccion de e-mail o contraseña invalidos'})
-            console.log('mala contrasena')
             return;
         }
-
-        res.status(200).json({token: createToken(usuario.ID,usuario.username, usuario.email)})
-        console.log('respondi')
+        res.header('auth-token', createToken(usuario.id, usuario.rol))
+        res.status(200).json({message: 'Sesion iniciada correctamente'})
     } catch (error) {
-        
+        console.error(error);
+        res.status(500).json({message: 'Internal server error'})
     }
 }

@@ -53,7 +53,6 @@ exports.deleteTienda = deleteTienda;
 const createTienda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre, codigo_dir } = req.body;
-        console.log(req.body);
         const response = yield PoolEnUso.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre, codigo_dir]);
         return res.status(201).json({
             message: "Sucursal created successfully",

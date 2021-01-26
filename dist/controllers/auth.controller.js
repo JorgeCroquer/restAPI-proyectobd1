@@ -31,13 +31,12 @@ function encryptPassword(password) {
 }
 function comparePasswords(encryptedPassword, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('ahi va');
         console.log(encryptedPassword);
         return yield bcrypt_1.default.compare(password, encryptedPassword);
     });
 }
-function createToken(id, username, email) {
-    return jsonwebtoken_1.default.sign({ id: id, username: username, email: email }, 'somesecrettoken', { expiresIn: 86400 /*24 horas*/ });
+function createToken(id, rol) {
+    return jsonwebtoken_1.default.sign({ id: id, rol: rol }, process.env.JWT_Secret || 'somesecrettoken', { expiresIn: 86400 /*24 horas*/ });
 }
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -106,35 +105,31 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.signUp = signUp;
 const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('me ejecuto');
         const { email, password } = req.body;
         //Una mini validacion
         if (!email || !password) {
             res.status(400).json({ message: 'Faltan campos' });
             return;
         }
-        console.log('peticion completa');
         //Verifiquemos si el usuario existe
-        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword 
+        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword, fk_roles AS rol 
                                                             FROM usuarios
                                                            WHERE direccion_ema = $1`, [email]);
-        console.log('sali de la BD');
         if (response.rows.length != 1) {
             res.status(400).json({ message: `No hay una cuenta asociada a la direccion ${email}` });
             return;
         }
-        console.log('Si hay usuario');
         var usuario = response.rows[0];
-        console.log(usuario);
         if ((yield comparePasswords(usuario.encryptedpassword, password)) == false) {
             res.status(400).json({ message: 'Direccion de e-mail o contraseña invalidos' });
-            console.log('mala contrasena');
             return;
         }
-        res.status(200).json({ token: createToken(usuario.ID, usuario.username, usuario.email) });
-        console.log('respondi');
+        res.header('auth-token', createToken(usuario.id, usuario.rol));
+        res.status(200).json({ message: 'Sesion iniciada correctamente' });
     }
     catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 exports.logIn = logIn;
