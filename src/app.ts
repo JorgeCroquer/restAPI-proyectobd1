@@ -7,6 +7,7 @@ import clientesRoutes from './routes/cliente.routes'
 import lugaresRoutes from './routes/lugar.routes'
 import personasRoutes from './routes/persona.routes'
 import authRoutes from './routes/auth.routes'
+import productoRoutes from './routes/productos.routes'
 
 const app = express();
 
@@ -37,7 +38,8 @@ app.use('/api',proveedoresRoutes);
 app.use('/api',clientesRoutes);
 app.use('/api',lugaresRoutes);
 app.use('/api',personasRoutes);
-app.use('/api',authRoutes)
+app.use('/api',authRoutes);
+app.use('/api',productoRoutes);
 
 
 
