@@ -16,4 +16,10 @@ export const pool2 = new Pool ({
     port: 5432
 })
 
-
+export const LocalPool = new Pool ({
+    user: 'jorge',
+    host: 'localhost',
+    password: '221099',
+    database: 'proyectogrupobd1',
+    port: 5432
+})
