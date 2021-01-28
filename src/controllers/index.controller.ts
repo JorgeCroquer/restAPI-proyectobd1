@@ -462,3 +462,4 @@ export const createClienteJur = async(req: Request,res: Response): Promise<Respo
         return res.status(500).send('Internal Server Error');
     }
 }
+
