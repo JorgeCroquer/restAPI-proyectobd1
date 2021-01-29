@@ -20,7 +20,7 @@ const persona_juridica_1 = require("../Clases/persona_juridica");
 const QR_1 = require("../Clases/QR");
 const usuario_1 = require("../Clases/usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 //Funcion para encriptar un password
 function encryptPassword(password) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -64,12 +64,25 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 //Insertamos la persona natural
                 const InsercionNat = yield PoolEnUso.query(`INSERT INTO persona_natural 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), persona_contacto, codigo_residencia]);
-                //Generamos el QR del nuevo cliente
-                yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
-                //Insertamos al cliente
-                const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_nat 
-                                                                    VALUES ($1,$2,$3,$4,$5)`, [cedula, false, 0, 1, `C:\\ImagenesBD\\QR\\${cedula}.png`]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), `C:\\ImagenesBD\\QR\\${cedula}.png`, persona_contacto, codigo_residencia]);
+                if (rol == 1) {
+                    //Generamos el QR del nuevo cliente
+                    yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
+                }
+                else {
+                    //Generamos el QR del nuevo empleado
+                    yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/empleados/${cedula}`);
+                }
+                if (rol == 1) {
+                    //Insertamos al cliente
+                    const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_nat 
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula, false, 0, 1]);
+                }
+                else {
+                    //Insertamos al empleado
+                    const InsercionEmp = yield PoolEnUso.query(`INSERT INTO empleado 
+                                                                        VALUES ($1,$2,$3)`, [cedula, 100000, 1]);
+                }
                 //ahora si creamo el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, cedula]);
@@ -93,12 +106,13 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 //ahora si creamos el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, rif]);
-                res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
+                return res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
             }
         }
     }
     catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 exports.signUp = signUp;
@@ -111,9 +125,15 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         //Verifiquemos si el usuario existe
-        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword, fk_roles AS rol 
-                                                            FROM usuarios
-                                                           WHERE direccion_ema = $1`, [email]);
+        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,
+                                                                    nombre_usu AS username,
+                                                                    direccion_ema AS email, 
+                                                                    password_usu AS encryptedpassword, 
+                                                                    fk_roles AS rol, 
+                                                                    fk_sucursal AS sucursal 
+                                                            FROM usuarios JOIN empleado 
+                                                                 ON usuarios.fk_persona_nat = empleado.fk_cedula_nat
+                                                            WHERE direccion_ema = $1`, [email]);
         if (response.rows.length != 1) {
             res.status(400).json({ message: `No hay una cuenta asociada a la direccion ${email}` });
             return;
@@ -124,6 +144,7 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         res.header('auth-token', createToken(usuario.id, usuario.rol));
+        res.header('sucursal', usuario.sucursal);
         res.status(200).json({ message: 'Sesion iniciada correctamente' });
     }
     catch (error) {

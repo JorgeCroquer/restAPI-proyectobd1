@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {LocalPool} from '../database'
+import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
 import bcrypt from 'bcrypt'
 import {persona_natural} from '../Clases/persona_natural'
@@ -8,7 +8,7 @@ import {QR} from '../Clases/QR'
 import {usuario} from '../Clases/usuario'
 import jwt from 'jsonwebtoken'
 
-const PoolEnUso = LocalPool;
+const PoolEnUso = pool;
 
 
 //Funcion para encriptar un password
@@ -65,15 +65,26 @@ export const signUp = async (req: Request,res: Response) =>{
 
             //Insertamos la persona natural
             const InsercionNat: QueryResult = await PoolEnUso.query(`INSERT INTO persona_natural 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),persona_contacto,codigo_residencia]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),`C:\\ImagenesBD\\QR\\${cedula}.png`,persona_contacto,codigo_residencia]);
 
-            //Generamos el QR del nuevo cliente
-            await QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
-
-            //Insertamos al cliente
-            const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_nat 
-                                                                    VALUES ($1,$2,$3,$4,$5)`, [cedula,false,0,1,`C:\\ImagenesBD\\QR\\${cedula}.png`]);
-
+            if (rol == 1){
+                //Generamos el QR del nuevo cliente
+                await QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
+            }else{
+                //Generamos el QR del nuevo empleado
+                await QR.generarQR(cedula, `http://localhost:3000/api/empleados/${cedula}`);
+            }
+            
+            if (rol == 1){
+                //Insertamos al cliente
+                const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_nat 
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula,false,0,1]);
+            }else{
+                //Insertamos al empleado
+                const InsercionEmp: QueryResult = await PoolEnUso.query(`INSERT INTO empleado 
+                                                                        VALUES ($1,$2,$3)`, [cedula,100000,1]);
+            }
+                
             //ahora si creamo el usuario
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user,encryptedPassword,email,rol,cedula]);
@@ -104,7 +115,7 @@ export const signUp = async (req: Request,res: Response) =>{
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user,encryptedPassword,email,rol,rif]);
 
-         res.status(201).json({message: `El usuario ${user} fue registrado exitosamente`})
+         return res.status(201).json({message: `El usuario ${user} fue registrado exitosamente`})
         }
 
 
@@ -114,6 +125,7 @@ export const signUp = async (req: Request,res: Response) =>{
         
     } catch (error) {
         console.log(error);
+        res.status(500).json({message: 'Internal server error'})
     }
 
     
@@ -121,6 +133,8 @@ export const signUp = async (req: Request,res: Response) =>{
     
 
 }
+
+
 
 export const logIn = async(req: Request,res: Response) =>{
     try {
@@ -131,9 +145,15 @@ export const logIn = async(req: Request,res: Response) =>{
             return;
         }
         //Verifiquemos si el usuario existe
-        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword, fk_roles AS rol 
-                                                            FROM usuarios
-                                                           WHERE direccion_ema = $1`, [email]);
+        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,
+                                                                    nombre_usu AS username,
+                                                                    direccion_ema AS email, 
+                                                                    password_usu AS encryptedpassword, 
+                                                                    fk_roles AS rol, 
+                                                                    fk_sucursal AS sucursal 
+                                                            FROM usuarios JOIN empleado 
+                                                                 ON usuarios.fk_persona_nat = empleado.fk_cedula_nat
+                                                            WHERE direccion_ema = $1`, [email]);
         if (response.rows.length != 1){
             res.status(400).json({message: `No hay una cuenta asociada a la direccion ${email}`})
             return
@@ -144,6 +164,7 @@ export const logIn = async(req: Request,res: Response) =>{
             return;
         }
         res.header('auth-token', createToken(usuario.id, usuario.rol))
+        res.header('sucursal', usuario.sucursal)
         res.status(200).json({message: 'Sesion iniciada correctamente'})
     } catch (error) {
         console.error(error);
