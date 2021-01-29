@@ -8,6 +8,7 @@ import lugaresRoutes from './routes/lugar.routes'
 import personasRoutes from './routes/persona.routes'
 import authRoutes from './routes/auth.routes'
 import productoRoutes from './routes/productos.routes'
+import OrdenRoutes from './routes/orden.routes'
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api',lugaresRoutes);
 app.use('/api',personasRoutes);
 app.use('/api',authRoutes);
 app.use('/api',productoRoutes);
+app.use('/api',OrdenRoutes);
 
 
 
