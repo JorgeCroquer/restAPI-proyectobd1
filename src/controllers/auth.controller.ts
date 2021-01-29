@@ -101,15 +101,15 @@ export const signUp = async (req: Request,res: Response) =>{
             }
 
             //Insertamos la persona natural
-            const InsercionNat: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [rif,razon_social,denom_comercial, web,capital,new Date(), direccion_fisica,direccion_fiscal]);
+            const InsercionJur: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica 
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [rif,razon_social,denom_comercial, web,capital,new Date(),false,`C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica,direccion_fiscal]);
             
             //Generamos el QR del nuevo cliente
             await QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
 
             //Insertamos al cliente
             const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_jur 
-                                                                    VALUES ($1,$2,$3,$4,$5)`, [rif,0,1,false,`C:\\ImagenesBD\\QR\\${rif}.png`]);
+                                                                    VALUES ($1,$2,$3)`, [rif,0,1]);
 
             //ahora si creamos el usuario
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
@@ -145,26 +145,34 @@ export const logIn = async(req: Request,res: Response) =>{
             return;
         }
         //Verifiquemos si el usuario existe
-        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,
+        const responseUsu: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,
                                                                     nombre_usu AS username,
                                                                     direccion_ema AS email, 
                                                                     password_usu AS encryptedpassword, 
-                                                                    fk_roles AS rol, 
-                                                                    fk_sucursal AS sucursal 
-                                                            FROM usuarios JOIN empleado 
-                                                                 ON usuarios.fk_persona_nat = empleado.fk_cedula_nat
+                                                                    fk_roles AS rol
+                                                            FROM usuarios 
                                                             WHERE direccion_ema = $1`, [email]);
-        if (response.rows.length != 1){
+        if (responseUsu.rows.length != 1){
             res.status(400).json({message: `No hay una cuenta asociada a la direccion ${email}`})
             return
         }
-        var usuario = response.rows[0];
+        var usuario = responseUsu.rows[0];
+        if (usuario.rol > 1 && usuario.rol != 11){
+            const responseEmp: QueryResult = await PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
+                                                                    FROM empleado E JOIN usuarios U
+                                                                        ON E.fk_cedula_nat = U.fk_persona_nat
+                                                                    WHERE direccion_ema = $1`, [usuario.email]);
+            if (responseEmp.rows.length == 1){
+                res.header('sucursal', responseEmp.rows[0].sucursal)
+            }
+        }
+
         if (await comparePasswords(usuario.encryptedpassword, password) == false){
             res.status(400).json({message: 'Direccion de e-mail o contraseña invalidos'})
             return;
         }
-        res.header('auth-token', createToken(usuario.id, usuario.rol))
-        res.header('sucursal', usuario.sucursal)
+        res.header('auth-token', createToken(usuario.id, usuario.rol));
+       
         res.status(200).json({message: 'Sesion iniciada correctamente'})
     } catch (error) {
         console.error(error);
