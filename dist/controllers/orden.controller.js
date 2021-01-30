@@ -16,13 +16,16 @@ const PoolEnUso = database_1.pool;
 //Tiendas
 const getOrdenRecien = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fecha, sucursal, proveedor } = req.body;
+        const { fecha, sucursal, proveedor, producto } = req.body;
         const response = yield PoolEnUso.query(`
         SELECT numero_sum
-        FROM suministro
+        FROM suministro, producto, producto_suministro
         WHERE fecha_sum = $1
         AND fk_sucursal_sum = $2
-        AND fk_proveedor_sum = $3`, [fecha, sucursal, proveedor]);
+        AND fk_proveedor_sum = $3
+        AND codigo_pro = fk_producto_pro_sum 
+        AND fk_pedido_pro_sum = numero_sum 
+        AND codigo_pro = $4`, [fecha, sucursal, proveedor, producto]);
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -37,14 +40,16 @@ const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO suministro(fecha_sum,fk_sucursal_sum,fk_proveedor_sum)
-        VALUES($1,$2,$3)`, [fecha, sucursal, proveedor]);
+        VALUES($1,$2,$3)
+        RETURNING numero_sum;`, [fecha, sucursal, proveedor]);
         return res.status(201).json({
             message: "orden created successfully",
             body: {
-                Proveedor: {
-                    fecha, sucursal, proveedor
+                suministro: {
+                    fecha, sucursal, proveedor,
                 }
-            }
+            },
+            respuesta: response.rows
         });
     }
     catch (e) {
@@ -77,16 +82,16 @@ const crearProductoOrden = (req, res) => __awaiter(void 0, void 0, void 0, funct
 exports.crearProductoOrden = crearProductoOrden;
 const crearOrdenEstatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fecha, estatus, pedido } = req.body;
+        const { fecha, pedido } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO suministro_estatus
-        VALUES($1,$2,$3)`, [fecha, estatus, pedido]);
+        VALUES($1,2,$2)`, [fecha, pedido]);
         return res.status(201).json({
             message: "Relationship Status_orden  created successfully",
             body: {
                 Proveedor: {
-                    fecha, estatus, pedido
+                    fecha, pedido
                 }
             }
         });
