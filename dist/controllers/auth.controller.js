@@ -20,7 +20,7 @@ const persona_juridica_1 = require("../Clases/persona_juridica");
 const QR_1 = require("../Clases/QR");
 const usuario_1 = require("../Clases/usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 //Funcion para encriptar un password
 function encryptPassword(password) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -64,12 +64,25 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 //Insertamos la persona natural
                 const InsercionNat = yield PoolEnUso.query(`INSERT INTO persona_natural 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), persona_contacto, codigo_residencia]);
-                //Generamos el QR del nuevo cliente
-                yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
-                //Insertamos al cliente
-                const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_nat 
-                                                                    VALUES ($1,$2,$3,$4,$5)`, [cedula, false, 0, 1, `C:\\ImagenesBD\\QR\\${cedula}.png`]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), `C:\\ImagenesBD\\QR\\${cedula}.png`, persona_contacto, codigo_residencia]);
+                if (rol == 1) {
+                    //Generamos el QR del nuevo cliente
+                    yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
+                }
+                else {
+                    //Generamos el QR del nuevo empleado
+                    yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/empleados/${cedula}`);
+                }
+                if (rol == 1) {
+                    //Insertamos al cliente
+                    const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_nat 
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula, false, 0, 1]);
+                }
+                else {
+                    //Insertamos al empleado
+                    const InsercionEmp = yield PoolEnUso.query(`INSERT INTO empleado 
+                                                                        VALUES ($1,$2,$3)`, [cedula, 100000, 1]);
+                }
                 //ahora si creamo el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, cedula]);
@@ -83,22 +96,23 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     return;
                 }
                 //Insertamos la persona natural
-                const InsercionNat = yield PoolEnUso.query(`INSERT INTO persona_juridica 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [rif, razon_social, denom_comercial, web, capital, new Date(), direccion_fisica, direccion_fiscal]);
+                const InsercionJur = yield PoolEnUso.query(`INSERT INTO persona_juridica 
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [rif, razon_social, denom_comercial, web, capital, new Date(), false, `C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica, direccion_fiscal]);
                 //Generamos el QR del nuevo cliente
                 yield QR_1.QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
                 //Insertamos al cliente
                 const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_jur 
-                                                                    VALUES ($1,$2,$3,$4,$5)`, [rif, 0, 1, false, `C:\\ImagenesBD\\QR\\${rif}.png`]);
+                                                                    VALUES ($1,$2,$3)`, [rif, 0, 1]);
                 //ahora si creamos el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, rif]);
-                res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
+                return res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
             }
         }
     }
     catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 exports.signUp = signUp;
@@ -111,14 +125,27 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         //Verifiquemos si el usuario existe
-        const response = yield PoolEnUso.query(`SELECT codigo_usu AS ID,nombre_usu AS username,direccion_ema AS email, password_usu AS encryptedpassword, fk_roles AS rol 
-                                                            FROM usuarios
-                                                           WHERE direccion_ema = $1`, [email]);
-        if (response.rows.length != 1) {
+        const responseUsu = yield PoolEnUso.query(`SELECT codigo_usu AS ID,
+                                                                    nombre_usu AS username,
+                                                                    direccion_ema AS email, 
+                                                                    password_usu AS encryptedpassword, 
+                                                                    fk_roles AS rol
+                                                            FROM usuarios 
+                                                            WHERE direccion_ema = $1`, [email]);
+        if (responseUsu.rows.length != 1) {
             res.status(400).json({ message: `No hay una cuenta asociada a la direccion ${email}` });
             return;
         }
-        var usuario = response.rows[0];
+        var usuario = responseUsu.rows[0];
+        if (usuario.rol > 1 && usuario.rol != 11) {
+            const responseEmp = yield PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
+                                                                    FROM empleado E JOIN usuarios U
+                                                                        ON E.fk_cedula_nat = U.fk_persona_nat
+                                                                    WHERE direccion_ema = $1`, [usuario.email]);
+            if (responseEmp.rows.length == 1) {
+                res.header('sucursal', responseEmp.rows[0].sucursal);
+            }
+        }
         if ((yield comparePasswords(usuario.encryptedpassword, password)) == false) {
             res.status(400).json({ message: 'Direccion de e-mail o contraseña invalidos' });
             return;

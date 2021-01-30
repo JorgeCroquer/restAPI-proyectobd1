@@ -1,0 +1,1574 @@
+{
+	"info": {
+		"_postman_id": "1e1350cf-f926-40fb-8aaf-1eef8fa91727",
+		"name": "Rest API proyecto BD1",
+		"description": "Aqui estan todas las peticiones CRUD a PostgreSQL del proyecto de Bases de Datos 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Empleados",
+			"item": [
+				{
+					"name": "GET /api/empleados",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/empleados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"empleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/empleados/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"clientes",
+								"naturales",
+								"27086047"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/empleados",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fk_cedula_nat\": \"27086047\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/clientes/naturales/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"clientes",
+								"naturales",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/empleados/:id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"999999\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"clientes",
+								"naturales",
+								"27086047"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /api/empleados/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"clientes",
+								"naturales",
+								"27086047"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Naturales",
+					"item": [
+						{
+							"name": "GET /api/clientes/naturales",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/naturales",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"naturales"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/clientes/naturales/:id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"naturales",
+										"27086047"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/clientes/naturales",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fk_cedula_nat\": \"27086047\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/naturales/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"naturales",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT /api/clientes/naturales/:id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"999999\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"naturales",
+										"27086047"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/clientes/naturales/:id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"naturales",
+										"27086047"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Juridicos",
+					"item": [
+						{
+							"name": "GET /api/clientes/juridicos",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/juridicos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"juridicos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/clientes/juridicos/:id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/juridicos/6321741-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"juridicos",
+										"6321741-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/clientes/jurudicos",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fk_cedula_nat\": \"27086047\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/juridicos/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"juridicos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT /api/clientes/juridicos/:id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"puntos_jur\": \"999999\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/juridicos/6321741-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"juridicos",
+										"6321741-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/clientes/juridicos/:id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/clientes/juridicos/1111111-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"clientes",
+										"juridicos",
+										"1111111-1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tiendas",
+			"item": [
+				{
+					"name": "GET /api/tiendas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Niwicm9sIjoxMSwiaWF0IjoxNjExNjY2MzQ3LCJleHAiOjE2MTE3NTI3NDd9.2iE9H7owrF2V3iFDPU6VNL3Pu7yxPWcPBBO7j_wxAfU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tiendas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tiendas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/tiendas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "mytoken",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Tienda de prueba 2\",\r\n    \"codigo_dir\": \"500\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tiendas?hola=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tiendas"
+							],
+							"query": [
+								{
+									"key": "hola",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/tiendas/:id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Tienda de prueba MODIFICADO\",\r\n    \"codigo_dir\": \"500\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tiendas/62",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tiendas",
+								"62"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /api/tiendas/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tiendas/62",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tiendas",
+								"62"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Proveedores",
+			"item": [
+				{
+					"name": "GET /api/proveedores",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/proveedores",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"proveedores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/proveedores",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fk_rif_jur\": \"1111111-1\",\r\n    \"marca_propia\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/proveedores",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"proveedores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/proveedores/:id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fk_rif_jur\": \"1111111-1\",\r\n    \"marca_propia\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/proveedores/1111111-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"proveedores",
+								"1111111-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /api/proveedores/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/proveedores/1111111-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"proveedores",
+								"1111111-1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lugares",
+			"item": [
+				{
+					"name": "GET /api/lugares",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/lugares/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/lugares/:id/sublugares",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/15/sublugares",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								"15",
+								"sublugares"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/lugares",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_lug\": \"Lugar de prueba\",\r\n    \"tipo_lugar\": \"Prueba\",\r\n    \"fk_lugar_lug\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/lugares/:id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_lug\": \"Lugar de prueba\",\r\n    \"tipo_lugar\": \"prueba\",\r\n    \"fk_lugar_lug\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/1507",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								"1507"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /api/lugares/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/1507",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								"1507"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Personas",
+			"item": [
+				{
+					"name": "Naturales",
+					"item": [
+						{
+							"name": "GET /api/personas/naturales",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/naturales",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"naturales"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/personas/naturales/:id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/naturales/20000000",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"naturales",
+										"20000000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/personas/naturales",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cedula\": \"27086047\",\r\n    \"rif\": \"27086047-4\",\r\n    \"primer_nombre\": \"Jorge\",\r\n    \"segundo_nombre\": \"Alejandro\",\r\n    \"primer_apellido\": \"Croquer\",\r\n    \"segundo_apellido\": \"Colmenares\",\r\n    \"fecha_registro\": \"2021-01-22\",\r\n    \"persona_contacto\": null,\r\n    \"residencia\": \"1\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/naturales/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"naturales",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT /api/personas/naturales/:id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rif\": \"27086047-4\",\r\n    \"primer_nombre\": \"Jorge\",\r\n    \"segundo_nombre\": \"Alejandro\",\r\n    \"primer_apellido\": \"Croquer\",\r\n    \"segundo_apellido\": \"Colmenares\",\r\n    \"fecha_registro\": \"2021-01-22\",\r\n    \"persona_contacto\": null,\r\n    \"residencia\": \"997\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/naturales/27086047",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"naturales",
+										"27086047"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/personas/naturales/:id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/naturales/27086047",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"naturales",
+										"27086047"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Juridicos",
+					"item": [
+						{
+							"name": "GET /api/personas/juridicas",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/juridicas",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"juridicas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/personas/juridicas/:id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/juridicas/123001-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"juridicas",
+										"123001-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/personas/jurudicas",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rif\": \"1111111-1\",\r\n    \"razon_social\": \"Persona juridica de prueba\",\r\n    \"denom_comercial\": \"Prueba, C.A.\",\r\n    \"web\": \"prueba.com.ve\",\r\n    \"capital\": \"6000\",\r\n    \"fecha_registro\": \"2021-01-22\",\r\n    \"direccion_fisica\": \"1\",\r\n    \"direccion_fiscal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/juridicas/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"juridicas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT /api/personas/juridicas/:id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rif\": \"1111111-1\",\r\n    \"razon_social\": \"Persona juridica de prueba MODIFICADO\",\r\n    \"denom_comercial\": \"Prueba, C.A.\",\r\n    \"web\": \"prueba.com.ve\",\r\n    \"capital\": \"8000\",\r\n    \"fecha_registro\": \"2021-01-22\",\r\n    \"direccion_fisica\": \"1\",\r\n    \"direccion_fiscal\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/juridicas/1111111-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"juridicas",
+										"1111111-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/personas/juridicas/:id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/personas/juridicas/1111111-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"personas",
+										"juridicas",
+										"1111111-1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "/api/empleadosreport",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/empleadosreport",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"empleadosreport"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/empreport",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/D:/Documentos/UCAB/Semestre Sep-Ene 2020-2021/Sistema de Bases de Datos I/prueba.xlsx"
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/empreport",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"empreport"
+							]
+						},
+						"description": "Este es el endpoint a donde hay que mandar el excel con los datos de entradas y salidas de los empleados.\r\nPostman puede enviar binarios pero El back no esta preparado para recibirlo asi. Asi que no es funcional. Esta aqui para servir de ejemplo"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Carnet.pdf?cedula=${cedula}",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Carnet.pdf?cedula=20000480",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"Carnet.pdf"
+							],
+							"query": [
+								{
+									"key": "cedula",
+									"value": "20000480"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Empleados_Report.pdf",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Empleados_Report.pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"Empleados_Report.pdf"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "/api/signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tipo\": \"jur\",\r\n    \"user\": \"PruebaJur\",\r\n    \"email\": \"prueba@prueba2.com.ve\",\r\n    \"password\": \"2100012\",\r\n    \"rol\": \"1\",\r\n    \"cedula\": \"27086047\",\r\n    \"rif\": \"27086047-4\", \r\n    \"primernombre\": \"Jorge\",\r\n    \"segundonombre\": \"Alejandro\",\r\n    \"primerapellido\": \"Croquer\",\r\n    \"segundoapellido\": \"Colmenares\",\r\n    \"persona_contacto\": null, \r\n    \"codigo_residencia\": \"997\",\r\n    \"razon_social\": \"Prueba\",\r\n    \"denom_comercial\": \"Prueba SIGNUP JUR CA\",\r\n    \"web\": \"prueba2.com.ve\",\r\n    \"capital\": \"6389\",\r\n    \"direccion_fisica\": \"1\",\r\n    \"direccion_fiscal\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jorgeale.croquer.jc@gmail.com\",\r\n    \"password\": \"2100012\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
