@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuario = void 0;
 const database_1 = require("../database");
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 class usuario {
     constructor(username, password, email, roles) {
         this.fk_persona_nat = 0;

@@ -81,7 +81,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 else {
                     //Insertamos al empleado
                     const InsercionEmp = yield PoolEnUso.query(`INSERT INTO empleado 
-                                                                        VALUES ($1,$2,$3)`, [cedula, 100000, 1]);
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula, 100000, `assets/img/empleados/${cedula}.png`, 1]);
                 }
                 //ahora si creamo el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
@@ -97,12 +97,12 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 //Insertamos la persona natural
                 const InsercionJur = yield PoolEnUso.query(`INSERT INTO persona_juridica 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [rif, razon_social, denom_comercial, web, capital, new Date(), false, `C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica, direccion_fiscal]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [rif, razon_social, denom_comercial, web, capital, new Date(), `C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica, direccion_fiscal]);
                 //Generamos el QR del nuevo cliente
                 yield QR_1.QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
                 //Insertamos al cliente
                 const InsercionCli = yield PoolEnUso.query(`INSERT INTO cliente_jur 
-                                                                    VALUES ($1,$2,$3)`, [rif, 0, 1]);
+                                                                    VALUES ($1,$2,$3,$4)`, [rif, 0, false, 1]);
                 //ahora si creamos el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, rif]);

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteLugar = exports.updateLugar = exports.createLugar = exports.getLugarById = exports.getSub_LugaresById = exports.getLugares = void 0;
+exports.deleteLugar = exports.updateLugar = exports.createLugar = exports.getLugarByTipo = exports.getLugarById = exports.getSub_LugaresById = exports.getLugares = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.LocalPool;
@@ -51,7 +51,8 @@ const getLugarById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                                                                     tipo_lugar as tipo, 
                                                                     fk_lugar_lug as codigo_en 
                                                              FROM  lugar
-                                                             WHERE codigo_lug = $1`, [codigo_lug]);
+                                                             WHERE codigo_lug = $1
+                                                             ORDER BY nombre_lug DESC`, [codigo_lug]);
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -60,6 +61,23 @@ const getLugarById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getLugarById = getLugarById;
+const getLugarByTipo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tipo = req.params.id;
+        const response = yield PoolEnUso.query(`SELECT codigo_lug as codigo, 
+                                                                    nombre_lug as nombre, 
+                                                                    tipo_lugar as tipo, 
+                                                                    fk_lugar_lug as codigo_en 
+                                                             FROM  lugar
+                                                             WHERE tipo_lugar = $1`, [tipo]);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getLugarByTipo = getLugarByTipo;
 const createLugar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre_lug, tipo_lugar, fk_lugar_lug } = req.body;

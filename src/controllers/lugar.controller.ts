@@ -45,7 +45,28 @@ export const getLugarById = async(req: Request, res: Response): Promise<Response
                                                                     tipo_lugar as tipo, 
                                                                     fk_lugar_lug as codigo_en 
                                                              FROM  lugar
-                                                             WHERE codigo_lug = $1`, [codigo_lug]);
+                                                             WHERE codigo_lug = $1
+                                                             ORDER BY nombre_lug DESC`, [codigo_lug]);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+
+
+export const getLugarByTipo = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+
+        const tipo = req.params.id;
+        const response: QueryResult = await PoolEnUso.query(`SELECT codigo_lug as codigo, 
+                                                                    nombre_lug as nombre, 
+                                                                    tipo_lugar as tipo, 
+                                                                    fk_lugar_lug as codigo_en 
+                                                             FROM  lugar
+                                                             WHERE tipo_lugar = $1`, [tipo]);
         return res.status(200).json(response.rows);
     }
     catch(e){

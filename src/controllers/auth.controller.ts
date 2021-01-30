@@ -82,7 +82,7 @@ export const signUp = async (req: Request,res: Response) =>{
             }else{
                 //Insertamos al empleado
                 const InsercionEmp: QueryResult = await PoolEnUso.query(`INSERT INTO empleado 
-                                                                        VALUES ($1,$2,$3)`, [cedula,100000,1]);
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula,100000,`assets/img/empleados/${cedula}.png`,1]);
             }
                 
             //ahora si creamo el usuario
@@ -102,14 +102,14 @@ export const signUp = async (req: Request,res: Response) =>{
 
             //Insertamos la persona natural
             const InsercionJur: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [rif,razon_social,denom_comercial, web,capital,new Date(),false,`C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica,direccion_fiscal]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [rif,razon_social,denom_comercial, web,capital,new Date(),`C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica,direccion_fiscal]);
             
             //Generamos el QR del nuevo cliente
             await QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
 
             //Insertamos al cliente
             const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_jur 
-                                                                    VALUES ($1,$2,$3)`, [rif,0,1]);
+                                                                    VALUES ($1,$2,$3,$4)`, [rif,0,false,1]);
 
             //ahora si creamos el usuario
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 

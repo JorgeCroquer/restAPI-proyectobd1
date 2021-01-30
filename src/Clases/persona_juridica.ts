@@ -1,7 +1,7 @@
-import {LocalPool} from '../database'
+import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
 
-const PoolEnUso = LocalPool
+const PoolEnUso = pool
 
 export class persona_juridica {
 
