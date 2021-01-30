@@ -18,7 +18,11 @@ const getFaltantes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const id = parseInt(req.params.id);
         const response = yield PoolEnUso.query(`
+<<<<<<< HEAD
+        SELECT  pr.nombre_pro as Producto, pr.codigo_pro as Producto_codigo, (pz.cantidad_pro_zon + ps.cantidad_pro_sec) as Existencia,jur.rif_jur as Rif_proveedor, jur.dencomercial_jur as Proveedor,
+=======
         SELECT  pr.nombre_pro as Producto, (pz.cantidad_pro_zon + ps.cantidad_pro_sec) as Existencia,jur.rif_jur as Rif_proveedor, jur.dencomercial_jur as Proveedor,
+>>>>>>> a4679842fec61f0f6462d9bc9c65442d38b10305
         CASE 
             WHEN EXISTS (SELECT pr.nombre_pro, su.numero_sum 
                         FROM  producto_suministro psu, suministro su, suministro_estatus ss 
@@ -48,45 +52,3 @@ const getFaltantes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getFaltantes = getFaltantes;
-// export const updateTienda = async(req: Request, res: Response): Promise<Response> =>{
-//     try{
-//         const id = parseInt(req.params.id);
-//         const {nombre} = req.body;
-//         const response: QueryResult = await PoolEnUso.query('UPDATE sucursal SET nombre_suc = $1 WHERE codigo_suc = $2', [nombre,id]);
-//         return res.status(202).json(`Tienda ${id} updated successfully`);
-//     }
-//     catch(e){
-//         console.log(e);
-//         return res.status(500).send('Internal Server Error');
-//     }
-// }
-// export const deleteTienda = async(req: Request,res: Response): Promise<Response> => {
-//     try{
-//         const id = parseInt(req.params.id);
-//         const response: QueryResult = await PoolEnUso.query('DELETE FROM sucursal WHERE codigo_suc = $1', [id]);
-//         return res.status(200).json(`tienda ${id} deleted successfully`);
-//     }
-//     catch(e){
-//         console.log(e);
-//         return res.status(500).send('Internal Server Error');
-//     }
-// }
-// export const createTienda = async(req: Request,res: Response): Promise<Response> => {
-//     try{
-//         const{nombre,codigo_dir} = req.body
-//         const response: QueryResult = await PoolEnUso.query('INSERT INTO sucursal(nombre_suc,fk_lugar) VALUES ($1,$2)', [nombre,codigo_dir]);
-//         return res.status(201).json({
-//             message: "Sucursal created successfully",
-//             body: {
-//                 sucursal: {
-//                     nombre,
-//                     codigo_dir
-//                 }
-//             }
-//         });
-//     }
-//     catch(e){
-//         console.log(e);
-//         return res.status(500).send('Internal Server Error');
-//     }
-// }
