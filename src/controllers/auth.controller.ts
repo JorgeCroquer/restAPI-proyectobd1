@@ -6,7 +6,7 @@ import {persona_natural} from '../Clases/persona_natural'
 import {persona_juridica} from '../Clases/persona_juridica'
 import {QR} from '../Clases/QR'
 import {usuario} from '../Clases/usuario'
-import jwt from 'jsonwebtoken'
+import jwt, { TokenExpiredError } from 'jsonwebtoken'
 
 const PoolEnUso = pool;
 
@@ -31,13 +31,13 @@ export const signUp = async (req: Request,res: Response) =>{
 
         //hay que obtener todo lo necesario para insertar una persona y su usuario
     const {tipo,
-        user,email,password,rol,
+        user,email,password,rol,telefono,
         cedula, rif, primernombre,segundonombre, primerapellido,segundoapellido, persona_contacto, codigo_residencia,
         razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal} = req.body;
 
         
     //Una mini validacion
-    if (!email || !password || !user){
+    if (!email || !password || !user || !telefono){
         res.status(400).json({message: 'Faltan campos'})
         return;
     }
@@ -53,6 +53,18 @@ export const signUp = async (req: Request,res: Response) =>{
      //Se encripta el password
     const encryptedPassword = await encryptPassword(password);
 
+    //Se determina la comania telefonica
+    var compania:string;
+    if (telefono.startsWith('412')){
+        compania = 'Digitel'
+    }else if (telefono.startsWith('414') || telefono.startsWith('424')){
+        compania = 'Movistar'
+    }else if (telefono.startsWith('416') || telefono.startsWith('426')){
+        compania = 'Movilnet'
+    }else{
+        compania = 'Desconocida'
+    }
+
     switch (tipo){
         case 'nat':{
 
@@ -66,6 +78,12 @@ export const signUp = async (req: Request,res: Response) =>{
             //Insertamos la persona natural
             const InsercionNat: QueryResult = await PoolEnUso.query(`INSERT INTO persona_natural 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),`C:\\ImagenesBD\\QR\\${cedula}.png`,persona_contacto,codigo_residencia]);
+            
+            
+            //Insertemos telefono
+
+            const InsercionTel: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_nat)
+                                                                   VALUES ($1,$2,$3)`, [telefono, compania,cedula]);                                                                                   
 
             if (rol == 1){
                 //Generamos el QR del nuevo cliente
@@ -89,7 +107,7 @@ export const signUp = async (req: Request,res: Response) =>{
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user,encryptedPassword,email,rol,cedula]);
 
-         res.status(201).json({message: `El usuario ${user} fue registrado exitosamente`})
+         return res.status(201).json({message: `El usuario ${user} fue registrado exitosamente`})
         }
         case 'jur':{
 
@@ -103,6 +121,10 @@ export const signUp = async (req: Request,res: Response) =>{
             //Insertamos la persona natural
             const InsercionJur: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [rif,razon_social,denom_comercial, web,capital,new Date(),`C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica,direccion_fiscal]);
+            
+            const InsercionTel: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_jur)
+                                                                   VALUES ($1,$2,$3)`, [telefono, compania,rif]);
+            
             
             //Generamos el QR del nuevo cliente
             await QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
@@ -172,10 +194,12 @@ export const logIn = async(req: Request,res: Response) =>{
             return;
         }
         res.header('auth-token', createToken(usuario.id, usuario.rol));
+        res.header('rol', usuario.rol)
+        res.header('Access-Control-Expose-Headers', ['auth-Token','sucursal', 'rol'] )
        
         res.status(200).json({message: 'Sesion iniciada correctamente'})
     } catch (error) {
         console.error(error);
-        res.status(500).json({message: 'Internal server error'})
+        return res.status(500).json({message: 'Internal server error'})
     }
 }

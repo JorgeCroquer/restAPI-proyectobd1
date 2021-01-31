@@ -40,9 +40,9 @@ function createToken(id, rol) {
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //hay que obtener todo lo necesario para insertar una persona y su usuario
-        const { tipo, user, email, password, rol, cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, persona_contacto, codigo_residencia, razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal } = req.body;
+        const { tipo, user, email, password, rol, telefono, cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, persona_contacto, codigo_residencia, razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal } = req.body;
         //Una mini validacion
-        if (!email || !password || !user) {
+        if (!email || !password || !user || !telefono) {
             res.status(400).json({ message: 'Faltan campos' });
             return;
         }
@@ -54,6 +54,20 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         //Se encripta el password
         const encryptedPassword = yield encryptPassword(password);
+        //Se determina la comania telefonica
+        var compania;
+        if (telefono.startsWith('412')) {
+            compania = 'Digitel';
+        }
+        else if (telefono.startsWith('414') || telefono.startsWith('424')) {
+            compania = 'Movistar';
+        }
+        else if (telefono.startsWith('416') || telefono.startsWith('426')) {
+            compania = 'Movilnet';
+        }
+        else {
+            compania = 'Desconocida';
+        }
         switch (tipo) {
             case 'nat': {
                 //Verificamos que no exista esa persona natural
@@ -65,6 +79,9 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 //Insertamos la persona natural
                 const InsercionNat = yield PoolEnUso.query(`INSERT INTO persona_natural 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), `C:\\ImagenesBD\\QR\\${cedula}.png`, persona_contacto, codigo_residencia]);
+                //Insertemos telefono
+                const InsercionTel = yield PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_nat)
+                                                                   VALUES ($1,$2,$3)`, [telefono, compania, cedula]);
                 if (rol == 1) {
                     //Generamos el QR del nuevo cliente
                     yield QR_1.QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
@@ -86,7 +103,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 //ahora si creamo el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 
                                                                     VALUES ($1,$2,$3,$4,$5)`, [user, encryptedPassword, email, rol, cedula]);
-                res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
+                return res.status(201).json({ message: `El usuario ${user} fue registrado exitosamente` });
             }
             case 'jur': {
                 //Verificamos que no exista esa persona juridica
@@ -98,6 +115,8 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 //Insertamos la persona natural
                 const InsercionJur = yield PoolEnUso.query(`INSERT INTO persona_juridica 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [rif, razon_social, denom_comercial, web, capital, new Date(), `C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica, direccion_fiscal]);
+                const InsercionTel = yield PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_jur)
+                                                                   VALUES ($1,$2,$3)`, [telefono, compania, rif]);
                 //Generamos el QR del nuevo cliente
                 yield QR_1.QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
                 //Insertamos al cliente
@@ -151,11 +170,13 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         res.header('auth-token', createToken(usuario.id, usuario.rol));
+        res.header('rol', usuario.rol);
+        res.header('Access-Control-Expose-Headers', ['auth-Token', 'sucursal', 'rol']);
         res.status(200).json({ message: 'Sesion iniciada correctamente' });
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 });
 exports.logIn = logIn;

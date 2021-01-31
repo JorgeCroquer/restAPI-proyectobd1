@@ -18,11 +18,7 @@ const getFaltantes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const id = parseInt(req.params.id);
         const response = yield PoolEnUso.query(`
-<<<<<<< HEAD
         SELECT  pr.nombre_pro as Producto, pr.codigo_pro as Producto_codigo, (pz.cantidad_pro_zon + ps.cantidad_pro_sec) as Existencia,jur.rif_jur as Rif_proveedor, jur.dencomercial_jur as Proveedor,
-=======
-        SELECT  pr.nombre_pro as Producto, (pz.cantidad_pro_zon + ps.cantidad_pro_sec) as Existencia,jur.rif_jur as Rif_proveedor, jur.dencomercial_jur as Proveedor,
->>>>>>> a4679842fec61f0f6462d9bc9c65442d38b10305
         CASE 
             WHEN EXISTS (SELECT pr.nombre_pro, su.numero_sum 
                         FROM  producto_suministro psu, suministro su, suministro_estatus ss 
