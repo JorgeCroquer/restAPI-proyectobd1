@@ -21,6 +21,38 @@ const QR_1 = require("../Clases/QR");
 const usuario_1 = require("../Clases/usuario");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const PoolEnUso = database_1.pool;
+// Retorna un entero aleatorio entre min (incluido) y max (excluido)
+// ¡Usando Math.round() te dará una distribución no-uniforme!
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+function asignarPathEmp() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield PoolEnUso.query('SELECT fk_cedula_nat FROM empleado');
+        for (let i in response.rows) {
+            PoolEnUso.query('UPDATE empleado SET pathimagen_pro= $1 WHERE fk_cedula_nat = $2', [`C:/ImagenesBD/empleados/${getRandomInt(1, 49)}.png`, response.rows[i].fk_cedula_nat]);
+        }
+        console.log('listo');
+    });
+}
+function llenarTelefonos() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield PoolEnUso.query(`SELECT fk_rif_jur
+        FROM cliente_jur`);
+        for (let i = 0; i < response.rows.length; i++) {
+            if (i < 10) {
+                const escritura = yield PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel,fk_persona_jur) 
+                                                            VALUES ($1, $2, $3)`, [`41423719${i}`, 'Movistar', response.rows[i].fk_rif_jur]);
+            }
+            else {
+                const escritura = yield PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel,fk_persona_jur) 
+                                                            VALUES ($1, $2, $3)`, [`4123581${i}`, 'Digitel', response.rows[i].fk_rif_jur]);
+            }
+            console.log(i);
+        }
+        console.log('listo');
+    });
+}
 //Funcion para encriptar un password
 function encryptPassword(password) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -97,8 +129,9 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 else {
                     //Insertamos al empleado
+                    var imagen = getRandomInt(1, 49);
                     const InsercionEmp = yield PoolEnUso.query(`INSERT INTO empleado 
-                                                                        VALUES ($1,$2,$3,$4)`, [cedula, 100000, `assets/img/empleados/${cedula}.png`, 1]);
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula, 100000, `assets/img/empleados/${imagen}.png`, 1]);
                 }
                 //ahora si creamo el usuario
                 const InsercionUser = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_nat) 

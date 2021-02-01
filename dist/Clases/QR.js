@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QR = void 0;
 const database_1 = require("../database");
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 const qrcode = require('qrcode');
 const fs = require('fs');
 class QR {
@@ -29,11 +29,22 @@ class QR {
     }
     static llenarQRNat() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield database_1.LocalPool.query(`SELECT fk_cedula_nat
-        FROM cliente_nat`);
-            for (let i = 0; i <= response.rows.length; i++) {
-                this.generarQR(response.rows[i].fk_cedula_nat, `http://localhost:3000/api/clientes/naturales/${response.rows[i].fk_cedula_nat}`);
-                const escritura = yield database_1.LocalPool.query(`UPDATE cliente_nat SET qr_path = $1 WHERE fk_cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].fk_cedula_nat}.png`, response.rows[i].fk_cedula_nat]);
+            const response = yield PoolEnUso.query(`SELECT cedula_nat
+        FROM persona_natural`);
+            for (let i = 0; i <= response.rows.length - 1; i++) {
+                this.generarQR(response.rows[i].cedula_nat, `http://localhost:3000/api/clientes/naturales/${response.rows[i].cedula_nat}`);
+                const escritura = yield PoolEnUso.query(`UPDATE persona_natural SET qr_path = $1 WHERE cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].cedula_nat}.png`, response.rows[i].cedula_nat]);
+            }
+            console.log('listo');
+        });
+    }
+    static llenarQRJur() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield PoolEnUso.query(`SELECT rif_jur
+        FROM persona_juridica`);
+            for (let i = 0; i <= response.rows.length - 1; i++) {
+                this.generarQR(response.rows[i].rif_jur, `http://localhost:3000/api/clientes/juridicos/${response.rows[i].rif_jur}`);
+                const escritura = yield PoolEnUso.query(`UPDATE persona_juridica SET qr_path = $1 WHERE rif_jur = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].rif_jur}.png`, response.rows[i].rif_jur]);
             }
             console.log('listo');
         });

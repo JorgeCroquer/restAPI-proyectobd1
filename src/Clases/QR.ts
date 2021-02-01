@@ -1,7 +1,7 @@
-import {LocalPool} from '../database'
+import {LocalPool,pool} from '../database'
 import {QueryResult} from 'pg'
 
-const PoolEnUso = LocalPool
+const PoolEnUso = pool
 const qrcode = require('qrcode')
 const fs = require('fs')
 
@@ -23,15 +23,25 @@ export class QR {
         });
     }
     static async llenarQRNat(){
-        const response: QueryResult = await LocalPool.query(`SELECT fk_cedula_nat
-        FROM cliente_nat`);
+        const response: QueryResult = await PoolEnUso.query(`SELECT cedula_nat
+        FROM persona_natural`);
 
-        for(let i = 0; i<= response.rows.length; i++){
-            this.generarQR(response.rows[i].fk_cedula_nat,`http://localhost:3000/api/clientes/naturales/${response.rows[i].fk_cedula_nat}`);
-            const escritura: QueryResult = await LocalPool.query(`UPDATE cliente_nat SET qr_path = $1 WHERE fk_cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].fk_cedula_nat}.png`,response.rows[i].fk_cedula_nat ]);
+        for(let i = 0; i<= response.rows.length-1; i++){
+            this.generarQR(response.rows[i].cedula_nat,`http://localhost:3000/api/clientes/naturales/${response.rows[i].cedula_nat}`);
+            const escritura: QueryResult = await PoolEnUso.query(`UPDATE persona_natural SET qr_path = $1 WHERE cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].cedula_nat}.png`,response.rows[i].cedula_nat ]);
         }
 
         console.log('listo')
     }
+    static async llenarQRJur(){
+        const response: QueryResult = await PoolEnUso.query(`SELECT rif_jur
+        FROM persona_juridica`);
 
+        for(let i = 0; i<= response.rows.length-1; i++){
+            this.generarQR(response.rows[i].rif_jur,`http://localhost:3000/api/clientes/juridicos/${response.rows[i].rif_jur}`);
+            const escritura: QueryResult = await PoolEnUso.query(`UPDATE persona_juridica SET qr_path = $1 WHERE rif_jur = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].rif_jur}.png`,response.rows[i].rif_jur]);
+        }
+
+        console.log('listo')
+    }
 }

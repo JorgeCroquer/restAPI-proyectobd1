@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import {Request, response, Response} from 'express'
 import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
 import bcrypt from 'bcrypt'
@@ -10,6 +10,36 @@ import jwt, { TokenExpiredError } from 'jsonwebtoken'
 
 const PoolEnUso = pool;
 
+// Retorna un entero aleatorio entre min (incluido) y max (excluido)
+// ¡Usando Math.round() te dará una distribución no-uniforme!
+function getRandomInt(min:number, max:number):number {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+async function asignarPathEmp(){
+    const response: QueryResult = await PoolEnUso.query('SELECT fk_cedula_nat FROM empleado')
+    for (let i in response.rows){
+        PoolEnUso.query('UPDATE empleado SET pathimagen_pro= $1 WHERE fk_cedula_nat = $2', [`C:/ImagenesBD/empleados/${getRandomInt(1,49)}.png`, response.rows[i].fk_cedula_nat])
+    }
+    console.log('listo')
+}
+  
+async function llenarTelefonos(){
+    const response: QueryResult = await PoolEnUso.query(`SELECT fk_rif_jur
+        FROM cliente_jur`);
+
+    for (let i=0; i<response.rows.length;i++){
+        if (i < 10){
+            const escritura: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel,fk_persona_jur) 
+                                                            VALUES ($1, $2, $3)`, [`41423719${i}`, 'Movistar',response.rows[i].fk_rif_jur]);
+        }else{
+            const escritura: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel,fk_persona_jur) 
+                                                            VALUES ($1, $2, $3)`, [`4123581${i}`, 'Digitel',response.rows[i].fk_rif_jur]);
+        }
+        console.log(i)
+    }
+    console.log('listo')
+}
 
 //Funcion para encriptar un password
 async function encryptPassword(password:string) {
@@ -99,8 +129,9 @@ export const signUp = async (req: Request,res: Response) =>{
                                                                         VALUES ($1,$2,$3,$4)`, [cedula,false,0,1]);
             }else{
                 //Insertamos al empleado
+                var imagen:number = getRandomInt(1,49);
                 const InsercionEmp: QueryResult = await PoolEnUso.query(`INSERT INTO empleado 
-                                                                        VALUES ($1,$2,$3,$4)`, [cedula,100000,`assets/img/empleados/${cedula}.png`,1]);
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula,100000,`assets/img/empleados/${imagen}.png`,1]);
             }
                 
             //ahora si creamo el usuario

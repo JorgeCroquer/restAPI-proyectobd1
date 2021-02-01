@@ -23,7 +23,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"message\": \"hola\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -905,7 +905,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/lugares/15/sublugares",
+							"raw": "http://localhost:3000/api/lugares/2/sublugares",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -914,8 +914,46 @@
 							"path": [
 								"api",
 								"lugares",
-								"15",
+								"2",
 								"sublugares"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/lugares/tipo/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/lugares/tipo/Municipio",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"lugares",
+								"tipo",
+								"Municipio"
 							]
 						}
 					},
@@ -1424,7 +1462,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Carnet.pdf?cedula=${cedula}",
+					"name": "carnet Nat",
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -1444,7 +1482,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Carnet.pdf?cedula=20000480",
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/carnetNat.pdf?cedula=20000480",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1455,7 +1493,7 @@
 								"rest_v2",
 								"reports",
 								"Reportes",
-								"Carnet.pdf"
+								"carnetNat.pdf"
 							],
 							"query": [
 								{
@@ -1468,7 +1506,340 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/Empleados_Report.pdf",
+					"name": "carnet Jur",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/carnetJur.pdf?rif=6321742-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"carnetJur.pdf"
+							],
+							"query": [
+								{
+									"key": "rif",
+									"value": "6321742-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "carnet Emp",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/carnetEmp.pdf?Cedula=20000228",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"carnetEmp.pdf"
+							],
+							"query": [
+								{
+									"key": "Cedula",
+									"value": "20000228"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mejores 5 clientes",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/MejoresClientes.pdf?Fechainicio=2021-12-01&Fechafin=2021-12-31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"MejoresClientes.pdf"
+							],
+							"query": [
+								{
+									"key": "Fechainicio",
+									"value": "2021-12-01"
+								},
+								{
+									"key": "Fechafin",
+									"value": "2021-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10 clientes mas frecuentes",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/MejoresClientes.pdf?Fechainicio=2021-12-01&Fechafin=2021-12-31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"MejoresClientes.pdf"
+							],
+							"query": [
+								{
+									"key": "Fechainicio",
+									"value": "2021-12-01"
+								},
+								{
+									"key": "Fechafin",
+									"value": "2021-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Productos mas vendidos",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/ClientesFrecuentes.pdf?Fechainicio=2021-12-01&Fechafin=2021-12-31&sucursal=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"ClientesFrecuentes.pdf"
+							],
+							"query": [
+								{
+									"key": "Fechainicio",
+									"value": "2021-12-01"
+								},
+								{
+									"key": "Fechafin",
+									"value": "2021-12-31"
+								},
+								{
+									"key": "sucursal",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Presupuestos efectivos",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/PresupuestosEfectivos.pdf?Fechainicio=2021-12-01&Fechafin=2021-12-31&sucursal=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"PresupuestosEfectivos.pdf"
+							],
+							"query": [
+								{
+									"key": "Fechainicio",
+									"value": "2021-12-01"
+								},
+								{
+									"key": "Fechafin",
+									"value": "2021-12-31"
+								},
+								{
+									"key": "sucursal",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Meses mas productivos",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/MesesMasProductivos.pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"MesesMasProductivos.pdf"
+							],
+							"query": [
+								{
+									"key": "cedula",
+									"value": "20000480",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asistencia",
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -1517,7 +1888,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"tipo\": \"jur\",\r\n    \"user\": \"PruebaJur\",\r\n    \"email\": \"prueba@prueba2.com.ve\",\r\n    \"password\": \"2100012\",\r\n    \"rol\": \"1\",\r\n    \"cedula\": \"27086047\",\r\n    \"rif\": \"27086047-4\", \r\n    \"primernombre\": \"Jorge\",\r\n    \"segundonombre\": \"Alejandro\",\r\n    \"primerapellido\": \"Croquer\",\r\n    \"segundoapellido\": \"Colmenares\",\r\n    \"persona_contacto\": null, \r\n    \"codigo_residencia\": \"997\",\r\n    \"razon_social\": \"Prueba\",\r\n    \"denom_comercial\": \"Prueba SIGNUP JUR CA\",\r\n    \"web\": \"prueba2.com.ve\",\r\n    \"capital\": \"6389\",\r\n    \"direccion_fisica\": \"1\",\r\n    \"direccion_fiscal\": \"1\"\r\n}",
+							"raw": "{\r\n    \"tipo\": \"nat\",\r\n    \"user\": \"Rogelio.nat\",\r\n    \"email\": \"rogelio@prueba.com\",\r\n    \"password\": \"1234\",\r\n    \"rol\": \"1\",\r\n    \"cedula\": \"10375489\",\r\n    \"telefono\": \"416198751\",\r\n    \"rif\": \"\", \r\n    \"primernombre\": \"Rogelio\",\r\n    \"segundonombre\": \"Alberto\",\r\n    \"primerapellido\": \"Rodriguez\",\r\n    \"segundoapellido\": \"Pena\",\r\n    \"persona_contacto\": null, \r\n    \"codigo_residencia\": \"996\",\r\n    \"razon_social\": \"Prueba\",\r\n    \"denom_comercial\": \"Prueba SIGNUP JUR CA\",\r\n    \"web\": \"prueba.com.ve\",\r\n    \"capital\": \"6389\",\r\n    \"direccion_fisica\": \"1\",\r\n    \"direccion_fiscal\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1546,7 +1917,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"jorgeale.croquer.jc@gmail.com\",\r\n    \"password\": \"2100012\"\r\n}",
+							"raw": "{\r\n    \"email\": \"jorgeale.croquer.jc@gmail.com\",\r\n    \"password\": \"221099\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
