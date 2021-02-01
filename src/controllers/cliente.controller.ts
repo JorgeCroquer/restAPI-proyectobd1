@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
-import {LocalPool} from '../database'
+import {LocalPool,pool} from '../database'
 import {QueryResult} from 'pg'
 
 //Aqui se cambia la BD que esta en uso
-const PoolEnUso = LocalPool
+const PoolEnUso = pool
 
 
 const qrcode = require('qrcode')

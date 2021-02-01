@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createClienteJur = exports.deleteClientesJur = exports.updateClientesJur = exports.getClientesJurById = exports.getClientesJur = exports.createClienteNat = exports.deleteClientesNat = exports.updateClientesNat = exports.getClientesNatById = exports.getClientesNat = exports.getCarnet = void 0;
 const database_1 = require("../database");
 //Aqui se cambia la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 const qrcode = require('qrcode');
 const fs = require('fs');
 //Esta funcion genera el QR para un 
