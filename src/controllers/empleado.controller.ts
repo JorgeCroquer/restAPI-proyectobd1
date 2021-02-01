@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
-import {LocalPool} from '../database'
+import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
 
 
-const PoolEnUso = LocalPool;
+const PoolEnUso = pool;
 
 //empleados
 

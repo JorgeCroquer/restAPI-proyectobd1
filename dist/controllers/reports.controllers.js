@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.enviarAReporte = exports.compararHorarios = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 const EmpListos = require('../../EmpleadosListos.json');
 const XLSX = require('xlsx');
 const fs = require('fs');

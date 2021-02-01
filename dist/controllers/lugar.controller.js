@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteLugar = exports.updateLugar = exports.createLugar = exports.getLugarByTipo = exports.getLugarById = exports.getSub_LugaresById = exports.getLugares = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 //Lugares 
 const getLugares = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

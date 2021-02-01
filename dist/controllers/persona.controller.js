@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getPersonaJurById = exports.getPersonaJur = exports.deletePersonaNat = exports.updatePersonaNat = exports.createPersonaNat = exports.getPersonaNatById = exports.getPersonasNat = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 //personas naturales
 const getPersonasNat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

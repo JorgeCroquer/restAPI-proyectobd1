@@ -34,8 +34,6 @@ async function llenarQR(){
     console.log('listo')
 }
 
-
-
 //Funciones de respuesta
  export const getCarnet = async(req: Request,res: Response): Promise<Response> => {
      try{
@@ -73,15 +71,15 @@ async function llenarQR(){
     }
 }
 
-//cliente natural 
 
+
+//cliente natural 
 export const getClientesNat = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const response: QueryResult = await PoolEnUso.query(`SELECT fk_cedula_nat AS cedula, 
                                                                     registrofisico_nat AS registro_fisico, 
                                                                     puntos_nat AS puntos, 
-                                                                    fk_sucursal AS sucursal, 
-                                                                    qr_path
+                                                                    fk_sucursal AS sucursal 
                                                             FROM cliente_nat`);
         return res.status(200).json(response.rows);
     }
@@ -93,14 +91,13 @@ export const getClientesNat = async(req: Request, res: Response): Promise<Respon
 
 export const getClientesNatById = async(req: Request, res: Response): Promise<Response> =>{
     try{
-        const fk_cedula_nat = req.params.id
+        const cedula = req.params.id
         const response: QueryResult = await PoolEnUso.query(`SELECT fk_cedula_nat AS cedula, 
                                                                     registrofisico_nat AS registro_fisico, 
                                                                     puntos_nat AS puntos, 
-                                                                    fk_sucursal AS sucursal, 
-                                                                    qr_path
+                                                                    fk_sucursal AS sucursal
                                                             FROM cliente_nat
-                                                            WHERE fk_cedula_nat = $1`, [fk_cedula_nat]);
+                                                            WHERE fk_cedula_nat = $1`, [cedula]);
         return res.status(200).json(response.rows[0]);
     }
     catch(e){
@@ -138,14 +135,15 @@ export const createClienteNat = async(req: Request,res: Response): Promise<Respo
     try{
         //Falta comprobar que exista una persona con esa cedula
         const {fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal} = req.body;
-        generarQR(fk_cedula_nat,`http://localhost:3000/api/clientes/naturales/${fk_cedula_nat}`);
+
         const QR = `C:\\ImagenesBD\\QR\\${fk_cedula_nat}.png`
-        const responseCliente: QueryResult = await PoolEnUso.query('INSERT INTO cliente_nat VALUES ($1,$2,$3,$4,$5)',[fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal, QR]);
+
+        const responseCliente: QueryResult = await PoolEnUso.query('INSERT INTO cliente_nat VALUES ($1,$2,$3,$4)',[fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal]);
         return res.status(201).json({
             message: "Cliente natural created successfully",
             body: {
                 Cliente: {
-                    fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal, QR
+                    fk_cedula_nat, registrofisico_nat, puntos_nat, fk_sucursal
                 }
             }
         });

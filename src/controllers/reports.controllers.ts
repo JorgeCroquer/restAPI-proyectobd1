@@ -1,12 +1,12 @@
 import {Request, Response} from 'express'
-import {LocalPool} from '../database'
+import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
 
 import {EmpleadoListo} from '../interfaces/EmpleadoListo'
 
 
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = LocalPool
+const PoolEnUso = pool
 
 const EmpListos = require('../../EmpleadosListos.json')
 const XLSX = require('xlsx');

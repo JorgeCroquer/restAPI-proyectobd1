@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTienda = exports.deleteTienda = exports.updateTienda = exports.getTiendas = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 //Tiendas
 const getTiendas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
