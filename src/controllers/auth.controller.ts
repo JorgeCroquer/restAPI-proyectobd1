@@ -214,7 +214,7 @@ export const logIn = async(req: Request,res: Response) =>{
             const responseEmp: QueryResult = await PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
                                                                     FROM empleado E JOIN usuarios U 
                                                                         ON E.fk_cedula_nat = U.fk_persona_nat
-                                                                        JOIN 
+                                                                        
                                                                     WHERE direccion_ema = $1`, [usuario.email]);
             if (responseEmp.rows.length == 1){
                 res.header('sucursal', responseEmp.rows[0].sucursal)
