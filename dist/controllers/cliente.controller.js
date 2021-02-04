@@ -27,17 +27,6 @@ function generarQR(cedula, url) {
         });
     });
 }
-function llenarQR() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const response = yield database_1.LocalPool.query(`SELECT fk_cedula_nat
-    FROM cliente_nat`);
-        for (let i = 0; i <= response.rows.length; i++) {
-            generarQR(response.rows[i].fk_cedula_nat, `http://localhost:3000/api/clientes/naturales/${response.rows[i].fk_cedula_nat}`);
-            const escritura = yield database_1.LocalPool.query(`UPDATE cliente_nat SET qr_path = $1 WHERE fk_cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].fk_cedula_nat}.png`, response.rows[i].fk_cedula_nat]);
-        }
-        console.log('listo');
-    });
-}
 //Funciones de respuesta
 const getCarnet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

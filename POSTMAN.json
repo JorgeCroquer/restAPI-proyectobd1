@@ -1710,7 +1710,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/ClientesFrecuentes.pdf?Fechainicio=2021-12-01&Fechafin=2021-12-31&sucursal=1",
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/ProductosMasVendidos.pdf?limit=3&Mes=12&Year=2021",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1721,20 +1721,20 @@
 								"rest_v2",
 								"reports",
 								"Reportes",
-								"ClientesFrecuentes.pdf"
+								"ProductosMasVendidos.pdf"
 							],
 							"query": [
 								{
-									"key": "Fechainicio",
-									"value": "2021-12-01"
+									"key": "limit",
+									"value": "3"
 								},
 								{
-									"key": "Fechafin",
-									"value": "2021-12-31"
+									"key": "Mes",
+									"value": "12"
 								},
 								{
-									"key": "sucursal",
-									"value": "1"
+									"key": "Year",
+									"value": "2021"
 								}
 							]
 						}

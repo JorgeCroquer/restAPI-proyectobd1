@@ -9,6 +9,7 @@ import personasRoutes from './routes/persona.routes'
 import authRoutes from './routes/auth.routes'
 import productoRoutes from './routes/productos.routes'
 import OrdenRoutes from './routes/orden.routes'
+import notimartRoutes from './routes/notimart.routes'
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api',personasRoutes);
 app.use('/api',authRoutes);
 app.use('/api',productoRoutes);
 app.use('/api',OrdenRoutes);
+app.use('/api',notimartRoutes)
 
 
 

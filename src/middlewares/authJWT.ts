@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction} from 'express'
 
 import jwt from 'jsonwebtoken'
-import {LocalPool} from '../database'
+import {LocalPool,pool} from '../database'
 import {QueryResult} from 'pg'
 
 
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = LocalPool
+const PoolEnUso = pool
 
 //Interfaz para el objeto encriptado en el token
 interface Idecode{
@@ -146,10 +146,12 @@ export const isGerentePromos = async (req: Request, res: Response, next: NextFun
 
         //Verificamos que el rol del usuario es 8(ger. Promos) o 10 (Ger. General) 0 11 (Admin)
         if (req.userRol ===  8 || req.userRol ===  10 || req.userRol ===  11){
-            //Hacemos una comprobacion en la BD
+            //Hacemos una comprobacion en la BD\
+
             const ValidacionRol: QueryResult = await PoolEnUso.query(`SELECT fk_roles AS rol, codigo_usu AS id 
                                                                         FROM usuarios
                                                                         WHERE codigo_usu = $1 AND fk_roles = $2`, [req.userId, req.userRol])
+
             if (ValidacionRol.rows.length === 1 
                 && (ValidacionRol.rows[0].rol === 8 || ValidacionRol.rows[0].rol === 10 || ValidacionRol.rows[0].rol === 11)
                 && ValidacionRol.rows[0].id === req.userId){

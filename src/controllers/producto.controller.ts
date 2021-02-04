@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
-
+import {producto} from '../Clases/producto'
 import jwt from 'jsonwebtoken'
 import config from '../config/config'
 

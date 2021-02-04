@@ -16,7 +16,7 @@ exports.isCliente = exports.isGerenteDespacho = exports.isGerenteEntregas = expo
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
-const PoolEnUso = database_1.LocalPool;
+const PoolEnUso = database_1.pool;
 const verifyToken = (req, res, next) => {
     try {
         //reading the headers
@@ -113,7 +113,7 @@ const isGerentePromos = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     try {
         //Verificamos que el rol del usuario es 8(ger. Promos) o 10 (Ger. General) 0 11 (Admin)
         if (req.userRol === 8 || req.userRol === 10 || req.userRol === 11) {
-            //Hacemos una comprobacion en la BD
+            //Hacemos una comprobacion en la BD\
             const ValidacionRol = yield PoolEnUso.query(`SELECT fk_roles AS rol, codigo_usu AS id 
                                                                         FROM usuarios
                                                                         WHERE codigo_usu = $1 AND fk_roles = $2`, [req.userId, req.userRol]);

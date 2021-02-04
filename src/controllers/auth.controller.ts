@@ -203,7 +203,7 @@ export const logIn = async(req: Request,res: Response) =>{
                                                                     direccion_ema AS email, 
                                                                     password_usu AS encryptedpassword, 
                                                                     fk_roles AS rol
-                                                            FROM usuarios 
+                                                            FROM usuarios
                                                             WHERE direccion_ema = $1`, [email]);
         if (responseUsu.rows.length != 1){
             res.status(400).json({message: `No hay una cuenta asociada a la direccion ${email}`})
@@ -212,8 +212,9 @@ export const logIn = async(req: Request,res: Response) =>{
         var usuario = responseUsu.rows[0];
         if (usuario.rol > 1 && usuario.rol != 11){
             const responseEmp: QueryResult = await PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
-                                                                    FROM empleado E JOIN usuarios U
+                                                                    FROM empleado E JOIN usuarios U 
                                                                         ON E.fk_cedula_nat = U.fk_persona_nat
+                                                                        JOIN 
                                                                     WHERE direccion_ema = $1`, [usuario.email]);
             if (responseEmp.rows.length == 1){
                 res.header('sucursal', responseEmp.rows[0].sucursal)
@@ -228,7 +229,11 @@ export const logIn = async(req: Request,res: Response) =>{
         res.header('rol', usuario.rol)
         res.header('Access-Control-Expose-Headers', ['auth-Token','sucursal', 'rol'] )
        
-        res.status(200).json({message: 'Sesion iniciada correctamente'})
+        res.status(200).json({message: 'Sesion iniciada correctamente',
+                              body:{
+                                user: usuario.username
+                              }
+                              })
     } catch (error) {
         console.error(error);
         return res.status(500).json({message: 'Internal server error'})
