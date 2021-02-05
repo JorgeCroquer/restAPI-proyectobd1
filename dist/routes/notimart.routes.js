@@ -27,4 +27,9 @@ const NotimartCtrl = __importStar(require("../controllers/notimart.controller"))
 const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 router.get('/notimart/productos', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.getProductosNotimart);
+router.put('/notimart/descuento/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.updateDescuento);
+router.get('/notimart/fecha', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.getProximaFecha);
+router.delete('/notimart/productos/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.deleteProducto);
+router.post('/notimart/productos', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.agregarDescuentos);
+router.post('/notimart', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], NotimartCtrl.publicar);
 exports.default = router;

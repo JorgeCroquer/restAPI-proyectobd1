@@ -1,9 +1,7 @@
 import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
-import {producto} from '../Clases/producto'
-import jwt from 'jsonwebtoken'
-import config from '../config/config'
+
 
 
 //Aqui se pone la BD que esta en uso
@@ -42,5 +40,19 @@ export const getFaltantes = async(req: Request, res: Response): Promise<Response
     catch(e){
         console.log(e);
         return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getProductosBasic = async (req:Request, res: Response) => {
+    try {
+        const productos: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_pro AS id, nombre_pro AS nombre
+             FROM producto
+             ORDER by nombre DESC`
+        );
+        res.status(200).json(productos.rows)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal server error')
     }
 }

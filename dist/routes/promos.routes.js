@@ -23,10 +23,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const ProductoCtrl = __importStar(require("../controllers/producto.controller"));
+const PromosCtrl = __importStar(require("../controllers/promo.controller"));
+const middlewares_1 = require("../middlewares");
 const router = express_1.default();
-//Productos
-//router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
-router.get('/Productos/faltantes/:id', ProductoCtrl.getFaltantes);
-router.get('/Productos/basic', ProductoCtrl.getProductosBasic);
+router.get('/promos', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.getPromosSinNotimart);
+router.get('/promos/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.getProductosDePromo);
+router.delete('/promos/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.deletePromo);
+router.delete('/promos/descuentos/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.deleteProducto);
+router.post('/promos', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.createPromo);
+router.put('/promos/:id', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerentePromos], PromosCtrl.updatePromo);
 exports.default = router;

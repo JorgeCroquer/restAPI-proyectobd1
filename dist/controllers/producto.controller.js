@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFaltantes = void 0;
+exports.getProductosBasic = exports.getFaltantes = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
@@ -48,3 +48,16 @@ const getFaltantes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getFaltantes = getFaltantes;
+const getProductosBasic = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const productos = yield PoolEnUso.query(`SELECT codigo_pro AS id, nombre_pro AS nombre
+             FROM producto
+             ORDER by nombre DESC`);
+        res.status(200).json(productos.rows);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send('Internal server error');
+    }
+});
+exports.getProductosBasic = getProductosBasic;
