@@ -16,6 +16,7 @@ const productos_routes_1 = __importDefault(require("./routes/productos.routes"))
 const orden_routes_1 = __importDefault(require("./routes/orden.routes"));
 const notimart_routes_1 = __importDefault(require("./routes/notimart.routes"));
 const promos_routes_1 = __importDefault(require("./routes/promos.routes"));
+const pasillo_routes_1 = __importDefault(require("./routes/pasillo.routes"));
 const app = express_1.default();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -42,4 +43,5 @@ app.use('/api', productos_routes_1.default);
 app.use('/api', orden_routes_1.default);
 app.use('/api', notimart_routes_1.default);
 app.use('/api', promos_routes_1.default);
+app.use('/api', pasillo_routes_1.default);
 exports.default = app;

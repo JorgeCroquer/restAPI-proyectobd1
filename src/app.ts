@@ -11,6 +11,7 @@ import productoRoutes from './routes/productos.routes'
 import OrdenRoutes from './routes/orden.routes'
 import notimartRoutes from './routes/notimart.routes'
 import promosRoutes from './routes/promos.routes'
+import pasilloRoutes from './routes/pasillo.routes'
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api',productoRoutes);
 app.use('/api',OrdenRoutes);
 app.use('/api',notimartRoutes);
 app.use('/api',promosRoutes);
+app.use('/api',pasilloRoutes);
 
 
 export default app;
