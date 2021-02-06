@@ -16,7 +16,17 @@ const PoolEnUso = database_1.pool;
 //Tiendas
 const getTiendas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield PoolEnUso.query('SELECT codigo_suc as codigo, nombre_suc as nombre, nombre_lug as direccion FROM sucursal,lugar WHERE codigo_lug = fk_lugar ORDER BY codigo_suc');
+        const response = yield PoolEnUso.query(`
+        SELECT su.codigo_suc as codigo, su.nombre_suc as nombre, pa.nombre_lug as direccion, pa.codigo_lug as codigo_dir, 
+        es.nombre_lug as estado, es.codigo_lug as codigo_estado 
+        FROM sucursal su,lugar pa,lugar mu, lugar es 
+        WHERE su.fk_lugar = pa.codigo_lug
+        AND pa.fk_lugar_lug = mu.codigo_lug
+        AND mu.fk_lugar_lug = es.codigo_lug
+        AND mu.tipo_lugar = 'Municipio'
+        AND pa.tipo_lugar = 'Parroquia'
+        AND es.tipo_lugar = 'Estado'
+        ORDER BY su.codigo_suc`);
         return res.status(200).json(response.rows);
     }
     catch (e) {

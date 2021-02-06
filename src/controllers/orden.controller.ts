@@ -9,28 +9,6 @@ import config from '../config/config'
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
-//Tiendas
-
-export const getOrdenRecien = async(req: Request, res: Response): Promise<Response> =>{
-    try{
-        const {fecha,sucursal,proveedor,producto} = req.body;
-        const response: QueryResult = await PoolEnUso.query(`
-        SELECT numero_sum
-        FROM suministro, producto, producto_suministro
-        WHERE fecha_sum = $1
-        AND fk_sucursal_sum = $2
-        AND fk_proveedor_sum = $3
-        AND codigo_pro = fk_producto_pro_sum 
-        AND fk_pedido_pro_sum = numero_sum 
-        AND codigo_pro = $4`,[fecha,sucursal,proveedor,producto]);
-        return res.status(200).json(response.rows);
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).send('Internal Server Error');
-    }
-}
-
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
         const {fecha,sucursal,proveedor} = req.body;

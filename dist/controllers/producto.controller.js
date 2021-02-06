@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFaltantes = void 0;
+exports.getBusqueda = exports.getFaltantes = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
@@ -48,3 +48,31 @@ const getFaltantes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getFaltantes = getFaltantes;
+const getBusqueda = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        //const {fecha,sucursal,proveedor,producto} = req.body;
+        const sucursal = parseInt(req.params.sucursal);
+        const busqueda = '%' + req.params.busqueda + '%';
+        const response = yield PoolEnUso.query(`
+        SELECT pr.codigo_pro codigo, pr.nombre_pro nombre, pr.pathimagen_pro as ruta, pre.precio_pre as precio
+        FROM producto pr, precio pre
+        WHERE lower(pr.nombre_pro) LIKE $1
+        AND pre.fk_producto = pr.codigo_pro
+        AND fecha_pre = (SELECT MAX(fecha_pre)
+				        FROM precio pre2
+				        WHERE pre2.fk_producto = pr.codigo_pro)
+        AND EXISTS (SELECT *
+		   	        FROM producto_zona pz, zona_almacen za, sucursal su
+		   	        WHERE  pr.codigo_pro = pz.fk_producto
+		   	        AND pz.fk_zona_pro = za.codigo_zon
+		   	        AND za.fk_sucursal = su.codigo_suc
+		   	        AND su.codigo_suc = $2)
+        ORDER BY pr.nombre_pro`, [busqueda, sucursal]);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getBusqueda = getBusqueda;

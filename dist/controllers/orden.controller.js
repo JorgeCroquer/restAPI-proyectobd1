@@ -13,7 +13,6 @@ exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = ex
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
-//Tiendas
 const getOrdenRecien = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { fecha, sucursal, proveedor, producto } = req.body;
