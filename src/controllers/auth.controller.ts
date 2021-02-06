@@ -192,11 +192,13 @@ export const signUp = async (req: Request,res: Response) =>{
 export const logIn = async(req: Request,res: Response) =>{
     try {
         const {email, password} = req.body
+        
         //Una mini validacion
         if (!email || !password){
             res.status(400).json({message: 'Faltan campos'})
             return;
         }
+
         //Verifiquemos si el usuario existe
         const responseUsu: QueryResult = await PoolEnUso.query(`SELECT codigo_usu AS ID,
                                                                     nombre_usu AS username,
@@ -210,14 +212,19 @@ export const logIn = async(req: Request,res: Response) =>{
             return
         }
         var usuario = responseUsu.rows[0];
+
+        //Si el usuario es empleado...
         if (usuario.rol > 1 && usuario.rol != 11){
-            const responseEmp: QueryResult = await PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
-                                                                    FROM empleado E JOIN usuarios U 
-                                                                        ON E.fk_cedula_nat = U.fk_persona_nat
-                                                                        
-                                                                    WHERE direccion_ema = $1`, [usuario.email]);
+            const responseEmp: QueryResult = await PoolEnUso.query(`
+            SELECT fk_sucursal AS sucursal, l.nombre_lug AS lugar
+            FROM empleado E JOIN usuarios U ON E.fk_cedula_nat = U.fk_persona_nat
+                    JOIN sucursal s on E.fk_sucursal = s.codigo_suc
+                    JOIN lugar l on s.fk_lugar = l.codigo_lug
+            WHERE direccion_ema = $1`, [usuario.email]);
             if (responseEmp.rows.length == 1){
-                res.header('sucursal', responseEmp.rows[0].sucursal)
+                //Estos solo son headers paar empleados
+                res.header('sucursal', responseEmp.rows[0].sucursal);
+                res.header('zona', responseEmp.rows[0].lugar)
             }
         }
 
@@ -225,9 +232,13 @@ export const logIn = async(req: Request,res: Response) =>{
             res.status(400).json({message: 'Direccion de e-mail o contraseña invalidos'})
             return;
         }
+
+        //adjuntamos los header
         res.header('auth-token', createToken(usuario.id, usuario.rol));
         res.header('rol', usuario.rol)
-        res.header('Access-Control-Expose-Headers', ['auth-Token','sucursal', 'rol'] )
+
+        //Esto es para exponer los headers a los navegadores (Por defecto se les oculta)
+        res.header('Access-Control-Expose-Headers', ['auth-Token','sucursal', 'rol', 'zona'] )
        
         res.status(200).json({message: 'Sesion iniciada correctamente',
                               body:{

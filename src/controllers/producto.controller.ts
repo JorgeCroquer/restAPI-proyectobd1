@@ -7,6 +7,7 @@ import config from '../config/config'
 import { text } from 'body-parser'
 
 
+
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
@@ -71,5 +72,19 @@ export const getBusqueda = async(req: Request, res: Response): Promise<Response>
     catch(e){
         console.log(e);
         return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getProductosBasic = async (req:Request, res: Response) => {
+    try {
+        const productos: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_pro AS id, nombre_pro AS nombre
+             FROM producto
+             ORDER by nombre DESC`
+        );
+        res.status(200).json(productos.rows)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal server error')
     }
 }
