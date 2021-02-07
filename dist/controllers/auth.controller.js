@@ -192,20 +192,12 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var usuario = responseUsu.rows[0];
         //Si el usuario es empleado...
         if (usuario.rol > 1 && usuario.rol != 11) {
-<<<<<<< HEAD
-            const responseEmp = yield PoolEnUso.query(`SELECT fk_sucursal AS sucursal 
-                                                                    FROM empleado E JOIN usuarios U 
-                                                                        ON E.fk_cedula_nat = U.fk_persona_nat
-                                                                        
-                                                                    WHERE direccion_ema = $1`, [usuario.email]);
-=======
             const responseEmp = yield PoolEnUso.query(`
             SELECT fk_sucursal AS sucursal, l.nombre_lug AS lugar
             FROM empleado E JOIN usuarios U ON E.fk_cedula_nat = U.fk_persona_nat
                     JOIN sucursal s on E.fk_sucursal = s.codigo_suc
                     JOIN lugar l on s.fk_lugar = l.codigo_lug
             WHERE direccion_ema = $1`, [usuario.email]);
->>>>>>> 8c526314a34542a0326d8cb18093ae24d2aa4d25
             if (responseEmp.rows.length == 1) {
                 //Estos solo son headers paar empleados
                 res.header('sucursal', responseEmp.rows[0].sucursal);
