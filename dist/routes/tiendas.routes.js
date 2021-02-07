@@ -24,11 +24,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
-const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 //tiendas
+<<<<<<< HEAD
 router.get('/tiendas', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteTalentoHumano], TiendaCtrl.getTiendas);
+=======
+// router.get('/tiendas',[authJWT.verifyToken,authJWT.isGerenteGeneral], TiendaCtrl.getTiendas); 
 router.get('/tiendas', TiendaCtrl.getTiendas);
+>>>>>>> 7216a5008446be79582e8feefef6ceb29ba8a29e
 router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
 router.put('/tiendas/:id', TiendaCtrl.updateTienda);
 router.post('/tiendas', TiendaCtrl.createTienda);

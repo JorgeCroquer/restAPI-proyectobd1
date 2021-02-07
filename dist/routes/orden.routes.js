@@ -27,6 +27,7 @@ const ordenCtrl = __importStar(require("../controllers/orden.controller"));
 const router = express_1.default();
 //Productos
 //router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
+router.post('/Orden/Recien', ordenCtrl.getOrdenRecien);
 router.post('/Orden', ordenCtrl.crearOrden);
 router.post('/Orden/Producto_Orden', ordenCtrl.crearProductoOrden);
 router.post('/Orden/Orden_estatus', ordenCtrl.crearOrdenEstatus);
