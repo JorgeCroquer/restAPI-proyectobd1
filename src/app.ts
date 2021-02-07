@@ -12,6 +12,8 @@ import OrdenRoutes from './routes/orden.routes'
 import notimartRoutes from './routes/notimart.routes'
 import promosRoutes from './routes/promos.routes'
 import pasilloRoutes from './routes/pasillo.routes'
+import OrdenClienteRoutes from './routes/orden_cliente.routes'
+import PagoRoutes from './routes/pago.routes'
 import CajeroRoutes from './routes/cajero.routes'
 
 const app = express();
@@ -49,6 +51,8 @@ app.use('/api',OrdenRoutes);
 app.use('/api',notimartRoutes);
 app.use('/api',promosRoutes);
 app.use('/api',pasilloRoutes);
+app.use('/api',OrdenClienteRoutes);
+app.use('/api',PagoRoutes)
 app.use('/api',CajeroRoutes);
 
 
