@@ -12,6 +12,7 @@ import OrdenRoutes from './routes/orden.routes'
 import notimartRoutes from './routes/notimart.routes'
 import promosRoutes from './routes/promos.routes'
 import pasilloRoutes from './routes/pasillo.routes'
+import CajeroRoutes from './routes/cajero.routes'
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api',OrdenRoutes);
 app.use('/api',notimartRoutes);
 app.use('/api',promosRoutes);
 app.use('/api',pasilloRoutes);
+app.use('/api',CajeroRoutes);
 
 
 export default app;
