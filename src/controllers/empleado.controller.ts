@@ -1,7 +1,9 @@
 import {Request, Response} from 'express'
 import {LocalPool, pool} from '../database'
-import {QueryResult} from 'pg'
+import {Query, QueryResult} from 'pg'
 import { persona_natural } from '../Clases/persona_natural';
+import { QR } from '../Clases/QR';
+import {encryptPassword, getRandomInt} from './auth.controller'
 
 
 const PoolEnUso = pool;
@@ -61,11 +63,24 @@ export const getEmpleadosBySucursal = async(req: Request, res: Response): Promis
 
 export const despedir = async(req: Request, res: Response): Promise<Response> =>{
     try{
-        const cedula = req.params.id
-        const response: QueryResult = await PoolEnUso.query(
+        const cedula = req.params.id;
+        const vacaciones = await PoolEnUso.query(
+            `DELETE FROM vacaciones
+             WHERE fk_empleado = $1`, [cedula]);
+        
+        const horario = await PoolEnUso.query(
+            `DELETE FROM horario_empleado
+             WHERE fk_empleado = $1`, [cedula]);
+
+        const empleado: QueryResult = await PoolEnUso.query(
             `DELETE FROM empleado
              WHERE fk_cedula_nat = $1`, [cedula]);
-        return res.status(200).json(response.rows);
+
+        const usuario = await PoolEnUso.query(
+            `DELETE FROM usuarios
+             WHERE fk_persona_nat = $1`, [cedula]);
+
+        return res.status(200).json({message: `Empleado ${cedula} eliminado`});
     }
     catch(e){
         console.log(e);
@@ -131,10 +146,22 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
              WHERE numero_tel = $1 AND fk_persona_nat <> $2`, [telefono.split('-')[1], cedula])
         if (buscarTel.rows.length == 0){
             //Si no hay entonces actualizo
+
+            //Deteremino la compania
+            var compania:string;
+            if (telefono.split('-')[1].startsWith('412')){
+                compania = 'Digitel'
+            }else if (telefono.split('-')[1].startsWith('414') || telefono.startsWith('424')){
+                compania = 'Movistar'
+            }else if (telefono.split('-')[1].startsWith('416') || telefono.startsWith('426')){
+                compania = 'Movilnet'
+            }else{
+                compania = 'Desconocida'
+            }
             const tel: QueryResult = await PoolEnUso.query(
                 `UPDATE telefono
-                 SET numero_tel = $1
-                 WHERE fk_persona_nat = $2`, [telefono.split('-')[1], cedula]);
+                 SET numero_tel = $1, compania = $2
+                 WHERE fk_persona_nat = $3`, [telefono.split('-')[1],compania,cedula]);
         }else return res.status(400).json({message: 'El telefono ya esta en uso'})
 
 
@@ -190,12 +217,184 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
                  VALUES ($1,$2,$3)`,[iniciovacas, finvacas, cedula])
   
         }   
-          
+        
+
                 
         return res.status(200).json({message: 'Empleado actualizado'});
     }
     catch(e){
         console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const createEmpleado = async (req: Request, res: Response): Promise<Response> =>{
+    try {
+        const sucursal = req.params.id;
+        const { primernombre,
+            segundonombre,
+            primerapellido,
+            segundoapellido,
+            cedula,
+            parroquia,
+            email,
+            iniciovacas,
+            finvacas,
+            horaentrada,
+            horasalida,
+            rif,
+            salario,
+            telefono,
+            usuario,
+            password} = req.body
+
+        //Llevare el telefono a un formato valido
+       var TelefonoFormateado
+        if (telefono.startsWith('04')){
+            var TelefonoFormateado = telefono.split('0',2)[1]
+        }else if(telefono.startsWith('+584')){
+            var TelefonoFormateado = telefono.split('+58',2)[1]
+        }else if(telefono.startsWith('00584')){
+            var TelefonoFormateado = telefono.split('0058',2)[1]
+        }else if(telefono.startsWith('+58-')){
+            var TelefonoFormateado = telefono.split('+58-',2)[1]
+        }else{
+            return res.status(400).json({message: 'Telefono incorrecto'})
+        }
+
+
+         //Ahora busco en la BD por datos repetidos y actuo en consecuencia
+        const buscarCedula: QueryResult = await PoolEnUso.query(
+            `SELECT cedula_nat
+             FROM persona_natural
+             WHERE cedula_nat = $1 OR rif_nat = $2`,[cedula,rif])
+
+            const buscarEmpleado: QueryResult = await PoolEnUso.query(
+                `SELECT fk_cedula_nat
+                 FROM empleado
+                 WHERE fk_cedula_nat = $1`, [cedula]);
+            if (buscarEmpleado.rows.length == 0){
+                
+                const buscarTel: QueryResult = await PoolEnUso.query(
+                    `SELECT numero_tel
+                     FROM telefono
+                     WHERE numero_tel = $1 AND fk_persona_nat <> $2`, [TelefonoFormateado, cedula])
+                if (buscarTel.rows.length == 0){
+
+                    const buscarUser: QueryResult = await PoolEnUso.query(
+                        `SELECT codigo_usu
+                         FROM usuarios
+                         WHERE nombre_usu = $1 OR direccion_ema = $2`, [usuario,email])
+                    if (buscarUser.rows.length == 0){
+
+                        console.log('paso filtros')
+
+
+                    }else return res.status(400).json({message: 'El nombre de usuario o el email ya estan en uso'})
+
+                }
+
+            }else return res.status(400).json({message: 'Ya existe un empleado con esta cedula'})
+        
+
+            //ya paso todos los filtros
+
+            //Aqui vuelvo a preguntar, por si ya existia la persona pero no el empleado
+            if (buscarCedula.rows.length == 0){
+            //Agrego a la persona
+            const agregarPersona: QueryResult = await PoolEnUso.query(
+                `INSERT INTO persona_natural
+                 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+                 [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date().toLocaleDateString('en-US'),`C:\\ImagenesBD\\QR\\${cedula}.png`, null, parroquia])
+            QR.generarQR(cedula,`cedula: ${cedula}, 
+                                nombre: ${primernombre} ${primerapellido}
+                                email: ${email},
+                                telefono: ${telefono},
+                                ID: ${sucursal}-${cedula}`)
+            console.log('persona')
+            }
+            
+        
+
+            //Agrego al empleado
+
+            //Le asigno una imagen aleatoria
+            const imagen = getRandomInt(1,49);
+
+            const agregarEmpleado: QueryResult = await PoolEnUso.query(
+                `INSERT INTO empleado
+                 VALUES ($1,$2,$3,$4)`,
+                 [cedula,salario,`C:/ImagenesBD/empleados/${imagen}.png`, sucursal])
+
+                 console.log('empleado')
+        
+
+
+        //Telefono
+
+        //Determino la compania
+        var compania:string;
+        if (TelefonoFormateado.startsWith('412')){
+            compania = 'Digitel'
+        }else if (TelefonoFormateado.startsWith('414') || TelefonoFormateado.startsWith('424')){
+            compania = 'Movistar'
+        }else if (TelefonoFormateado.startsWith('416') || TelefonoFormateado.startsWith('426')){
+            compania = 'Movilnet'
+        }else{
+            compania = 'Desconocida'
+        }
+
+        const tel: QueryResult = await PoolEnUso.query(
+            `INSERT INTO telefono
+             VALUES ($1,$2,$3,$4)`, [TelefonoFormateado,compania,null,cedula]);        
+                console.log('telefono')
+    
+
+        //Usuario
+
+        //Encripto la contrasena
+        const encryptedPassword = await encryptPassword(password)
+        const user: QueryResult = await PoolEnUso.query(
+            `INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_nat)
+             VALUES ($1,$2,$3,$4,$5)`, [usuario,encryptedPassword,email,12,cedula]);
+                console.log('usuario')
+
+        
+
+        //Vacaciones
+        const nuevaVacacion: QueryResult = await PoolEnUso.query(
+            `INSERT INTO vacaciones (iniciovacaciones_emp, final_vacaciones_emp, fk_empleado)
+             VALUES ($1,$2,$3)`,[iniciovacas, finvacas, cedula])
+             console.log('vacacion')
+
+        //Horario
+        const buscarHorario: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_hor
+             FROM horario
+             WHERE horaentrada_hor = $1 AND horasalida_hor = $2`, [horaentrada,horasalida])
+
+             if( buscarHorario.rows.length === 1 ){
+                //Si existe lo asigno
+                const asignarHorario: QueryResult = await PoolEnUso.query(
+                    `INSERT INTO horario_empleado 
+                     VALUES ($1,$2)`, [cedula, buscarHorario.rows[0].codigo_hor]);
+                     console.log('horario1')
+            }else if (buscarHorario.rows.length === 0){
+                //Si no existe, creo uno nuevo y se lo asigno
+                const nuevoHorario: QueryResult = await PoolEnUso.query(
+                    `INSERT INTO horario (horaentrada_hor,horasalida_hor)
+                     VALUES ($1,$2) RETURNING codigo_hor`,[horaentrada,horasalida])
+                const asignarHorario: QueryResult = await PoolEnUso.query(
+                    `INSERT INTO horario_empleado
+                     VALUES ($1,$2)`, [cedula,nuevoHorario.rows[0].codigo_hor]);
+                     console.log('horario1')   
+            }
+
+
+
+        return res.status(201).json({message: `El empleado ${cedula} fue creado exitosamente`})
+    } catch (error) {
+        console.error(error);
         return res.status(500).send('Internal Server Error');
     }
 }

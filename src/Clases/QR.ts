@@ -44,4 +44,16 @@ export class QR {
 
         console.log('listo')
     }
+    static async generarQR2 (id:string, url:Object){
+    
+        const QRgenerado = await qrcode.toDataURL(url);
+
+
+        fs.writeFile(`C:\\ImagenesBD\\QR\\${id}.png`, QRgenerado.split(',')[1] ,'base64', (err: Error) => {
+            // throws an error, you could also catch it here
+            if (err) throw err;
+
+            console.log('QR salvado');
+        });
+    }
 }

@@ -12,7 +12,7 @@ const PoolEnUso = pool;
 
 // Retorna un entero aleatorio entre min (incluido) y max (excluido)
 // ¡Usando Math.round() te dará una distribución no-uniforme!
-function getRandomInt(min:number, max:number):number {
+export function getRandomInt(min:number, max:number):number {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 

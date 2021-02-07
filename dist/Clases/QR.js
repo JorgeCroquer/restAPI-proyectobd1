@@ -49,5 +49,16 @@ class QR {
             console.log('listo');
         });
     }
+    static generarQR2(id, url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const QRgenerado = yield qrcode.toDataURL(url);
+            fs.writeFile(`C:\\ImagenesBD\\QR\\${id}.png`, QRgenerado.split(',')[1], 'base64', (err) => {
+                // throws an error, you could also catch it here
+                if (err)
+                    throw err;
+                console.log('QR salvado');
+            });
+        });
+    }
 }
 exports.QR = QR;
