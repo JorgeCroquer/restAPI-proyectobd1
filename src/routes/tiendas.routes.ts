@@ -13,3 +13,4 @@ router.put('/tiendas/:id',TiendaCtrl.updateTienda);
 router.post('/tiendas',TiendaCtrl.createTienda);
 
 export default router;
+ 

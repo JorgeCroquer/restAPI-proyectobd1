@@ -91,7 +91,6 @@ export const getBeneficios = async(req: Request, res: Response): Promise<Respons
     }
 }
 
-
 export const updateEmpleado = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const cedula = req.params.id

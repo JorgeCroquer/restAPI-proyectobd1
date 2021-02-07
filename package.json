@@ -8,8 +8,9 @@
     "dev": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
     "build": "tsc"
   },
+
   "keywords": [],
-  "author": "Jorge Croquer & Leonardo Contreras",
+  "author": "Jorge Croquer & Leonardo Contreras & Stratos Kakalanos",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
