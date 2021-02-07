@@ -46,7 +46,7 @@
 					"response": []
 				},
 				{
-					"name": "GET /api/empleados/:id",
+					"name": "GET /api/empleados/sucursales:id",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true,
 						"disabledSystemHeaders": {}
@@ -56,7 +56,13 @@
 							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbCI6NywiaWF0IjoxNjEyNTgzNzY2LCJleHAiOjE2MTI2NzAxNjZ9.-ssdVhizH6zDL3W5PGpORgWw-Fvp9He0hli-CkoLre4",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -67,7 +73,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"raw": "http://localhost:3000/api/empleados/sucursal/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -75,22 +81,42 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"clientes",
-								"naturales",
-								"27086047"
+								"empleados",
+								"sucursal",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"type": "string"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "POST /api/empleados",
+					"name": "GET /api/empleados/:id/beneficios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
 					"request": {
-						"method": "POST",
-						"header": [],
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbCI6NywiaWF0IjoxNjEyNTgzNzY2LCJleHAiOjE2MTI2NzAxNjZ9.-ssdVhizH6zDL3W5PGpORgWw-Fvp9He0hli-CkoLre4",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fk_cedula_nat\": \"27086047\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,7 +124,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/clientes/naturales/",
+							"raw": "http://localhost:3000/api/empleados/:id/beneficios",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -106,9 +132,16 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"clientes",
-								"naturales",
-								""
+								"empleados",
+								":id",
+								"beneficios"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -129,7 +162,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"raw": "http://localhost:3000/api/empleados/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -137,9 +170,15 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"clientes",
-								"naturales",
-								"27086047"
+								"empleados",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -160,7 +199,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+							"raw": "http://localhost:3000/api/empleados/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,9 +207,14 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"clientes",
-								"naturales",
-								"27086047"
+								"empleados",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -243,7 +287,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"raw": "http://localhost:3000/api/clientes/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -253,7 +297,14 @@
 										"api",
 										"clientes",
 										"naturales",
-										"27086047"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -266,7 +317,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fk_cedula_nat\": \"27086047\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
+									"raw": "{\r\n    \"fk_cedula_nat\": \"27903943\",\r\n    \"registrofisico_nat\": \"false\",\r\n    \"puntos_nat\": \"0\",\r\n    \"fk_sucursal\": \"1\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -305,7 +356,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"raw": "http://localhost:3000/api/clientes/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -315,7 +366,14 @@
 										"api",
 										"clientes",
 										"naturales",
-										"27086047"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -336,7 +394,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/naturales/27086047",
+									"raw": "http://localhost:3000/api/clientes/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -346,7 +404,14 @@
 										"api",
 										"clientes",
 										"naturales",
-										"27086047"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -416,7 +481,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/juridicos/6321741-1",
+									"raw": "http://localhost:3000/api/clientes/juridicos/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -426,7 +491,14 @@
 										"api",
 										"clientes",
 										"juridicos",
-										"6321741-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -478,7 +550,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/juridicos/6321741-1",
+									"raw": "http://localhost:3000/api/clientes/juridicos/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -488,7 +560,14 @@
 										"api",
 										"clientes",
 										"juridicos",
-										"6321741-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -509,7 +588,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/clientes/juridicos/1111111-1",
+									"raw": "http://localhost:3000/api/clientes/juridicos/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -519,7 +598,14 @@
 										"api",
 										"clientes",
 										"juridicos",
-										"1111111-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -630,7 +716,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/tiendas/62",
+							"raw": "http://localhost:3000/api/tiendas/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -639,7 +725,14 @@
 							"path": [
 								"api",
 								"tiendas",
-								"62"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -660,7 +753,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/tiendas/62",
+							"raw": "http://localhost:3000/api/tiendas/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -669,7 +762,14 @@
 							"path": [
 								"api",
 								"tiendas",
-								"62"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -760,7 +860,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/proveedores/1111111-1",
+							"raw": "http://localhost:3000/api/proveedores/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -769,7 +869,14 @@
 							"path": [
 								"api",
 								"proveedores",
-								"1111111-1"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -790,7 +897,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/proveedores/1111111-1",
+							"raw": "http://localhost:3000/api/proveedores/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -799,7 +906,14 @@
 							"path": [
 								"api",
 								"proveedores",
-								"1111111-1"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -868,7 +982,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/lugares/1",
+							"raw": "http://localhost:3000/api/lugares/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -877,7 +991,14 @@
 							"path": [
 								"api",
 								"lugares",
-								"1"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -905,7 +1026,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/lugares/2/sublugares",
+							"raw": "http://localhost:3000/api/lugares/:id/sublugares",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -914,8 +1035,15 @@
 							"path": [
 								"api",
 								"lugares",
-								"2",
+								":id",
 								"sublugares"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -943,7 +1071,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/lugares/tipo/Municipio",
+							"raw": "http://localhost:3000/api/lugares/tipo/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -953,7 +1081,14 @@
 								"api",
 								"lugares",
 								"tipo",
-								"Municipio"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "Municipio",
+									"type": "string"
+								}
 							]
 						}
 					},
@@ -1116,7 +1251,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/naturales/20000000",
+									"raw": "http://localhost:3000/api/personas/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1126,7 +1261,14 @@
 										"api",
 										"personas",
 										"naturales",
-										"20000000"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1178,7 +1320,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/naturales/27086047",
+									"raw": "http://localhost:3000/api/personas/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1188,7 +1330,14 @@
 										"api",
 										"personas",
 										"naturales",
-										"27086047"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1209,7 +1358,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/naturales/27086047",
+									"raw": "http://localhost:3000/api/personas/naturales/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1219,7 +1368,14 @@
 										"api",
 										"personas",
 										"naturales",
-										"27086047"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1289,7 +1445,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/juridicas/123001-1",
+									"raw": "http://localhost:3000/api/personas/juridicas/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1299,7 +1455,14 @@
 										"api",
 										"personas",
 										"juridicas",
-										"123001-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1351,7 +1514,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/juridicas/1111111-1",
+									"raw": "http://localhost:3000/api/personas/juridicas/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1361,7 +1524,14 @@
 										"api",
 										"personas",
 										"juridicas",
-										"1111111-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1382,7 +1552,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/personas/juridicas/1111111-1",
+									"raw": "http://localhost:3000/api/personas/juridicas/:id",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1392,7 +1562,14 @@
 										"api",
 										"personas",
 										"juridicas",
-										"1111111-1"
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "string"
+										}
 									]
 								}
 							},
@@ -1499,6 +1676,50 @@
 								{
 									"key": "cedula",
 									"value": "20000480"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "factura",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/factura.pdf?numero_ord=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"factura.pdf"
+							],
+							"query": [
+								{
+									"key": "numero_ord",
+									"value": "1"
 								}
 							]
 						}
@@ -1875,6 +2096,82 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Rendimiento",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/rendimiento_empleado.pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"rendimiento_empleado.pdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Noti-Mart",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "jasperadmin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "jasperadmin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/jasperserver/rest_v2/reports/Reportes/notimart.pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"jasperserver",
+								"rest_v2",
+								"reports",
+								"Reportes",
+								"notimart.pdf"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1917,7 +2214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"jorgeale.croquer.jc@gmail.com\",\r\n    \"password\": \"221099\"\r\n}",
+							"raw": "{\r\n    \"email\": \"talentohumano@prueba.com\",\r\n    \"password\": \"1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1940,6 +2237,431 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Noti-Mart",
+			"item": [
+				{
+					"name": "/api/notimart/productos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyMzk0NTc4LCJleHAiOjE2MTI0ODA5Nzh9.zJDAggc7j7G84bgkAuGjuNhCkYUrhqrr8FWLy55n0kc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/notimart/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"notimart",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/notimart/fecha",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDA4NzI4LCJleHAiOjE2MTI0OTUxMjh9.f2uMr-ygYbIeYz1jonXOAp0dkzlO6YEvZtREMlahCF4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/notimart/fecha",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"notimart",
+								"fecha"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/notimart/descuentos/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDA3NTQyLCJleHAiOjE2MTI0OTM5NDJ9.626_zTJ4l2Lm6k_dQtAzobPDdrW9Pufg_ZaPG3GlqTo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"descuento\": \"15\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/notimart/descuento/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"notimart",
+								"descuento",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/notimart/productos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDU1NTE1LCJleHAiOjE2MTI1NDE5MTV9.pbGS6FHuC1i6PswIFkTHieL4TTGYJ7i8JtC5Qw7_e4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "x",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/notimart/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"notimart",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "/api/Productos/basic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/Productos/basic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"Productos",
+								"basic"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Promos",
+			"item": [
+				{
+					"name": "/api/promos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDgxMDc2LCJleHAiOjE2MTI1Njc0NzZ9.CExWSiucpQaoIcckEAhKs9ekybf4Dg5V-H3tgLgjxvg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/promos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/promos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDgxMDc2LCJleHAiOjE2MTI1Njc0NzZ9.CExWSiucpQaoIcckEAhKs9ekybf4Dg5V-H3tgLgjxvg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/promos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/promo/:id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDgxMDc2LCJleHAiOjE2MTI1Njc0NzZ9.CExWSiucpQaoIcckEAhKs9ekybf4Dg5V-H3tgLgjxvg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/promos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/promo/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbCI6OCwiaWF0IjoxNjEyNDgxMDc2LCJleHAiOjE2MTI1Njc0NzZ9.CExWSiucpQaoIcckEAhKs9ekybf4Dg5V-H3tgLgjxvg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/promos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/promos/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/promos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/promos/descuentos/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/promos/descuentos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"promos",
+								"descuentos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pasillos",
+			"item": [
+				{
+					"name": "/api/pasillo/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/pasillo/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"pasillo",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/repo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/pasillo/repo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"pasillo",
+								"repo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "email",
+			"value": "talentohumano@prueba.com"
+		},
+		{
+			"key": "password",
+			"value": "1234"
 		}
 	]
 }

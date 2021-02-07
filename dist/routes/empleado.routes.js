@@ -24,6 +24,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const EmpleadoCtrl = __importStar(require("../controllers/empleado.controller"));
+const index_1 = require("../middlewares/index");
 const router = express_1.default();
-router.get('/empleados', EmpleadoCtrl.getEmpleados);
+router.get('/empleados', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.getEmpleados);
+router.get('/empleados/sucursal/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.getEmpleadosBySucursal);
+router.delete('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.despedir);
+router.get('/empleados/:id/beneficios', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.getBeneficios);
+router.put('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.updateEmpleado);
 exports.default = router;

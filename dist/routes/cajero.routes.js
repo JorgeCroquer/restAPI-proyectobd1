@@ -23,11 +23,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const ProductoCtrl = __importStar(require("../controllers/producto.controller"));
+const ProductosCtrl = __importStar(require("../controllers/cajero.controller"));
 const router = express_1.default();
-//Productos
-//router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
-router.get('/Productos/faltantes/:id', ProductoCtrl.getFaltantes);
-router.get('/Productos/Busqueda/:sucursal/:busqueda', ProductoCtrl.getBusqueda);
-router.get('/Productos/basic', ProductoCtrl.getProductosBasic);
+//productos
+router.get('/productos', ProductosCtrl.getProductos);
+router.get('/productos/:id', ProductosCtrl.getProductosid);
 exports.default = router;
