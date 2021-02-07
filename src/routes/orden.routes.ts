@@ -7,7 +7,6 @@ const router = Router();
 
 //Productos
 //router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
-router.post('/Orden/Recien', ordenCtrl.getOrdenRecien);
 router.post('/Orden',ordenCtrl.crearOrden);
 router.post('/Orden/Producto_Orden',ordenCtrl.crearProductoOrden);
 router.post('/Orden/Orden_estatus',ordenCtrl.crearOrdenEstatus);  

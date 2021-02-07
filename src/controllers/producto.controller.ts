@@ -1,6 +1,10 @@
 import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
+import {producto} from '../Clases/producto'
+import jwt from 'jsonwebtoken'
+import config from '../config/config'
+import { text } from 'body-parser'
 
 
 
@@ -35,6 +39,34 @@ export const getFaltantes = async(req: Request, res: Response): Promise<Response
         AND pro.fk_rif_jur = jur.rif_jur 
         AND s.codigo_suc = $1 
         AND (pz.cantidad_pro_zon + ps.cantidad_pro_sec) <= 100;`,[id]);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getBusqueda = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        //const {fecha,sucursal,proveedor,producto} = req.body;
+        const sucursal = parseInt(req.params.sucursal);
+        const busqueda:string = '%'+req.params.busqueda+'%';
+        const response: QueryResult = await PoolEnUso.query(`
+        SELECT pr.codigo_pro codigo, pr.nombre_pro nombre, pr.pathimagen_pro as ruta, pre.precio_pre as precio
+        FROM producto pr, precio pre
+        WHERE lower(pr.nombre_pro) LIKE $1
+        AND pre.fk_producto = pr.codigo_pro
+        AND fecha_pre = (SELECT MAX(fecha_pre)
+				        FROM precio pre2
+				        WHERE pre2.fk_producto = pr.codigo_pro)
+        AND EXISTS (SELECT *
+		   	        FROM producto_zona pz, zona_almacen za, sucursal su
+		   	        WHERE  pr.codigo_pro = pz.fk_producto
+		   	        AND pz.fk_zona_pro = za.codigo_zon
+		   	        AND za.fk_sucursal = su.codigo_suc
+		   	        AND su.codigo_suc = $2)
+        ORDER BY pr.nombre_pro`,[busqueda,sucursal]);
         return res.status(200).json(response.rows);
     }
     catch(e){
