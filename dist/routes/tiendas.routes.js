@@ -27,7 +27,7 @@ const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
 const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 //tiendas
-router.get('/tiendas', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteGeneral], TiendaCtrl.getTiendas);
+router.get('/tiendas', [middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteTalentoHumano], TiendaCtrl.getTiendas);
 router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
 router.put('/tiendas/:id', TiendaCtrl.updateTienda);
 router.post('/tiendas', TiendaCtrl.createTienda);

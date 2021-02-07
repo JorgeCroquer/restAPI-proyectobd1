@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logIn = exports.signUp = void 0;
+exports.logIn = exports.signUp = exports.encryptPassword = void 0;
 const database_1 = require("../database");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const persona_natural_1 = require("../Clases/persona_natural");
@@ -60,6 +60,7 @@ function encryptPassword(password) {
         return yield bcrypt_1.default.hash(password, salt);
     });
 }
+exports.encryptPassword = encryptPassword;
 function comparePasswords(encryptedPassword, password) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(encryptedPassword);

@@ -42,7 +42,7 @@ async function llenarTelefonos(){
 }
 
 //Funcion para encriptar un password
-async function encryptPassword(password:string) {
+export async function encryptPassword(password:string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password,salt);
 }
