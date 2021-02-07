@@ -14,7 +14,7 @@ router.post('/pago/tarjeta',pagoCtrl.crearTarjeta);
 router.post('/pago/cuenta',pagoCtrl.crearCuenta);
 router.post('/pago/efectivo',pagoCtrl.crearEfectivo);
 router.post('/pago/efectivo',pagoCtrl.crearPunto);
-router.post('/pago',pagoCtrl.crearPago);     
+router.post('/pago',pagoCtrl.crearPago); 
 
 
 export default router;

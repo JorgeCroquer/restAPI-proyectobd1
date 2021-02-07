@@ -58,16 +58,16 @@ export const crearProductoOrden = async(req: Request,res: Response): Promise<Res
 
 export const crearOrdenEstatus = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {fecha,pedido,estatus} = req.body;
+        const {fecha,orden,estatus} = req.body;
         const response: QueryResult = await PoolEnUso.query(`
         INSERT
         INTO status_orden
-        VALUES($1,$2,$3)`,[fecha,pedido,estatus]);
+        VALUES($1,$2,$3)`,[fecha,orden,estatus]);
         return res.status(201).json({
             message: "Relationship Status_orden created successfully",
             body: {
                 Proveedor: {
-                    fecha,pedido
+                    fecha,orden
                 }
             }
         });
