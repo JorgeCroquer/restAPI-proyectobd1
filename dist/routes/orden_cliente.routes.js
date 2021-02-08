@@ -30,5 +30,8 @@ const router = express_1.default();
 router.post('/OrdenC', ordenClienteCtrl.crearOrden);
 router.post('/OrdenC/Producto_Orden', ordenClienteCtrl.crearProductoOrden);
 router.post('/OrdenC/Orden_estatus', ordenClienteCtrl.crearOrdenEstatus);
+<<<<<<< HEAD
 router.get('/OrdenC/valorpunto', ordenClienteCtrl.getValorPunto);
+=======
+>>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
 exports.default = router;

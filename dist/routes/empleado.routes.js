@@ -31,4 +31,6 @@ router.get('/empleados/sucursal/:id', [index_1.authJWT.verifyToken, index_1.auth
 router.delete('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.despedir);
 router.get('/empleados/:id/beneficios', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.getBeneficios);
 router.put('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.updateEmpleado);
+router.post('/empleados/sucursal/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.createEmpleado);
+router.post('/empleados/asistencias', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.asistencias);
 exports.default = router;

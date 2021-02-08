@@ -12,7 +12,7 @@ const PoolEnUso = pool;
 
 // Retorna un entero aleatorio entre min (incluido) y max (excluido)
 // ¡Usando Math.round() te dará una distribución no-uniforme!
-function getRandomInt(min:number, max:number):number {
+export function getRandomInt(min:number, max:number):number {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
@@ -61,7 +61,7 @@ export const signUp = async (req: Request,res: Response) =>{
 
         //hay que obtener todo lo necesario para insertar una persona y su usuario
     const {tipo,
-        user,email,password,rol,telefono,
+        user,email,password,rol,telefono,sucursalEmpleado,
         cedula, rif, primernombre,segundonombre, primerapellido,segundoapellido, persona_contacto, codigo_residencia,
         razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal} = req.body;
 
@@ -70,6 +70,20 @@ export const signUp = async (req: Request,res: Response) =>{
     if (!email || !password || !user || !telefono){
         res.status(400).json({message: 'Faltan campos'})
         return;
+    }
+
+    //Llevare el telefono a un formato valido
+    var TelefonoFormateado
+    if (telefono.startsWith('04')){
+        var TelefonoFormateado = telefono.split('0',2)[1]
+    }else if(telefono.startsWith('+584')){
+        var TelefonoFormateado = telefono.split('+58',2)[1]
+    }else if(telefono.startsWith('00584')){
+        var TelefonoFormateado = telefono.split('0058',2)[1]
+    }else if(telefono.startsWith('+58-')){
+        var TelefonoFormateado = telefono.split('+58-',2)[1]
+    }else{
+        return res.status(400).json({message: 'Telefono incorrecto'})
     }
 
     //Verificamos que el usuario no exista 
@@ -85,15 +99,18 @@ export const signUp = async (req: Request,res: Response) =>{
 
     //Se determina la comania telefonica
     var compania:string;
-    if (telefono.startsWith('412')){
+    if (TelefonoFormateado.startsWith('412')){
         compania = 'Digitel'
-    }else if (telefono.startsWith('414') || telefono.startsWith('424')){
+    }else if (TelefonoFormateado.startsWith('414') || TelefonoFormateado.startsWith('424')){
         compania = 'Movistar'
-    }else if (telefono.startsWith('416') || telefono.startsWith('426')){
+    }else if (TelefonoFormateado.startsWith('416') || TelefonoFormateado.startsWith('426')){
         compania = 'Movilnet'
     }else{
         compania = 'Desconocida'
     }
+
+    
+
 
     switch (tipo){
         case 'nat':{
@@ -105,6 +122,18 @@ export const signUp = async (req: Request,res: Response) =>{
                 return;
             }
 
+            const sucursalesCercanas: QueryResult = await PoolEnUso.query(
+                `SELECT s.codigo_suc
+                FROM sucursal s JOIN lugar parroquiasuc on s.fk_lugar = parroquiasuc.codigo_lug
+                                JOIN lugar municipiosuc on parroquiasuc.fk_lugar_lug = municipiosuc.codigo_lug
+                                JOIN lugar estadosuc on estadosuc.codigo_lug = municipiosuc.fk_lugar_lug,
+                lugar parroquia JOIN lugar municipio on parroquia.fk_lugar_lug = municipio.codigo_lug
+                                JOIN lugar estado on estado.codigo_lug = municipio.fk_lugar_lug
+                WHERE (municipiosuc.codigo_lug = municipio.codigo_lug OR estadosuc.codigo_lug = estado.codigo_lug) 
+                    AND parroquia.codigo_lug = $1`, [codigo_residencia])
+        
+                const sucursal = sucursalesCercanas.rows[0].codigo_suc;
+
             //Insertamos la persona natural
             const InsercionNat: QueryResult = await PoolEnUso.query(`INSERT INTO persona_natural 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),`C:\\ImagenesBD\\QR\\${cedula}.png`,persona_contacto,codigo_residencia]);
@@ -113,21 +142,26 @@ export const signUp = async (req: Request,res: Response) =>{
             //Insertemos telefono
 
             const InsercionTel: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_nat)
-                                                                   VALUES ($1,$2,$3)`, [telefono, compania,cedula]);                                                                                   
+                                                                   VALUES ($1,$2,$3)`, [TelefonoFormateado, compania,cedula]);                                                                                   
 
-            if (rol == 1){
-                //Generamos el QR del nuevo cliente
-                await QR.generarQR(cedula, `http://localhost:3000/api/clientes/naturales/${cedula}`);
-            }else{
-                //Generamos el QR del nuevo empleado
-                await QR.generarQR(cedula, `http://localhost:3000/api/empleados/${cedula}`);
-            }
             
             if (rol == 1){
+
                 //Insertamos al cliente
                 const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_nat 
-                                                                        VALUES ($1,$2,$3,$4)`, [cedula,false,0,1]);
+                                                                        VALUES ($1,$2,$3,$4)`, [cedula,false,0,sucursal]);
+                //Generamos el QR del nuevo cliente
+                await QR.generarQR(cedula, `cedula: ${cedula}, 
+                                            nombre: ${primernombre} ${primerapellido}
+                                            email: ${email},
+                                            telefono: ${telefono},
+                                            ID: ${sucursal}-${cedula}`);                                                        
             }else{
+                `cedula: ${cedula}, 
+                                nombre: ${primernombre} ${primerapellido}
+                                email: ${email},
+                                telefono: ${telefono},
+                                ID: ${sucursalEmpleado}-${cedula}`
                 //Insertamos al empleado
                 var imagen:number = getRandomInt(1,49);
                 const InsercionEmp: QueryResult = await PoolEnUso.query(`INSERT INTO empleado 
@@ -149,20 +183,37 @@ export const signUp = async (req: Request,res: Response) =>{
                 return;
             }
 
+            const sucursalesCercanas: QueryResult = await PoolEnUso.query(
+                `SELECT s.codigo_suc
+                FROM sucursal s JOIN lugar parroquiasuc on s.fk_lugar = parroquiasuc.codigo_lug
+                                JOIN lugar municipiosuc on parroquiasuc.fk_lugar_lug = municipiosuc.codigo_lug
+                                JOIN lugar estadosuc on estadosuc.codigo_lug = municipiosuc.fk_lugar_lug,
+                lugar parroquia JOIN lugar municipio on parroquia.fk_lugar_lug = municipio.codigo_lug
+                                JOIN lugar estado on estado.codigo_lug = municipio.fk_lugar_lug
+                WHERE (municipiosuc.codigo_lug = municipio.codigo_lug OR estadosuc.codigo_lug = estado.codigo_lug) 
+                    AND parroquia.codigo_lug = $1`, [direccion_fisica])
+        
+                const sucursal = sucursalesCercanas.rows[0].codigo_suc;
+
+
             //Insertamos la persona natural
             const InsercionJur: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica 
                                                                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [rif,razon_social,denom_comercial, web,capital,new Date(),`C:\\ImagenesBD\\QR\\${rif}.png`, direccion_fisica,direccion_fiscal]);
             
             const InsercionTel: QueryResult = await PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_jur)
-                                                                   VALUES ($1,$2,$3)`, [telefono, compania,rif]);
+                                                                   VALUES ($1,$2,$3)`, [TelefonoFormateado, compania,rif]);
             
             
             //Generamos el QR del nuevo cliente
-            await QR.generarQR(rif, `http://localhost:3000/api/clientes/juridicos/${rif}`);
+            await QR.generarQR(rif, `rif: ${rif}, 
+                                     nombre: ${razon_social}
+                                     email: ${email},
+                                     telefono: ${telefono},
+                                     ID: ${sucursal}-${rif}`);
 
             //Insertamos al cliente
             const InsercionCli: QueryResult = await PoolEnUso.query(`INSERT INTO cliente_jur 
-                                                                    VALUES ($1,$2,$3,$4)`, [rif,0,false,1]);
+                                                                    VALUES ($1,$2,$3,$4)`, [rif,0,false,sucursal]);
 
             //ahora si creamos el usuario
             const InsercionUser: QueryResult = await PoolEnUso.query(`INSERT INTO usuarios (nombre_usu, password_usu, direccion_ema, fk_roles,fk_persona_jur) 
