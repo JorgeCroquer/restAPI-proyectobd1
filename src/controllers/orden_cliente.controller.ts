@@ -11,7 +11,7 @@ const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {puntosA,untosG,fecha,Date,tipo,valorPunto,sucursal,clienteId,direcionTextual, id} = req.body;
+        const {puntosA,untosG,fecha,Date,tipo,valorPunto,sucursal,clienteId,direcionTextual, id, rol} = req.body;
         console.log(id);
         const response: QueryResult = await PoolEnUso.query(`
         INSERT 

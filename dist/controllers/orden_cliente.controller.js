@@ -9,20 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
+exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
+=======
 exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
+>>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+<<<<<<< HEAD
         const { puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual, id } = req.body;
         console.log(id);
+=======
+<<<<<<< HEAD
+        const { puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual } = req.body;
+=======
+        const { puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual } = req.body;
+>>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
+>>>>>>> 7d4ea078ca808263352f56b19846e7e0a70cddf0
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
 		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+<<<<<<< HEAD
+        RETURNING numero_ord`, [puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual]);
+=======
         RETURNING numero_ord`, [puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual]);
+>>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
         return res.status(201).json({
             message: "orden created successfully",
             body: {
@@ -83,3 +99,20 @@ const crearOrdenEstatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.crearOrdenEstatus = crearOrdenEstatus;
+<<<<<<< HEAD
+const getValorPunto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield PoolEnUso.query(`
+        SELECT codigo_val
+        FROM valor_punto
+        WHERE fechainicio_val = (SELECT MAX(fechainicio_val) FROM valor_punto)`);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getValorPunto = getValorPunto;
+=======
+>>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9

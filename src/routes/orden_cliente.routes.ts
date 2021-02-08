@@ -10,5 +10,6 @@ const router = Router();
 router.post('/OrdenC',authJWT.verifyToken,ordenClienteCtrl.crearOrden);
 router.post('/OrdenC/Producto_Orden',ordenClienteCtrl.crearProductoOrden);
 router.post('/OrdenC/Orden_estatus',ordenClienteCtrl.crearOrdenEstatus);  
+router.get('/OrdenC/valorpunto',ordenClienteCtrl.getValorPunto)
 
 export default router;
