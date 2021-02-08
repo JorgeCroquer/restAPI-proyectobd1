@@ -9,31 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
 exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
-=======
 exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
         const { puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual } = req.body;
-=======
-        const { puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual } = req.body;
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
 		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-<<<<<<< HEAD
         RETURNING numero_ord`, [puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual]);
-=======
-        RETURNING numero_ord`, [puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual]);
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
         return res.status(201).json({
             message: "orden created successfully",
             body: {
