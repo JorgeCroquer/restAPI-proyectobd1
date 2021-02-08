@@ -5,20 +5,18 @@ import {Pool, QueryResult} from 'pg'
 import jwt from 'jsonwebtoken'
 import config from '../config/config'
 
-
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {puntosA,untosG,fecha,Date,tipo,valorPunto,sucursal,clienteId,direcionTextual, id, rol} = req.body;
-        console.log(id);
+        const {puntosA,untosG,fecha,tipo,valorPunto,lugardir,sucursal,clienteId,direcionTextual} = req.body;
         const response: QueryResult = await PoolEnUso.query(`
         INSERT 
         INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
-		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+           fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-        RETURNING numero_ord`,[puntosA,untosG,fecha,Date,tipo,valorPunto,sucursal,clienteId,direcionTextual]);
+        RETURNING numero_ord`,[puntosA,untosG,fecha,tipo,valorPunto,lugardir,sucursal,clienteId,direcionTextual]);
         return res.status(201).json({
             message: "orden created successfully",
             body: {
@@ -72,6 +70,20 @@ export const crearOrdenEstatus = async(req: Request,res: Response): Promise<Resp
                 }
             }
         });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getValorPunto = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(`
+        SELECT codigo_val
+        FROM valor_punto
+        WHERE fechainicio_val = (SELECT MAX(fechainicio_val) FROM valor_punto)`);
+        return res.status(200).json(response.rows);
     }
     catch(e){
         console.log(e);
