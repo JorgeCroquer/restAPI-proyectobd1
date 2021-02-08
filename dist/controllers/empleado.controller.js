@@ -315,15 +315,15 @@ const asistencias = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 cedula_nat AS cedula,
                 horaentrada_hor AS horaentrada,
                 horasalida_hor AS horasalida,
-                horaentrada_asi AS entradaasi,
-                horasalida_asi AS salidaasi,
+                COALESCE(horaentrada_asi::varchar(9), 'No asistió') AS entradaasi,
+                COALESCE(horasalida_asi::varchar(9), 'No asistió') AS salidaasi,
                 cumplio_asi AS cumplio,
                 CASE
-                    WHEN horaentrada_hor < horaentrada_asi THEN true
+                    WHEN horaentrada_hor + '1 hr'::INTERVAL < horaentrada_asi THEN true
                     ELSE false
                 END entrada_tarde,
                 CASE
-                    WHEN horasalida_hor > horasalida_asi THEN true
+                    WHEN horasalida_hor - '1 hr'::INTERVAL > horasalida_asi THEN true
                     ELSE false
                 END salida_temprana
             FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
