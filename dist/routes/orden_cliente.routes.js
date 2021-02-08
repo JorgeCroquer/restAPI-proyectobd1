@@ -24,15 +24,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ordenClienteCtrl = __importStar(require("../controllers/orden_cliente.controller"));
-const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 //Productos
 //router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
-router.post('/OrdenC', middlewares_1.authJWT.verifyToken, ordenClienteCtrl.crearOrden);
+router.post('/OrdenC', ordenClienteCtrl.crearOrden);
 router.post('/OrdenC/Producto_Orden', ordenClienteCtrl.crearProductoOrden);
 router.post('/OrdenC/Orden_estatus', ordenClienteCtrl.crearOrdenEstatus);
-<<<<<<< HEAD
 router.get('/OrdenC/valorpunto', ordenClienteCtrl.getValorPunto);
-=======
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
 exports.default = router;

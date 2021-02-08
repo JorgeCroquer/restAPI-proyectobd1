@@ -19,7 +19,6 @@ const crearMedio = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const response = yield PoolEnUso.query(`
         INSERT
         INTO medio_pago
-<<<<<<< HEAD
         VALUES(nextval('medio_pago_codigo_med_seq'))
         RETURNING codigo_med`);
         return res.status(201).json({
@@ -27,12 +26,6 @@ const crearMedio = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             body: {
                 Proveedor: {}
             },
-=======
-        VALUES(nextval('medio_pago_codigo_med_seq'));
-        RETURNING codigo_med`);
-        return res.status(201).json({
-            message: "Medio de pago successfully",
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
             respuesta: response.rows //Aquí reguresa el ID que acaba de insertar
         });
     }
@@ -178,7 +171,6 @@ exports.crearPunto = crearPunto;
 //POR ULTIMO RELACIONAMOS EL PAGO AL MEDIO DE PAGO CREADO PREVIAMENTE Y A LA ORDEN A LA QUE PAGA 
 const crearPago = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
         const { importe, medio, orden } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT
@@ -186,15 +178,6 @@ const crearPago = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         VALUES(default,$1,$2,$3)`, [importe, medio, orden]);
         return res.status(201).json({
             message: "Pago created successfully",
-=======
-        const { importe, orden, medio } = req.body;
-        const response = yield PoolEnUso.query(`
-        INSERT
-        INTO pago
-        VALUES(default,$1,$2,$3);`, [importe, orden, medio]);
-        return res.status(201).json({
-            message: "Medio Punto created successfully",
->>>>>>> 96dcd63bfea91ab7f460f95e0e157346541586d9
             body: {
                 Proveedor: {
                     importe, orden, medio
