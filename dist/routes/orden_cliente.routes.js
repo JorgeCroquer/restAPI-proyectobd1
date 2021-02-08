@@ -23,12 +23,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
+const ordenClienteCtrl = __importStar(require("../controllers/orden_cliente.controller"));
 const router = express_1.default();
-//tiendas
-//router.get('/tiendas',[authJWT.verifyToken,authJWT.isGerenteTalentoHumano], TiendaCtrl.getTiendas);  
-router.get('/tiendas', TiendaCtrl.getTiendas);
-router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
-router.put('/tiendas/:id', TiendaCtrl.updateTienda);
-router.post('/tiendas', TiendaCtrl.createTienda);
+//Productos
+//router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
+router.post('/OrdenC', ordenClienteCtrl.crearOrden);
+router.post('/OrdenC/Producto_Orden', ordenClienteCtrl.crearProductoOrden);
+router.post('/OrdenC/Orden_estatus', ordenClienteCtrl.crearOrdenEstatus);
+router.get('/OrdenC/valorpunto', ordenClienteCtrl.getValorPunto);
 exports.default = router;

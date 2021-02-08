@@ -16,10 +16,14 @@ export const crearMedio = async(req: Request,res: Response): Promise<Response> =
         const response: QueryResult = await PoolEnUso.query(`
         INSERT
         INTO medio_pago
-        VALUES(nextval('medio_pago_codigo_med_seq'));
+        VALUES(nextval('medio_pago_codigo_med_seq'))
         RETURNING codigo_med`);
         return res.status(201).json({
-            message: "Medio de pago successfully",
+            message: "Medio de pago successfully created",
+            body: {
+                Proveedor: {
+                }
+            },
             respuesta:response.rows //Aquí reguresa el ID que acaba de insertar
         });
     }
@@ -169,13 +173,13 @@ export const crearPunto = async(req: Request,res: Response): Promise<Response> =
 
 export const crearPago = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {importe,orden,medio} = req.body;
+        const {importe,medio,orden} = req.body;
         const response: QueryResult = await PoolEnUso.query(`
         INSERT
         INTO pago
-        VALUES(default,$1,$2,$3);`,[importe,orden,medio]);
+        VALUES(default,$1,$2,$3)`,[importe,medio,orden]);
         return res.status(201).json({
-            message: "Medio Punto created successfully",
+            message: "Pago created successfully",
             body: {
                 Proveedor: {
                     importe,orden,medio
