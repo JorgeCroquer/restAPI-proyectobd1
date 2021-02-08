@@ -23,12 +23,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
+const pagoCtrl = __importStar(require("../controllers/pago.controller"));
 const router = express_1.default();
-//tiendas
-router.get('/tiendas', TiendaCtrl.getTiendas);
-router.get('/tiendas', TiendaCtrl.getTiendas);
-router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
-router.put('/tiendas/:id', TiendaCtrl.updateTienda);
-router.post('/tiendas', TiendaCtrl.createTienda);
+//Productos
+//router.get('/Productos/faltantes/:id',[authJWT.verifyToken,authJWT.isGerenteGeneral], ProductoCtrl.getFaltantes);
+router.post('/pago/medio', pagoCtrl.crearMedio);
+router.post('/pago/cripto', pagoCtrl.crearCripto);
+router.post('/pago/dineroele', pagoCtrl.crearDineroEle);
+router.post('/pago/tarjeta', pagoCtrl.crearTarjeta);
+router.post('/pago/cuenta', pagoCtrl.crearCuenta);
+router.post('/pago/efectivo', pagoCtrl.crearEfectivo);
+router.post('/pago/efectivo', pagoCtrl.crearPunto);
+router.post('/pago', pagoCtrl.crearPago);
 exports.default = router;

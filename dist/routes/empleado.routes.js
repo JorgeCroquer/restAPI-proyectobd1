@@ -32,4 +32,5 @@ router.delete('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.is
 router.get('/empleados/:id/beneficios', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.getBeneficios);
 router.put('/empleados/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.updateEmpleado);
 router.post('/empleados/sucursal/:id', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.createEmpleado);
+router.post('/empleados/asistencias', [index_1.authJWT.verifyToken, index_1.authJWT.isGerenteTalentoHumano], EmpleadoCtrl.asistencias);
 exports.default = router;

@@ -29,10 +29,10 @@ class QR {
     }
     static llenarQRNat() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield PoolEnUso.query(`SELECT cedula_nat
-        FROM persona_natural`);
+            const response = yield PoolEnUso.query(`SELECT cedula_nat, 
+            FROM persona_natural`);
             for (let i = 0; i <= response.rows.length - 1; i++) {
-                this.generarQR(response.rows[i].cedula_nat, `http://localhost:3000/api/clientes/naturales/${response.rows[i].cedula_nat}`);
+                this.generarQR(response.rows[i].cedula_nat, ``);
                 const escritura = yield PoolEnUso.query(`UPDATE persona_natural SET qr_path = $1 WHERE cedula_nat = $2`, [`C:\\ImagenesBD\\QR\\${response.rows[i].cedula_nat}.png`, response.rows[i].cedula_nat]);
             }
             console.log('listo');

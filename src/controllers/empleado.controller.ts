@@ -399,4 +399,36 @@ export const createEmpleado = async (req: Request, res: Response): Promise<Respo
     }
 }
 
+export const asistencias = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const {fecha} = req.body
+        const asistencia: QueryResult = await PoolEnUso.query(
+            `SELECT CONCAT(pn.primernombre_nat,' ',pn.primerapellido_nat) AS nombre,
+                cedula_nat AS cedula,
+                horaentrada_hor AS horaentrada,
+                horasalida_hor AS horasalida,
+                horaentrada_asi AS entradaasi,
+                horasalida_asi AS salidaasi,
+                cumplio_asi AS cumplio,
+                CASE
+                    WHEN horaentrada_hor < horaentrada_asi THEN true
+                    ELSE false
+                END entrada_tarde,
+                CASE
+                    WHEN horasalida_hor > horasalida_asi THEN true
+                    ELSE false
+                END salida_temprana
+            FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
+                JOIN asistencia a on e.fk_cedula_nat = a.fk_empleado
+                JOIN horario_empleado he on e.fk_cedula_nat = he.fk_empleado
+                JOIN horario h on he.fk_horario = h.codigo_hor
+            WHERE a.fecha_asi = $1`,[fecha])
+
+        return res.status(200).json(asistencia.rows);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Internal server error')
+    }
+}
 
