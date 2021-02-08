@@ -16,7 +16,7 @@ const database_1 = require("../database");
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual } = req.body;
+        const { puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
