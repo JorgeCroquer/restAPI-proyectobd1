@@ -104,16 +104,16 @@ const crearTarjeta = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.crearTarjeta = crearTarjeta;
 const crearCuenta = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { medio, numero, banco, tarjetahabiente, cedula, vencimiento, tipo } = req.body;
+        const { medio, numero, banco, cedula } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT
         INTO cuenta_bancaria
-        VALUES(32,12345678901234567890,'Provincial',9986646,null)`, [medio, numero, banco, tarjetahabiente, cedula, vencimiento, tipo]);
+        VALUES($1,$2,$3,$4,null)`, [medio, numero, banco, cedula]);
         return res.status(201).json({
             message: "Medio Cuenta created successfully",
             body: {
                 Proveedor: {
-                    medio, numero, banco, tarjetahabiente, cedula, vencimiento, tipo
+                    medio, numero, banco, cedula
                 }
             }
         });
