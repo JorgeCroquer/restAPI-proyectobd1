@@ -25,8 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
 const router = express_1.default();
-//tiendas
-//router.get('/tiendas',[authJWT.verifyToken,authJWT.isGerenteTalentoHumano], TiendaCtrl.getTiendas);  
+//tiendas  
 router.get('/tiendas', TiendaCtrl.getTiendas);
 router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
 router.put('/tiendas/:id', TiendaCtrl.updateTienda);

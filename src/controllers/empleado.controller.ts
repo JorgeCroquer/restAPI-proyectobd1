@@ -44,7 +44,8 @@ export const getEmpleadosBySucursal = async(req: Request, res: Response): Promis
                     v.iniciovacaciones_emp AS iniciovacas,
                     v.final_vacaciones_emp AS finvacas,
                     u.nombre_usu AS usuario,
-                    u.direccion_ema AS email
+                    u.direccion_ema AS email,
+                    u.fk_roles AS rol
             FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
                     JOIN sucursal s ON e.fk_sucursal = s.codigo_suc
                     JOIN telefono t ON pn.cedula_nat = t.fk_persona_nat
@@ -121,7 +122,8 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
                 rif,
                 salario,
                 telefono,
-                usuario} = req.body
+                usuario,
+                rol} = req.body
         
         const persona: QueryResult = await PoolEnUso.query(
             `UPDATE persona_natural
@@ -138,7 +140,7 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
              WHERE fk_cedula_nat = $2`, [salario, cedula]);
 
 
-             console.log(telefono.split('-')[1])
+        
         //Primero busco a ver si ya existe ese numero de telefono
         const buscarTel: QueryResult = await PoolEnUso.query(
             `SELECT numero_tel
@@ -160,7 +162,7 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
             }
             const tel: QueryResult = await PoolEnUso.query(
                 `UPDATE telefono
-                 SET numero_tel = $1, compania = $2
+                 SET numero_tel = $1, compania_tel = $2
                  WHERE fk_persona_nat = $3`, [telefono.split('-')[1],compania,cedula]);
         }else return res.status(400).json({message: 'El telefono ya esta en uso'})
 
@@ -174,8 +176,8 @@ export const updateEmpleado = async(req: Request, res: Response): Promise<Respon
             //Si no existe entonces actualizo
             const user: QueryResult = await PoolEnUso.query(
                 `UPDATE usuarios
-                 SET nombre_usu = $1, direccion_ema = $2
-                 WHERE fk_persona_nat = $3`, [usuario,email,cedula]);
+                 SET nombre_usu = $1, direccion_ema = $2, fk_roles = $3
+                 WHERE fk_persona_nat = $4`, [usuario,email,rol,cedula]);
 
         }else return res.status(400).json({message: 'El nombre de usuario o el email ya estan en uso'})
 
@@ -246,7 +248,8 @@ export const createEmpleado = async (req: Request, res: Response): Promise<Respo
             salario,
             telefono,
             usuario,
-            password} = req.body
+            password,
+            rol} = req.body
 
         //Llevare el telefono a un formato valido
        var TelefonoFormateado
@@ -356,7 +359,7 @@ export const createEmpleado = async (req: Request, res: Response): Promise<Respo
         const encryptedPassword = await encryptPassword(password)
         const user: QueryResult = await PoolEnUso.query(
             `INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_nat)
-             VALUES ($1,$2,$3,$4,$5)`, [usuario,encryptedPassword,email,12,cedula]);
+             VALUES ($1,$2,$3,$4,$5)`, [usuario,encryptedPassword,email,rol,cedula]);
                 console.log('usuario')
 
         
@@ -409,7 +412,6 @@ export const asistencias = async (req: Request, res: Response): Promise<Response
                 horasalida_hor AS horasalida,
                 COALESCE(horaentrada_asi::varchar(9), 'No asistió') AS entradaasi,
                 COALESCE(horasalida_asi::varchar(9), 'No asistió') AS salidaasi,
-                cumplio_asi AS cumplio,
                 CASE
                     WHEN horaentrada_hor + '1 hr'::INTERVAL < horaentrada_asi THEN true
                     ELSE false
@@ -417,7 +419,12 @@ export const asistencias = async (req: Request, res: Response): Promise<Response
                 CASE
                     WHEN horasalida_hor - '1 hr'::INTERVAL > horasalida_asi THEN true
                     ELSE false
-                END salida_temprana
+                END salida_temprana,
+                CASE
+                    --cuando entre tarde op salga temprano entonces no cumple (1 HORA DE TOLERANCIA)
+                    WHEN horaentrada_hor + '1 hr'::INTERVAL < horaentrada_asi OR horasalida_hor - '1 hr'::INTERVAL > horasalida_asi THEN false
+                    ELSE true
+                END cumplio
             FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
                 JOIN asistencia a on e.fk_cedula_nat = a.fk_empleado
                 JOIN horario_empleado he on e.fk_cedula_nat = he.fk_empleado

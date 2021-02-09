@@ -28,5 +28,4 @@ const ReportCtrl = __importStar(require("../controllers/reports.controllers"));
 const middlewares_1 = require("../middlewares");
 const router = express_1.default();
 router.post('/empreport', [connect_multiparty_1.multiPartMiddleware, middlewares_1.authJWT.verifyToken, middlewares_1.authJWT.isGerenteTalentoHumano], ReportCtrl.compararHorarios);
-router.get('/empleadosreport', ReportCtrl.enviarAReporte);
 exports.default = router;

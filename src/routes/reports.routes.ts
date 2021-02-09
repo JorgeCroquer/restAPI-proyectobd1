@@ -8,5 +8,5 @@ const router = Router();
 
 router.post('/empreport', [multiPartMiddleware, authJWT.verifyToken,authJWT.isGerenteTalentoHumano], ReportCtrl.compararHorarios);
 
-router.get('/empleadosreport', ReportCtrl.enviarAReporte)
+
 export default router;
