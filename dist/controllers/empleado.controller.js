@@ -47,7 +47,8 @@ const getEmpleadosBySucursal = (req, res) => __awaiter(void 0, void 0, void 0, f
                     v.iniciovacaciones_emp AS iniciovacas,
                     v.final_vacaciones_emp AS finvacas,
                     u.nombre_usu AS usuario,
-                    u.direccion_ema AS email
+                    u.direccion_ema AS email,
+                    u.fk_roles AS rol
             FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
                     JOIN sucursal s ON e.fk_sucursal = s.codigo_suc
                     JOIN telefono t ON pn.cedula_nat = t.fk_persona_nat
@@ -103,7 +104,7 @@ exports.getBeneficios = getBeneficios;
 const updateEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cedula = req.params.id;
-        const { primernombre, segundonombre, primerapellido, segundoapellido, email, iniciovacas, finvacas, horaentrada, horasalida, rif, salario, telefono, usuario } = req.body;
+        const { primernombre, segundonombre, primerapellido, segundoapellido, email, iniciovacas, finvacas, horaentrada, horasalida, rif, salario, telefono, usuario, rol } = req.body;
         const persona = yield PoolEnUso.query(`UPDATE persona_natural
              SET primernombre_nat = $1,
                  segundonombre_nat = $2,
@@ -114,7 +115,6 @@ const updateEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function*
         const empleado = yield PoolEnUso.query(`UPDATE empleado
              SET salario_emp = $1
              WHERE fk_cedula_nat = $2`, [salario, cedula]);
-        console.log(telefono.split('-')[1]);
         //Primero busco a ver si ya existe ese numero de telefono
         const buscarTel = yield PoolEnUso.query(`SELECT numero_tel
              FROM telefono
@@ -136,7 +136,7 @@ const updateEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 compania = 'Desconocida';
             }
             const tel = yield PoolEnUso.query(`UPDATE telefono
-                 SET numero_tel = $1, compania = $2
+                 SET numero_tel = $1, compania_tel = $2
                  WHERE fk_persona_nat = $3`, [telefono.split('-')[1], compania, cedula]);
         }
         else
@@ -148,8 +148,8 @@ const updateEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (buscarUser.rows.length == 0) {
             //Si no existe entonces actualizo
             const user = yield PoolEnUso.query(`UPDATE usuarios
-                 SET nombre_usu = $1, direccion_ema = $2
-                 WHERE fk_persona_nat = $3`, [usuario, email, cedula]);
+                 SET nombre_usu = $1, direccion_ema = $2, fk_roles = $3
+                 WHERE fk_persona_nat = $4`, [usuario, email, rol, cedula]);
         }
         else
             return res.status(400).json({ message: 'El nombre de usuario o el email ya estan en uso' });
@@ -193,7 +193,7 @@ exports.updateEmpleado = updateEmpleado;
 const createEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sucursal = req.params.id;
-        const { primernombre, segundonombre, primerapellido, segundoapellido, cedula, parroquia, email, iniciovacas, finvacas, horaentrada, horasalida, rif, salario, telefono, usuario, password } = req.body;
+        const { primernombre, segundonombre, primerapellido, segundoapellido, cedula, parroquia, email, iniciovacas, finvacas, horaentrada, horasalida, rif, salario, telefono, usuario, password, rol } = req.body;
         //Llevare el telefono a un formato valido
         var TelefonoFormateado;
         if (telefono.startsWith('04')) {
@@ -276,7 +276,7 @@ const createEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function*
         //Encripto la contrasena
         const encryptedPassword = yield auth_controller_1.encryptPassword(password);
         const user = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_nat)
-             VALUES ($1,$2,$3,$4,$5)`, [usuario, encryptedPassword, email, 12, cedula]);
+             VALUES ($1,$2,$3,$4,$5)`, [usuario, encryptedPassword, email, rol, cedula]);
         console.log('usuario');
         //Vacaciones
         const nuevaVacacion = yield PoolEnUso.query(`INSERT INTO vacaciones (iniciovacaciones_emp, final_vacaciones_emp, fk_empleado)
@@ -315,17 +315,21 @@ const asistencias = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 cedula_nat AS cedula,
                 horaentrada_hor AS horaentrada,
                 horasalida_hor AS horasalida,
-                horaentrada_asi AS entradaasi,
-                horasalida_asi AS salidaasi,
-                cumplio_asi AS cumplio,
+                COALESCE(horaentrada_asi::varchar(9), 'No asistió') AS entradaasi,
+                COALESCE(horasalida_asi::varchar(9), 'No asistió') AS salidaasi,
                 CASE
-                    WHEN horaentrada_hor < horaentrada_asi THEN true
+                    WHEN horaentrada_hor + '1 hr'::INTERVAL < horaentrada_asi THEN true
                     ELSE false
                 END entrada_tarde,
                 CASE
-                    WHEN horasalida_hor > horasalida_asi THEN true
+                    WHEN horasalida_hor - '1 hr'::INTERVAL > horasalida_asi THEN true
                     ELSE false
-                END salida_temprana
+                END salida_temprana,
+                CASE
+                    --cuando entre tarde op salga temprano entonces no cumple (1 HORA DE TOLERANCIA)
+                    WHEN horaentrada_hor + '1 hr'::INTERVAL < horaentrada_asi OR horasalida_hor - '1 hr'::INTERVAL > horasalida_asi THEN false
+                    ELSE true
+                END cumplio
             FROM persona_natural pn JOIN empleado e ON pn.cedula_nat = e.fk_cedula_nat
                 JOIN asistencia a on e.fk_cedula_nat = a.fk_empleado
                 JOIN horario_empleado he on e.fk_cedula_nat = he.fk_empleado

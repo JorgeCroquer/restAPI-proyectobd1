@@ -5,7 +5,7 @@ import {authJWT} from '../middlewares'
 
 const router = Router();
 
-//tiendas 
+//tiendas  
 router.get('/tiendas',TiendaCtrl.getTiendas); 
 router.delete('/tiendas/:id',TiendaCtrl.deleteTienda);
 router.put('/tiendas/:id',TiendaCtrl.updateTienda);

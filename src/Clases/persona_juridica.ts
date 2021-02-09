@@ -1,5 +1,6 @@
 import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
+import { encryptPassword } from '../controllers/auth.controller';
 
 const PoolEnUso = pool
 
@@ -35,4 +36,21 @@ export class persona_juridica {
         else return false;
     } 
 
+    static async llenarUsuarios(){
+        const juridicos: QueryResult = await PoolEnUso.query(
+            `SELECT SUBSTR(pj.razonsocial_jur,1, POSITION(' ' IN pj.razonsocial_jur))  AS user,
+                    REPLACE(CONCAT(SUBSTR(pj.razonsocial_jur,1, POSITION(' ' IN pj.razonsocial_jur)) ,'@ucabmart.com.ve'), ' ', '') AS email,
+                    rif_jur as rif
+                    FROM persona_juridica pj`);
+
+        for (let i in juridicos.rows){
+            const password = await encryptPassword('9876') ;
+           
+            const usuarios: QueryResult = await PoolEnUso.query(
+                `INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_jur)
+                 VALUES ($1,$2,$3,1,$4)`, [juridicos.rows[i].user, password,juridicos.rows[i].email, juridicos.rows[i].rif]);
+                 console.log(i);
+        }
+    console.log('listos')
+    }
 }
