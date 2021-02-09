@@ -50,3 +50,53 @@ export const getProductosid = async(req: Request, res: Response): Promise<Respon
         return res.status(500).send('Internal Server Error');
     }
 }
+
+export const getTablaMonedas = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(
+            `SELECT tipo_moneda.nombre_tip as moneda,
+            historico_moneda.valor_his as valor
+            FROM tipo_moneda join historico_moneda 
+            ON tipo_moneda.codigo_tip = historico_moneda.fk_tipo_moneda 
+            WHERE historico_moneda.fechafin_his is null`);
+
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getClientesNat = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(
+            `select persona_natural.cedula_nat,
+            persona_natural.primernombre_nat,
+            persona_natural.primerapellido_nat,
+            cliente_nat.puntos_nat
+            from cliente_nat join persona_natural
+            on persona_natural.cedula_nat=cliente_nat.fk_cedula_nat`);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getClientesJur = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(
+            `select persona_juridica.rif_jur,
+            persona_juridica.razonsocial_jur,
+            cliente_jur.puntos_jur
+            from cliente_jur join persona_juridica
+            on persona_juridica.rif_jur=cliente_jur.fk_rif_jur`);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
