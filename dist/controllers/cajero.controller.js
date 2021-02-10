@@ -9,20 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClientesJur = exports.getClientesNat = exports.getTablaMonedas = exports.getProductosid = exports.getProductos = void 0;
+exports.getDescuentos = exports.getValorPunto = exports.getClientesJur = exports.getClientesNat = exports.getTablaMonedas = exports.getProductosid = exports.getProductos = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 //cajero
 const getProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield PoolEnUso.query('SELECT producto.codigo_pro as codigo,\
-					producto.nombre_pro as nombre,\
-					producto.pathimagen_pro as imagen,\
-					precio.precio_pre as precio \
-					FROM producto inner join precio \
-					ON producto.codigo_pro = precio.fk_producto \
-					');
+        const response = yield PoolEnUso.query(`SELECT producto.codigo_pro as codigo,
+            producto.nombre_pro as nombre,
+            producto.pathimagen_pro as imagen,
+            precio.precio_pre as precio 
+            FROM producto inner join precio 
+            ON producto.codigo_pro = precio.fk_producto 
+            `);
         return res.status(200).json(response.rows);
     }
     catch (e) {
@@ -34,12 +34,12 @@ exports.getProductos = getProductos;
 const getProductosid = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const response = yield PoolEnUso.query(`SELECT producto.codigo_pro as codigo,\
-            producto.nombre_pro as nombre,\
-            producto.pathimagen_pro as imagen,\
-            precio.precio_pre as precio \
-            FROM producto inner join precio \
-            ON producto.codigo_pro = precio.fk_producto \
+        const response = yield PoolEnUso.query(`SELECT producto.codigo_pro as codigo,
+            producto.nombre_pro as nombre,
+            producto.pathimagen_pro as imagen,
+            precio.precio_pre as precio 
+            FROM producto inner join precio 
+            ON producto.codigo_pro = precio.fk_producto 
             WHERE producto.codigo_pro = $1`, [id]);
         return res.status(200).json(response.rows);
     }
@@ -95,3 +95,34 @@ const getClientesJur = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getClientesJur = getClientesJur;
+const getValorPunto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield PoolEnUso.query(`select * from valor_punto
+            where fechafin_val is null`);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getValorPunto = getValorPunto;
+const getDescuentos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield PoolEnUso.query(`
+            select 
+            codigo_des as codigo,
+            porcentaje_des as porcentaje,
+            fk_producto as producto
+            from descuento
+            join promo
+            on promo.codigo_prom=descuento.fk_promo
+            where promo.fechafin_des is null`);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+exports.getDescuentos = getDescuentos;

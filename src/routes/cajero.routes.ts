@@ -10,6 +10,8 @@ router.get('/productos',ProductosCtrl.getProductos);
 router.get('/productos/monedas', ProductosCtrl.getTablaMonedas); 
 router.get('/productos/clientesNat',ProductosCtrl.getClientesNat);
 router.get('/productos/clientesJur', ProductosCtrl.getClientesJur); 
+router.get('/productos/ValorPunto', ProductosCtrl.getValorPunto); 
+router.get('/productos/Descuentos', ProductosCtrl.getDescuentos); 
 router.get('/productos/:id', ProductosCtrl.getProductosid);
 
 export default router;

@@ -14,13 +14,13 @@ const PoolEnUso = pool
 export const getProductos = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const response: QueryResult = await PoolEnUso.query(
-					'SELECT producto.codigo_pro as codigo,\
-					producto.nombre_pro as nombre,\
-					producto.pathimagen_pro as imagen,\
-					precio.precio_pre as precio \
-					FROM producto inner join precio \
-					ON producto.codigo_pro = precio.fk_producto \
-					');
+            `SELECT producto.codigo_pro as codigo,
+            producto.nombre_pro as nombre,
+            producto.pathimagen_pro as imagen,
+            precio.precio_pre as precio 
+            FROM producto inner join precio 
+            ON producto.codigo_pro = precio.fk_producto 
+            `);
         return res.status(200).json(response.rows);
     }
     catch(e){
@@ -35,12 +35,12 @@ export const getProductosid = async(req: Request, res: Response): Promise<Respon
         const id = req.params.id;
         const response: QueryResult = await PoolEnUso.query(
 
-            `SELECT producto.codigo_pro as codigo,\
-            producto.nombre_pro as nombre,\
-            producto.pathimagen_pro as imagen,\
-            precio.precio_pre as precio \
-            FROM producto inner join precio \
-            ON producto.codigo_pro = precio.fk_producto \
+            `SELECT producto.codigo_pro as codigo,
+            producto.nombre_pro as nombre,
+            producto.pathimagen_pro as imagen,
+            precio.precio_pre as precio 
+            FROM producto inner join precio 
+            ON producto.codigo_pro = precio.fk_producto 
             WHERE producto.codigo_pro = $1`, [id]);
 
         return res.status(200).json(response.rows);
@@ -100,3 +100,39 @@ export const getClientesJur = async(req: Request, res: Response): Promise<Respon
         return res.status(500).send('Internal Server Error');
     }
 }
+
+export const getValorPunto = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(
+            `select * from valor_punto
+            where fechafin_val is null`);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+export const getDescuentos = async(req: Request, res: Response): Promise<Response> =>{
+    try{
+        const response: QueryResult = await PoolEnUso.query(
+            `
+            select 
+            codigo_des as codigo,
+            porcentaje_des as porcentaje,
+            fk_producto as producto
+            from descuento
+            join promo
+            on promo.codigo_prom=descuento.fk_promo
+            where promo.fechafin_des is null`);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+
+
