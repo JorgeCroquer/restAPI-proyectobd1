@@ -74,7 +74,7 @@ function createToken(id, rol) {
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //hay que obtener todo lo necesario para insertar una persona y su usuario
-        const { tipo, user, email, password, rol, telefono, sucursalEmpleado, cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, persona_contacto, codigo_residencia, razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal } = req.body;
+        const { tipo, user, email, password, rol, telefono, sucursalEmpleado, cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, persona_contacto, codigo_residencia, contacto, razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal } = req.body;
         //Una mini validacion
         if (!email || !password || !user || !telefono) {
             res.status(400).json({ message: 'Faltan campos' });
@@ -121,6 +121,16 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         switch (tipo) {
             case 'nat': {
+                //Busco por el rif del contacto
+                if (contacto) {
+                    console.log(contacto);
+                    const contactosjur = yield PoolEnUso.query(`SELECT rif_jur
+                 FROM persona_juridica
+                 WHERE rif_jur = $1`, [contacto]);
+                    if (contactosjur.rows.length == 0) {
+                        return res.status(400).json({ message: 'El rif del contacto no existe' });
+                    }
+                }
                 //Verificamos que no exista esa persona natural
                 var newPersonaNat = new persona_natural_1.persona_natural(cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, persona_contacto, codigo_residencia);
                 if (yield newPersonaNat.existeEnBD()) {
@@ -138,7 +148,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 const sucursal = sucursalesCercanas.rows[0].codigo_suc;
                 //Insertamos la persona natural
                 const InsercionNat = yield PoolEnUso.query(`INSERT INTO persona_natural 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), `C:\\ImagenesBD\\QR\\${cedula}.png`, persona_contacto, codigo_residencia]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula, rif, primernombre, segundonombre, primerapellido, segundoapellido, new Date(), `C:\\ImagenesBD\\QR\\${cedula}.png`, contacto, codigo_residencia]);
                 //Insertemos telefono
                 const InsercionTel = yield PoolEnUso.query(`INSERT INTO telefono (numero_tel, compania_tel, fk_persona_nat)
                                                                    VALUES ($1,$2,$3)`, [TelefonoFormateado, compania, cedula]);

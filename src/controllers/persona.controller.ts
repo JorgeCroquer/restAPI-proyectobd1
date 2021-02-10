@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
-
+import {encryptPassword} from './auth.controller'
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
@@ -137,20 +137,36 @@ export const getPersonaJurById = async(req: Request,res: Response): Promise<Resp
         return res.status(500).send('Internal Server Error');
     }
 }
-
+ 
 export const createPersonaJur = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal} = req.body;
-        const response: QueryResult = await PoolEnUso.query(`INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
-                                                             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,[rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal]);
-        return res.status(201).json({
-            message: "Persona Jurídica created successfully",
-            body: {
-                Persona: {
-                    rif,razon_social,denom_comercial,web,capital,fecha_registro, direccion_fisica, direccion_fiscal
-                }
-            }
-        });
+        const {rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur, fk_direccion_fisica, fk_direccion_fiscal,usuario,password,email} = req.body;
+        console.log(rif_jur)
+        const validacionRif: QueryResult = await PoolEnUso.query(
+            `SELECT rif_jur
+             FROM persona_juridica
+             WHERE rif_jur = $1`,[rif_jur]);
+        if (validacionRif.rows.length != 0){
+            return res.status(400).json({message: 'Este RIF ya esta en uso'})
+        }
+        const validacionUser: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_usu
+             FROM usuarios
+             WHERE nombre_usu = $1 OR direccion_ema = $2`,[usuario,email]);
+        if (validacionRif.rows.length != 0){
+            return res.status(400).json({message: 'Este nombre de usuario o email ya esta en uso'})
+        }
+
+        const responsePer: QueryResult = await PoolEnUso.query(
+            `INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,[rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur, fk_direccion_fisica, fk_direccion_fiscal]);
+         
+        let encrytedPassword = await encryptPassword(password)
+        const responseUsu: QueryResult = await PoolEnUso.query(
+            `INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_jur)
+             VALUES ($1,$2,$3,$4,$5)`,[usuario,encrytedPassword,email,1,rif_jur])
+        
+        return res.status(201).json({message: "Persona Jurídica created successfully"});
     }
     catch(e){
         console.log(e);

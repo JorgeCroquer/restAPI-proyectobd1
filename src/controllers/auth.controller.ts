@@ -62,7 +62,7 @@ export const signUp = async (req: Request,res: Response) =>{
         //hay que obtener todo lo necesario para insertar una persona y su usuario
     const {tipo,
         user,email,password,rol,telefono,sucursalEmpleado,
-        cedula, rif, primernombre,segundonombre, primerapellido,segundoapellido, persona_contacto, codigo_residencia,
+        cedula, rif, primernombre,segundonombre, primerapellido,segundoapellido, persona_contacto, codigo_residencia, contacto,
         razon_social, denom_comercial, web, capital, direccion_fisica, direccion_fiscal} = req.body;
 
         
@@ -111,10 +111,21 @@ export const signUp = async (req: Request,res: Response) =>{
 
     
 
-
     switch (tipo){
         case 'nat':{
-
+            //Busco por el rif del contacto
+        if (contacto){
+            console.log(contacto)
+            const contactosjur:QueryResult = await PoolEnUso.query(
+                `SELECT rif_jur
+                 FROM persona_juridica
+                 WHERE rif_jur = $1`, [contacto])
+            if (contactosjur.rows.length == 0){
+                return res.status(400).json({message: 'El rif del contacto no existe'})
+            }
+        }
+            
+        
             //Verificamos que no exista esa persona natural
             var newPersonaNat: persona_natural = new persona_natural(cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,persona_contacto,codigo_residencia);
             if (await newPersonaNat.existeEnBD()){
@@ -134,9 +145,13 @@ export const signUp = async (req: Request,res: Response) =>{
         
                 const sucursal = sucursalesCercanas.rows[0].codigo_suc;
 
+
+
+
+
             //Insertamos la persona natural
             const InsercionNat: QueryResult = await PoolEnUso.query(`INSERT INTO persona_natural 
-                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),`C:\\ImagenesBD\\QR\\${cedula}.png`,persona_contacto,codigo_residencia]);
+                                                                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [cedula,rif,primernombre,segundonombre,primerapellido,segundoapellido,new Date(),`C:\\ImagenesBD\\QR\\${cedula}.png`,contacto,codigo_residencia]);
             
             
             //Insertemos telefono

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePersonaJur = exports.updatePersonaJur = exports.createPersonaJur = exports.getPersonaJurById = exports.getPersonaJur = exports.deletePersonaNat = exports.updatePersonaNat = exports.createPersonaNat = exports.getPersonaNatById = exports.getPersonasNat = void 0;
 const database_1 = require("../database");
+const auth_controller_1 = require("./auth.controller");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 //personas naturales
@@ -151,17 +152,26 @@ const getPersonaJurById = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getPersonaJurById = getPersonaJurById;
 const createPersonaJur = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { rif, razon_social, denom_comercial, web, capital, fecha_registro, direccion_fisica, direccion_fiscal } = req.body;
-        const response = yield PoolEnUso.query(`INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
-                                                             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [rif, razon_social, denom_comercial, web, capital, fecha_registro, direccion_fisica, direccion_fiscal]);
-        return res.status(201).json({
-            message: "Persona Jurídica created successfully",
-            body: {
-                Persona: {
-                    rif, razon_social, denom_comercial, web, capital, fecha_registro, direccion_fisica, direccion_fiscal
-                }
-            }
-        });
+        const { rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, fk_direccion_fisica, fk_direccion_fiscal, usuario, password, email } = req.body;
+        console.log(rif_jur);
+        const validacionRif = yield PoolEnUso.query(`SELECT rif_jur
+             FROM persona_juridica
+             WHERE rif_jur = $1`, [rif_jur]);
+        if (validacionRif.rows.length != 0) {
+            return res.status(400).json({ message: 'Este RIF ya esta en uso' });
+        }
+        const validacionUser = yield PoolEnUso.query(`SELECT codigo_usu
+             FROM usuarios
+             WHERE nombre_usu = $1 OR direccion_ema = $2`, [usuario, email]);
+        if (validacionRif.rows.length != 0) {
+            return res.status(400).json({ message: 'Este nombre de usuario o email ya esta en uso' });
+        }
+        const responsePer = yield PoolEnUso.query(`INSERT INTO persona_juridica (rif_jur,razonsocial_jur,dencomercial_jur,web_jur,capital_jur,fecharegistro_jur,fk_direccion_fisica_jur, fk_direccion_fiscal_jur) 
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [rif_jur, razonsocial_jur, dencomercial_jur, web_jur, capital_jur, fecharegistro_jur, fk_direccion_fisica, fk_direccion_fiscal]);
+        let encrytedPassword = yield auth_controller_1.encryptPassword(password);
+        const responseUsu = yield PoolEnUso.query(`INSERT INTO usuarios (nombre_usu,password_usu,direccion_ema,fk_roles,fk_persona_jur)
+             VALUES ($1,$2,$3,$4,$5)`, [usuario, encrytedPassword, email, 1, rif_jur]);
+        return res.status(201).json({ message: "Persona Jurídica created successfully" });
     }
     catch (e) {
         console.log(e);
