@@ -9,12 +9,79 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
+exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrdenFisico = exports.crearOrden = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+<<<<<<< HEAD
+        const { puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, direcionTextual } = req.body;
+        const userId = req.userId;
+        const tipoCli = yield PoolEnUso.query(`SELECT fk_persona_nat, fk_persona_jur
+             FROM usuarios 
+             WHERE codigo_usu =$1`, [userId]);
+        let tipocliente;
+        if (tipoCli.rows[0].fk_persona_nat) {
+            tipocliente = 'nat';
+        }
+        else {
+            tipocliente = 'jur';
+        }
+        const persona = yield PoolEnUso.query(`SELECT pn.cedula_nat::varchar(12) AS id
+             FROM persona_natural pn JOIN usuarios u ON pn.cedula_nat = u.fk_persona_nat
+             WHERE codigo_usu = $1
+             UNION
+             SELECT pj.rif_jur AS id
+             FROM persona_juridica pj JOIN usuarios u ON pj.rif_jur = u.fk_persona_jur
+             WHERE codigo_usu = $1`, [userId]);
+        let id = persona.rows[0].id;
+        let puntos;
+        if (puntosG == null) {
+            puntos = 0;
+        }
+        else {
+            puntos = puntosG;
+        }
+        console.log(id);
+        if (tipocliente == 'nat') {
+            console.log('natural');
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntos, fecha, tipo, valorPunto, lugardir, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntos, fecha, Date, tipo, valorPunto, sucursal, userId, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+        else if (tipocliente == 'jur') {
+            console.log('juridico');
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_jur,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntos, fecha, tipo, valorPunto, lugardir, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntos, fecha, Date, tipo, valorPunto, sucursal, userId, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+        return res.status(500).json({ message: "Error muy raro" });
+=======
         const { puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, id, direcionTextual } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT 
@@ -31,6 +98,7 @@ const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             },
             respuesta: response.rows
         });
+>>>>>>> 31a96a232a93755018ced634a970bbb05124e77f
     }
     catch (e) {
         console.log(e);
@@ -38,6 +106,56 @@ const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.crearOrden = crearOrden;
+const crearOrdenFisico = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { puntosA, puntosG, valorPunto, sucursal, direcionTextual, id, tipo } = req.body;
+        const fecha = new Date().toLocaleDateString('en-US');
+        const tipoCompra = 'Compra fisica';
+        const lugar = yield PoolEnUso.query(`SELECT codigo_lug
+             FROM lugar JOIN sucursal ON sucursal.fk_lugar = lugar.codigo_lug
+             WHERE sucursal.codigo_suc = $1`, [sucursal]);
+        let parroquia = lugar.rows[0].codigo_lug;
+        if (tipo == 'nat') {
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntosG, fecha, tipoCompra, valorPunto, parroquia, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntosG, fecha, Date, tipoCompra, valorPunto, sucursal, id, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+        else {
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_jur,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntosG, fecha, tipoCompra, valorPunto, parroquia, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntosG, fecha, Date, tipoCompra, valorPunto, sucursal, id, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send('Internal server error');
+    }
+});
+exports.crearOrdenFisico = crearOrdenFisico;
 const crearProductoOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { cantidad, precio, producto, orden } = req.body;
