@@ -30,6 +30,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             const decoded = jwt.verify(token, process.env.JWT_Secret || 'somesecrettoken') as Idecode
             req.userId = decoded.id
             req.userRol = decoded.rol
+            console.log(req.userId)
         
         } catch (error) {
             console.error(error);
