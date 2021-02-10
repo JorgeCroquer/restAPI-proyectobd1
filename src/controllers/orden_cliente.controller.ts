@@ -2,12 +2,15 @@ import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
 
+import jwt from 'jsonwebtoken'
+import config from '../config/config'
 
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
+<<<<<<< HEAD
         const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,direcionTextual} = req.body;
         const userId = req.userId;
 
@@ -80,6 +83,24 @@ export const crearOrden = async(req: Request,res: Response): Promise<Response> =
         }
         return res.status(500).json({message: "Error muy raro"})
 
+=======
+        const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual} = req.body;
+        const response: QueryResult = await PoolEnUso.query(`
+        INSERT 
+        INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT fK_persona_nat FROM usuarios WHERE codigo_usu = $8),$9)
+        RETURNING numero_ord`,[puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual]);
+        return res.status(201).json({
+            message: "orden created successfully",
+            body: {
+                OrdenCliente: {
+                    puntosA,puntosG,fecha,Date,tipo,valorPunto,sucursal,id,direcionTextual
+                }
+            },
+            respuesta:response.rows
+        });
+>>>>>>> 31a96a232a93755018ced634a970bbb05124e77f
     }
     catch(e){
         console.log(e);

@@ -12,7 +12,6 @@ const PoolEnUso = pool
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
         const {fecha,sucursal,proveedor} = req.body;
-        console.log(proveedor)
         const response: QueryResult = await PoolEnUso.query(`
         INSERT 
         INTO suministro(fecha_sum,fk_sucursal_sum,fk_proveedor_sum)

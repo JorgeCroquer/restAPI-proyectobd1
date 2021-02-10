@@ -29,7 +29,6 @@ const verifyToken = (req, res, next) => {
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_Secret || 'somesecrettoken');
             req.userId = decoded.id;
             req.userRol = decoded.rol;
-            console.log(req.userId);
         }
         catch (error) {
             console.error(error);
