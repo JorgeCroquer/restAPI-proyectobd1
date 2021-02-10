@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrden = void 0;
+exports.getValorPunto = exports.crearOrdenEstatus = exports.crearProductoOrden = exports.crearOrdenFisico = exports.crearOrden = void 0;
 const database_1 = require("../database");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, direcionTextual } = req.body;
+        const { puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, direcionTextual } = req.body;
         const userId = req.userId;
         const tipoCli = yield PoolEnUso.query(`SELECT fk_persona_nat, fk_persona_jur
              FROM usuarios 
@@ -36,11 +36,11 @@ const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
              WHERE codigo_usu = $1`, [userId]);
         let id = persona.rows[0].id;
         let puntos;
-        if (untosG == null) {
+        if (puntosG == null) {
             puntos = 0;
         }
         else {
-            puntos = untosG;
+            puntos = puntosG;
         }
         console.log(id);
         if (tipocliente == 'nat') {
@@ -87,6 +87,56 @@ const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.crearOrden = crearOrden;
+const crearOrdenFisico = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { puntosA, puntosG, valorPunto, sucursal, direcionTextual, id, tipo } = req.body;
+        const fecha = new Date().toLocaleDateString('en-US');
+        const tipoCompra = 'Compra fisica';
+        const lugar = yield PoolEnUso.query(`SELECT codigo_lug
+             FROM lugar JOIN sucursal ON sucursal.fk_lugar = lugar.codigo_lug
+             WHERE sucursal.codigo_suc = $1`, [sucursal]);
+        let parroquia = lugar.rows[0].codigo_lug;
+        if (tipo == 'nat') {
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntosG, fecha, tipoCompra, valorPunto, parroquia, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntosG, fecha, Date, tipoCompra, valorPunto, sucursal, id, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+        else {
+            const response = yield PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_jur,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`, [puntosA, puntosG, fecha, tipoCompra, valorPunto, parroquia, sucursal, id, direcionTextual]);
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA, puntosG, fecha, Date, tipoCompra, valorPunto, sucursal, id, direcionTextual
+                    }
+                },
+                respuesta: response.rows
+            });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send('Internal server error');
+    }
+});
+exports.crearOrdenFisico = crearOrdenFisico;
 const crearProductoOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { cantidad, precio, producto, orden } = req.body;

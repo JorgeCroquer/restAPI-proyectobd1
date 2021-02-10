@@ -8,7 +8,7 @@ const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {puntosA,untosG,fecha,tipo,valorPunto,lugardir,sucursal,direcionTextual} = req.body;
+        const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,direcionTextual} = req.body;
         const userId = req.userId;
 
         const tipoCli: QueryResult = await PoolEnUso.query(
@@ -36,10 +36,10 @@ export const crearOrden = async(req: Request,res: Response): Promise<Response> =
         let id = persona.rows[0].id
 
         let puntos
-        if (untosG == null){
+        if (puntosG == null){
             puntos = 0;
         }else{
-            puntos = untosG
+            puntos = puntosG
         }
         console.log(id)
         if (tipocliente == 'nat'){
@@ -86,6 +86,72 @@ export const crearOrden = async(req: Request,res: Response): Promise<Response> =
         return res.status(500).send('Internal Server Error');
     }
 }
+
+
+export const crearOrdenFisico = async(req: Request,res: Response): Promise<Response> => {
+    try{
+        const {puntosA,puntosG,valorPunto,sucursal,direcionTextual, id, tipo} = req.body;
+        const fecha = new Date().toLocaleDateString('en-US');
+        const tipoCompra = 'Compra fisica'
+        const lugar: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_lug
+             FROM lugar JOIN sucursal ON sucursal.fk_lugar = lugar.codigo_lug
+             WHERE sucursal.codigo_suc = $1`, [sucursal])
+
+        let parroquia = lugar.rows[0].codigo_lug
+
+
+
+
+        if (tipo == 'nat'){
+
+            const response: QueryResult = await PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`,[puntosA,puntosG,fecha,tipoCompra,valorPunto,parroquia,sucursal,id,direcionTextual]);
+
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA,puntosG,fecha,Date,tipoCompra,valorPunto,sucursal,id,direcionTextual
+                    }
+                },
+                respuesta:response.rows
+            });
+        }else{
+            const response: QueryResult = await PoolEnUso.query(`
+            INSERT 
+            INTO orden(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_jur,direcciontextual_ord)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            RETURNING numero_ord`,[puntosA,puntosG,fecha,tipoCompra,valorPunto,parroquia,sucursal,id,direcionTextual]);
+
+            return res.status(201).json({
+                message: "orden created successfully",
+                body: {
+                    suministro: {
+                        puntosA,puntosG,fecha,Date,tipoCompra,valorPunto,sucursal,id,direcionTextual
+                    }
+                },
+                respuesta:response.rows
+            });
+
+
+        }
+            
+   
+            
+
+    }catch(error){
+        console.error(error)
+        return res.status(500).send('Internal server error')
+    }
+
+}
+
 
 export const crearProductoOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
