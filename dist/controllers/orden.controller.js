@@ -16,6 +16,7 @@ const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { fecha, sucursal, proveedor } = req.body;
+        console.log(proveedor);
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO suministro(fecha_sum,fk_sucursal_sum,fk_proveedor_sum)
