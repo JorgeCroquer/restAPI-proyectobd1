@@ -23,11 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const TiendaCtrl = __importStar(require("../controllers/tienda.controller"));
+const UsuarioCtrl = __importStar(require("../controllers/usuarios.controller"));
 const router = express_1.default();
-//tiendas  
-router.get('/tiendas', TiendaCtrl.getTiendas);
-router.delete('/tiendas/:id', TiendaCtrl.deleteTienda);
-router.put('/tiendas/:id', TiendaCtrl.updateTienda);
-router.post('/tiendas', TiendaCtrl.createTienda);
+router.get('/Usuarios', UsuarioCtrl.getUsuarios);
+router.delete('/Usuarios/:id', UsuarioCtrl.deleteUsuario);
+router.put('/Usuarios/:id', UsuarioCtrl.updateUsuario);
+router.get('/Usuarios/roles', UsuarioCtrl.getRoles);
 exports.default = router;
