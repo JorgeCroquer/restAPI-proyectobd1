@@ -2,84 +2,30 @@ import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
 
+import jwt from 'jsonwebtoken'
+import config from '../config/config'
 
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
-        const {puntosA,untosG,fecha,tipo,valorPunto,lugardir,sucursal,direcionTextual} = req.body;
-        const userId = req.userId;
-
-        const tipoCli: QueryResult = await PoolEnUso.query(
-            `SELECT fk_persona_nat, fk_persona_jur
-             FROM usuarios 
-             WHERE codigo_usu =$1`,[userId])
-
-        let tipocliente: string
-        if (tipoCli.rows[0].fk_persona_nat){
-            tipocliente = 'nat'
-        }else{
-            tipocliente = 'jur'
-        }
-
-
-        const persona: QueryResult = await PoolEnUso.query(
-            `SELECT pn.cedula_nat::varchar(12) AS id
-             FROM persona_natural pn JOIN usuarios u ON pn.cedula_nat = u.fk_persona_nat
-             WHERE codigo_usu = $1
-             UNION
-             SELECT pj.rif_jur AS id
-             FROM persona_juridica pj JOIN usuarios u ON pj.rif_jur = u.fk_persona_jur
-             WHERE codigo_usu = $1`,[userId])
-
-        let id = persona.rows[0].id
-
-        let puntos
-        if (untosG == null){
-            puntos = 0;
-        }else{
-            puntos = untosG
-        }
-        console.log(id)
-        if (tipocliente == 'nat'){
-            console.log('natural')
-            const response: QueryResult = await PoolEnUso.query(`
-            INSERT 
-            INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
-            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-            RETURNING numero_ord`,[puntosA,puntos,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual]);
-            return res.status(201).json({
-                message: "orden created successfully",
-                body: {
-                    suministro: {
-                        puntosA,puntos,fecha,Date,tipo,valorPunto,sucursal,userId,direcionTextual
-                    }
-                },
-                respuesta:response.rows
-            });
-
-        }else if (tipocliente == 'jur'){
-            console.log('juridico')
-            const response: QueryResult = await PoolEnUso.query(`
-            INSERT 
-            INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
-            fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_jur,direcciontextual_ord)
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-            RETURNING numero_ord`,[puntosA,puntos,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual]);
-            return res.status(201).json({
-                message: "orden created successfully",
-                body: {
-                    suministro: {
-                        puntosA,puntos,fecha,Date,tipo,valorPunto,sucursal,userId,direcionTextual
-                    }
-                },
-                respuesta:response.rows
-            });
-        }
-        return res.status(500).json({message: "Error muy raro"})
-
+        const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual} = req.body;
+        const response: QueryResult = await PoolEnUso.query(`
+        INSERT 
+        INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
+		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT fK_persona_nat FROM usuarios WHERE codigo_usu = $8),$9)
+        RETURNING numero_ord`,[puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual]);
+        return res.status(201).json({
+            message: "orden created successfully",
+            body: {
+                OrdenCliente: {
+                    puntosA,puntosG,fecha,Date,tipo,valorPunto,sucursal,id,direcionTextual
+                }
+            },
+            respuesta:response.rows
+        });
     }
     catch(e){
         console.log(e);
