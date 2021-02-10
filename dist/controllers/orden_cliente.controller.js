@@ -15,18 +15,18 @@ const database_1 = require("../database");
 const PoolEnUso = database_1.pool;
 const crearOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual } = req.body;
+        const { puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, id, direcionTextual } = req.body;
         const response = yield PoolEnUso.query(`
         INSERT 
         INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
-           fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-        RETURNING numero_ord`, [puntosA, untosG, fecha, tipo, valorPunto, lugardir, sucursal, clienteId, direcionTextual]);
+		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT fK_persona_nat FROM usuarios WHERE codigo_usu = $8),$9)
+        RETURNING numero_ord`, [puntosA, puntosG, fecha, tipo, valorPunto, lugardir, sucursal, id, direcionTextual]);
         return res.status(201).json({
             message: "orden created successfully",
             body: {
-                suministro: {
-                    puntosA, untosG, fecha, Date, tipo, valorPunto, sucursal, clienteId, direcionTextual
+                OrdenCliente: {
+                    puntosA, puntosG, fecha, Date, tipo, valorPunto, sucursal, id, direcionTextual
                 }
             },
             respuesta: response.rows

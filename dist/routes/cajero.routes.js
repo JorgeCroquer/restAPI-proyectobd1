@@ -27,5 +27,8 @@ const ProductosCtrl = __importStar(require("../controllers/cajero.controller"));
 const router = express_1.default();
 //productos
 router.get('/productos', ProductosCtrl.getProductos);
+router.get('/productos/monedas', ProductosCtrl.getTablaMonedas);
+router.get('/productos/clientesNat', ProductosCtrl.getClientesNat);
+router.get('/productos/clientesJur', ProductosCtrl.getClientesJur);
 router.get('/productos/:id', ProductosCtrl.getProductosid);
 exports.default = router;
