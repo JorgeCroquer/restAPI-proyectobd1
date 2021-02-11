@@ -10,7 +10,6 @@ const PoolEnUso = pool
 
 export const crearOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
-<<<<<<< HEAD
         const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,direcionTextual} = req.body;
         const userId = req.userId;
 
@@ -83,24 +82,6 @@ export const crearOrden = async(req: Request,res: Response): Promise<Response> =
         }
         return res.status(500).json({message: "Error muy raro"})
 
-=======
-        const {puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual} = req.body;
-        const response: QueryResult = await PoolEnUso.query(`
-        INSERT 
-        INTO ORDEN(puntosadquiridos_ord,puntosgastados_ord,fecha_ord,tipo_ord,
-		   fk_valor_punto_ord,fk_lugar_ord,fk_sucursal,fk_cliente_nat,direcciontextual_ord)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT fK_persona_nat FROM usuarios WHERE codigo_usu = $8),$9)
-        RETURNING numero_ord`,[puntosA,puntosG,fecha,tipo,valorPunto,lugardir,sucursal,id,direcionTextual]);
-        return res.status(201).json({
-            message: "orden created successfully",
-            body: {
-                OrdenCliente: {
-                    puntosA,puntosG,fecha,Date,tipo,valorPunto,sucursal,id,direcionTextual
-                }
-            },
-            respuesta:response.rows
-        });
->>>>>>> 31a96a232a93755018ced634a970bbb05124e77f
     }
     catch(e){
         console.log(e);
@@ -177,10 +158,11 @@ export const crearOrdenFisico = async(req: Request,res: Response): Promise<Respo
 export const crearProductoOrden = async(req: Request,res: Response): Promise<Response> => {
     try{
         const {cantidad,precio,producto,orden} = req.body;
+        let precio_redondeado = Math.round(precio);
         const response: QueryResult = await PoolEnUso.query(`
         INSERT
         INTO producto_orden(cantidad_pro_ord,precio_prod_ord,fk_producto_pro_ord,fk_orden_pro_ord)
-        VALUES($1,$2,$3,$4)`,[cantidad,precio,producto,orden]);
+        VALUES($1,$2,$3,$4)`,[cantidad,precio_redondeado,producto,orden]);
         return res.status(201).json({
             message: "Relationship Producto_orden created successfully",
             body: {

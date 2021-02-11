@@ -118,14 +118,14 @@ export const getDescuentos = async(req: Request, res: Response): Promise<Respons
     try{
         const response: QueryResult = await PoolEnUso.query(
             `
-            select 
+            SELECT
             codigo_des as codigo,
             porcentaje_des as porcentaje,
             fk_producto as producto
-            from descuento
-            join promo
-            on promo.codigo_prom=descuento.fk_promo
-            where promo.fechafin_des is null`);
+            FROM descuento
+            JOIN promo
+            ON promo.codigo_prom=descuento.fk_promo
+            WHERE promo.fechafin_des is null OR current_date BETWEEN promo.fechainicio_des AND promo.fechafin_des`);
         return res.status(200).json(response.rows);
     }
     catch(e){

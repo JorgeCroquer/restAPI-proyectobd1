@@ -310,7 +310,7 @@ const createEmpleado = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.createEmpleado = createEmpleado;
 const asistencias = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fecha } = req.body;
+        const { fecha, sucursal } = req.body;
         const asistencia = yield PoolEnUso.query(`SELECT CONCAT(pn.primernombre_nat,' ',pn.primerapellido_nat) AS nombre,
                 cedula_nat AS cedula,
                 horaentrada_hor AS horaentrada,
@@ -334,7 +334,7 @@ const asistencias = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 JOIN asistencia a on e.fk_cedula_nat = a.fk_empleado
                 JOIN horario_empleado he on e.fk_cedula_nat = he.fk_empleado
                 JOIN horario h on he.fk_horario = h.codigo_hor
-            WHERE a.fecha_asi = $1`, [fecha]);
+            WHERE a.fecha_asi = $1 AND fk_sucursal = $2`, [fecha, sucursal]);
         return res.status(200).json(asistencia.rows);
     }
     catch (error) {

@@ -39,6 +39,7 @@ export const compararHorarios = async(req: Request, res: Response) =>{
             `INSERT INTO asistencia
              VALUES ($1,$2,$3,$4)`
              ,[asistencia[i].cedula,new Date().toLocaleDateString('en-US'),asistencia[i].horaent,asistencia[i].horasal])
+             console.log(i)
     }
     return res.status(201).json({message: 'Asistencias cargadas con exito'})
     
