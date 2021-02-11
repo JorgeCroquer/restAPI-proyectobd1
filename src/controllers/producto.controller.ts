@@ -38,7 +38,7 @@ export const getFaltantes = async(req: Request, res: Response): Promise<Response
         AND pr.fk_proveedor_pro = pro.fk_rif_jur 
         AND pro.fk_rif_jur = jur.rif_jur 
         AND s.codigo_suc = $1 
-        AND (pz.cantidad_pro_zon + ps.cantidad_pro_sec) <= 100;`,[id]);
+        AND (pz.cantidad_pro_zon + ps.cantidad_pro_sec) <= 100`,[id]);
         return res.status(200).json(response.rows);
     }
     catch(e){
