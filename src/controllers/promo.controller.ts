@@ -5,7 +5,7 @@ import {QueryResult} from 'pg'
 const PoolEnUso = pool;
 
 export const getPromosSinNotimart = async(req: Request, res: Response) => {
-    try {
+    try { 
         
         const promos:QueryResult = await PoolEnUso.query(
             `SELECT codigo_prom AS id,

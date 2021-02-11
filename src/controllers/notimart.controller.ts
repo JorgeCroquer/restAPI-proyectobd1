@@ -1,6 +1,7 @@
 import {Request, Response} from 'express'
 import {pool} from '../database'
 import {Pool, QueryResult} from 'pg'
+import { orden } from '../Clases/orden'
 
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = pool
@@ -107,3 +108,4 @@ export const publicar = async(req: Request, res: Response) => {
         res.status(500).send('Internal server error')
     }
 }
+
