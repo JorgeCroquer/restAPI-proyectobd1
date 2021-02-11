@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.publicar = exports.agregarDescuentos = exports.deleteProducto = exports.getProximaFecha = exports.updateDescuento = exports.getProductosNotimart = void 0;
 const database_1 = require("../database");
+const orden_1 = require("../Clases/orden");
 //Aqui se pone la BD que esta en uso
 const PoolEnUso = database_1.pool;
 const getProductosNotimart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -107,3 +108,4 @@ const publicar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.publicar = publicar;
+orden_1.orden.llenarProductoOrden();
