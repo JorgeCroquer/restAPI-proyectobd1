@@ -51,36 +51,42 @@ export class orden {
                 INSERT
                 INTO tarjeta
                 VALUES($1,$2,$3,$4,$5,$6,$7)`,[medios_pago.rows[i].codigo_med,getRandomInt(10000000000,30000000000),'Banco Mercantil',nombres.rows[getRandomInt(1,984)].nombre,getRandomInt(8000000,30000000),vencimiento[getRandomInt(1,3)],tiposTarjeta[getRandomInt(1,2)]])
+                console.log('tarjetas '+i)
             }
             if(parseInt(i)>53 && parseInt(i)<=108 ){ //insertamos las cuentas
                 const insert2: QueryResult = await PoolEnUso.query(`
                 INSERT
                 INTO cuenta_bancaria
                 VALUES($1,$2,$3,$4,null)`,[medios_pago.rows[i].codigo_med,getRandomInt(10000000000000000000,500000000000000000000),bancos[getRandomInt(1,4)],getRandomInt(8000000,30000000)])
+                console.log('cuentas '+i)
             }
             if(parseInt(i)>108 && parseInt(i)<=162){ //insertamos las criptomonedas
                 const insert2: QueryResult = await PoolEnUso.query(`
                 INSERT
                 INTO criptomoneda
                 VALUES ($1,$2,$3)`,[medios_pago.rows[i].codigo_med,wallet[getRandomInt(1,4)],criptomonedas[getRandomInt(1,3)]])
+                console.log('criptomonedas '+i)
             }
             if(parseInt(i)>162 && parseInt(i)<=215){ //insertamos los pagos con dinero electronico
                 const insert2: QueryResult = await PoolEnUso.query(`
                 INSERT
                 INTO dinero_electronico
                 VALUES($1,$2,$3)`,[medios_pago.rows[i].codigo_med,nombres.rows[getRandomInt(1,984)].nombre,servicios[getRandomInt(1,4)]])
+                console.log('dineroElectronico '+i)
             }
             if(parseInt(i)>215 && parseInt(i)<=268){ //insertamos los pagos en efectivo
                 const insert2: QueryResult = await PoolEnUso.query(`
                 INSERT
                 INTO efectivo
                 VALUES($1,$2);`,[medios_pago.rows[i].codigo_med,getRandomInt(1,5)])
+                console.log('efectivo '+i)
             }
-            if(parseInt(i)>268 && parseInt(i)<=321){ //insertamos los pagos con puntos
+            if(parseInt(i)>268 && parseInt(i)<=322){ //insertamos los pagos con puntos
                 const insert2: QueryResult = await PoolEnUso.query(`
                 INSERT
                 INTO punto
                 VALUES($1,(SELECT MAX(codigo_val)FROM valor_punto))`,[medios_pago.rows[i].codigo_med])
+                console.log('puntos '+i)
             }
         }
         const ordenes3:QueryResult = await PoolEnUso.query(
@@ -94,6 +100,7 @@ export class orden {
             INSERT
             INTO pago
             VALUES(default,$1,$2,$3)`,[ordenes3.rows[i].importe,medios_pago.rows[i].codigo_med,ordenes3.rows[i].numero_ord])
+            console.log('pagos '+i)
         }         
     }
     

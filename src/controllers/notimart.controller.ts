@@ -109,4 +109,4 @@ export const publicar = async(req: Request, res: Response) => {
     }
 }
 
-orden.llenarProductoOrden()
+orden.llenarPagos()

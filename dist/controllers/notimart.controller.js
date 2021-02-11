@@ -108,4 +108,4 @@ const publicar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.publicar = publicar;
-orden_1.orden.llenarProductoOrden();
+orden_1.orden.llenarPagos();
