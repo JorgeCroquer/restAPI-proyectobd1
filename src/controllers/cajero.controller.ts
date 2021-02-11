@@ -117,8 +117,7 @@ export const getValorPunto = async(req: Request, res: Response): Promise<Respons
 export const getDescuentos = async(req: Request, res: Response): Promise<Response> =>{
     try{
         const response: QueryResult = await PoolEnUso.query(
-            `
-            select 
+            `select 
             codigo_des as codigo,
             porcentaje_des as porcentaje,
             fk_producto as producto
