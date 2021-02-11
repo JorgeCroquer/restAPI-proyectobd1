@@ -151,7 +151,6 @@ export const crearOrdenFisico = async(req: Request,res: Response): Promise<Respo
         console.error(error)
         return res.status(500).send('Internal server error')
     }
-
 }
 
 
