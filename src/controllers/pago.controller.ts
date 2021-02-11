@@ -153,7 +153,7 @@ export const crearPunto = async(req: Request,res: Response): Promise<Response> =
         const response: QueryResult = await PoolEnUso.query(`
         INSERT
         INTO punto
-        VALUES($1,(SELECT MAX(codigo_val)FROM valor_punto));`,[medio]);
+        VALUES($1,(SELECT MAX(codigo_val)FROM valor_punto))`,[medio]);
         return res.status(201).json({
             message: "Medio Punto created successfully",
             body: {

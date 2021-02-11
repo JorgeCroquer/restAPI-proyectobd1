@@ -1,11 +1,12 @@
 import {LocalPool, pool} from '../database'
 import {QueryResult} from 'pg'
+import {getRandomInt} from '../controllers/auth.controller'
 
 const PoolEnUso = pool
 
 export class orden {
 
-
+    
 
     static async llenarStatusOrden(){
         const ordenes: QueryResult = await PoolEnUso.query(
@@ -18,7 +19,82 @@ export class orden {
             console.log(i)
         }
         console.log('listo')
-    } 
+    }
+    
+    static async llenarPagos(){
+        var tiposTarjeta:string[] = ['Debito','Credito']
+        var vencimiento:string[] = ['01/01/2025','01/01/2026','01/01/2027']
+        var bancos:string[] = ['Banco Banesco','Banco Nacional De Credito','Banco de Venezuela','Banco Mercantil']
+        var wallet:string[] = ['Coinbase','Trezor','Green Address','Electrum']
+        var criptomonedas:string[] = ['BitCoin','Ethereum','DodgeCoin']
+        var servicios:string[] = ['Paypal','UpHold','Skrill','Pyoneer']
+        const ordenes2: QueryResult = await PoolEnUso.query(
+            `SELECT numero_ord
+             FROM orden`)
+        for(let i in ordenes2.rows){
+            const insert2: QueryResult = await PoolEnUso.query(
+                `INSERT
+                INTO medio_pago
+                VALUES(nextval('medio_pago_codigo_med_seq'))`
+            )
+        }
+        const medios_pago: QueryResult = await PoolEnUso.query(
+            `SELECT codigo_med
+             FROM medio_pago`)
+        const nombres: QueryResult = await PoolEnUso.query(
+            `SELECT DISTINCT(primernombre_nat||' '||primerapellido_nat) as nombre
+            FROM persona_natural`)    
+        for(let i in medios_pago.rows){
+            if(parseInt(i)<=53){ //insertamos las tarjetas
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO tarjeta
+                VALUES($1,$2,$3,$4,$5,$6,$7)`,[medios_pago.rows[i].codigo_med,getRandomInt(10000000000,30000000000),'Banco Mercantil',nombres.rows[getRandomInt(1,984)].nombre,getRandomInt(8000000,30000000),vencimiento[getRandomInt(1,3)],tiposTarjeta[getRandomInt(1,2)]])
+            }
+            if(parseInt(i)>53 && parseInt(i)<=108 ){ //insertamos las cuentas
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO cuenta_bancaria
+                VALUES($1,$2,$3,$4,null)`,[medios_pago.rows[i].codigo_med,getRandomInt(10000000000000000000,500000000000000000000),bancos[getRandomInt(1,4)],getRandomInt(8000000,30000000)])
+            }
+            if(parseInt(i)>108 && parseInt(i)<=162){ //insertamos las criptomonedas
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO criptomoneda
+                VALUES ($1,$2,$3)`,[medios_pago.rows[i].codigo_med,wallet[getRandomInt(1,4)],criptomonedas[getRandomInt(1,3)]])
+            }
+            if(parseInt(i)>162 && parseInt(i)<=215){ //insertamos los pagos con dinero electronico
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO dinero_electronico
+                VALUES($1,$2,$3)`,[medios_pago.rows[i].codigo_med,nombres.rows[getRandomInt(1,984)].nombre,servicios[getRandomInt(1,4)]])
+            }
+            if(parseInt(i)>215 && parseInt(i)<=268){ //insertamos los pagos en efectivo
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO efectivo
+                VALUES($1,$2);`,[medios_pago.rows[i].codigo_med,getRandomInt(1,5)])
+            }
+            if(parseInt(i)>268 && parseInt(i)<=321){ //insertamos los pagos con puntos
+                const insert2: QueryResult = await PoolEnUso.query(`
+                INSERT
+                INTO punto
+                VALUES($1,(SELECT MAX(codigo_val)FROM valor_punto))`,[medios_pago.rows[i].codigo_med])
+            }
+        }
+        const ordenes3:QueryResult = await PoolEnUso.query(
+            `SELECT numero_ord, SUM (precio_prod_ord * cantidad_pro_ord ) as importe
+            FROM producto_orden JOIN orden ON numero_ord = fk_orden_pro_ord
+            GROUP BY 1
+            ORDER BY 1`
+            )
+        for(let i in ordenes3.rows){
+            const insert3: QueryResult = await PoolEnUso.query(`
+            INSERT
+            INTO pago
+            VALUES(default,$1,$2,$3)`,[ordenes3.rows[i].importe,medios_pago.rows[i].codigo_med,ordenes3.rows[i].numero_ord])
+        }         
+    }
     
 
 }
